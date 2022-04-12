@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "412767931611",
+    "project_id": "ppswe-d7ee1",
+    "storage_bucket": "ppswe-d7ee1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:412767931611:android:53c1cd5b27765f5c65d0fe",
+        "android_client_info": {
+          "package_name": "com.example.ppswe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "412767931611-gsirhkc0f5srhfo6i9r59t37cfbc1qct.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqYnNOHcmms9Zq7QOxMmT1Gu__sXHl-vc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "412767931611-gsirhkc0f5srhfo6i9r59t37cfbc1qct.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_med"
+    app:startDestination="@id/searchMedFragment">
+
+    <fragment
+        android:id="@+id/searchMedFragment"
+        android:name="com.example.ppswe.view.medicine.SearchMedFragment"
+        android:label="fragment_search_med"
+        tools:layout="@layout/fragment_search_med" >
+        <action
+            android:id="@+id/action_searchMedFragment_to_medFormFragment"
+            app:destination="@id/medFormFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/medFormFragment"
+        android:name="com.example.ppswe.view.medicine.MedFormFragment"
+        android:label="fragment_med_form"
+        tools:layout="@layout/fragment_med_form" >
+        <action
+            android:id="@+id/action_medFormFragment_to_submitMedFragment"
+            app:destination="@id/submitMedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/submitMedFragment"
+        android:name="com.example.ppswe.view.medicine.SubmitMedFragment"
+        android:label="fragment_submit_med"
+        tools:layout="@layout/fragment_submit_med" />
+</navigation>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home"
+        android:title="Home"
+        android:icon="@drawable/ic_outline_home_24"/>
+
+    <item
+        android:id="@+id/medicine"
+        android:title="Add Medicine"
+        android:icon="@drawable/ic_outline_medical_services_24"/>
+
+    <item
+        android:id="@+id/vitalSign"
+        android:title="Vital Sign"
+        android:icon="@drawable/ic_outline_favorite_border_24" />
+
+    <item
+        android:id="@+id/profile"
+        android:title="Profile"
+        android:icon="@drawable/ic_outline_person_outline_24" />
+</menu>
