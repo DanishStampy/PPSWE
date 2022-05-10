@@ -32,6 +32,7 @@ public class AuthViewModel extends AndroidViewModel {
         return loggedStatus;
     }
 
+
     public void register(String username, String email, String password, String phoneNum, String roles){
         repository.register(username, email, password, phoneNum, roles);
     }

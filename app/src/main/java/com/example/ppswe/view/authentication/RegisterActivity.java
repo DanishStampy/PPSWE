@@ -1,5 +1,6 @@
 package com.example.ppswe.view.authentication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -14,11 +15,18 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.ppswe.R;
+import com.example.ppswe.model.User;
 import com.example.ppswe.view.MainMenuActivity;
 import com.example.ppswe.view.authentication.LoginActivity;
 import com.example.ppswe.viewmodel.AuthViewModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -29,25 +37,16 @@ public class RegisterActivity extends AppCompatActivity {
 
     private AuthViewModel authViewModel;
 
-    private FirebaseAuth mAuth;
+    private FirebaseAuth auth;
+    private FirebaseFirestore firestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        authViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(AuthViewModel.class);
-
-        // Init firebase auth
-        authViewModel.getUserData().observe(this, new Observer<FirebaseUser>() {
-            @Override
-            public void onChanged(FirebaseUser firebaseUser) {
-                if (firebaseUser != null){
-                    Log.d("FIREBASE_USER", firebaseUser.getEmail());
-                    showMainActivity();
-                }
-            }
-        });
+        firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
         etUsername = findViewById(R.id.etUsername);
         etEmail = findViewById(R.id.etEmail);
@@ -64,14 +63,43 @@ public class RegisterActivity extends AppCompatActivity {
 
                 String username = etUsername.getText().toString();
                 String email = etEmail.getText().toString();
-                String phoneNum = etPhoneNum.getText().toString();
-                String password = etPassword.getText().toString();
-                String confirmPassword = etConfirmPass.getText().toString();
+                String phoneNum = etPhoneNum.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
+                String confirmPassword = etConfirmPass.getText().toString().trim();
                 String roles = radioPatient.isChecked() ? "patient" : "caregiver";
 
-                validation(email, phoneNum, password, confirmPassword);
+                if (validation(username, email, phoneNum, password, confirmPassword)){
 
-                authViewModel.register(username, email, password, phoneNum, roles);
+                    auth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()){
+                                        User user = new User(username, email, phoneNum, roles);
+
+                                        firestore.collection("users")
+                                                .document(auth.getUid())
+                                                .set(user)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void unused) {
+                                                        showMainActivity();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w("FAIL", "Error writing doc", e);
+                                                    }
+                                                });
+                                    }
+                                }
+                            });
+
+                } else {
+                    return;
+                }
+
             }
         });
 
@@ -96,9 +124,31 @@ public class RegisterActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private boolean validation(String email, String phoneNum, String password, String confirmPass){
+    private boolean validation(String username, String email, String phoneNum, String password, String confirmPass){
 
-        if (password != confirmPass) {
+        if (password.length() < 6) {
+            etConfirmPass.requestFocus();
+            etConfirmPass.setError("Please enter more than 6 characters.");
+            return false;
+
+        } else if (email.isEmpty()) {
+            etEmail.requestFocus();
+            etEmail.setError("Please enter the email.");
+            return false;
+
+        } else if (phoneNum.isEmpty()) {
+            etPhoneNum.requestFocus();
+            etPhoneNum.setError("Please enter the phone number.");
+            return false;
+
+        } else if (username.isEmpty()){
+            etUsername.requestFocus();
+            etUsername.setError("Please enter the username.");
+            return false;
+
+        } else if (!password.isEmpty()) {
+            etPassword.requestFocus();
+            etPassword.setError("Please enter the password.");
             return false;
         }
 

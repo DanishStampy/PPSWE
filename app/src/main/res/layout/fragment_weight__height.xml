@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.vitalsign.Weight_HeightFragment">
+
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/sansation_bold"
+        android:text="Check vital sign"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:fontFamily="@font/sansation_regular"
+        android:text="Please enter your height and weight first to calculate the BMI."
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtInputLayout5"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:hint="Height"
+        android:textColor="@color/grey"
+        app:boxCornerRadiusBottomEnd="8sp"
+        app:boxCornerRadiusBottomStart="8sp"
+        app:boxCornerRadiusTopEnd="8sp"
+        app:boxCornerRadiusTopStart="8sp"
+        app:boxStrokeColor="@color/blue"
+        app:helperText="Enter height in metres"
+        app:helperTextEnabled="true"
+        app:hintTextColor="@color/blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView11">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etHeightPatient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sansation_regular"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtInputLayout6"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:hint="Weight"
+        android:textColor="@color/grey"
+        app:boxCornerRadiusBottomEnd="8sp"
+        app:boxCornerRadiusBottomStart="8sp"
+        app:boxCornerRadiusTopEnd="8sp"
+        app:boxCornerRadiusTopStart="8sp"
+        app:boxStrokeColor="@color/blue"
+        app:helperText="Enter weight in kilogrammes"
+        app:helperTextEnabled="true"
+        app:hintTextColor="@color/blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtInputLayout5">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etWeightPatient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sansation_regular"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/materialDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:dividerColor="@color/blue"
+        app:dividerThickness="37dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtInputLayout6" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:fontFamily="@font/sansation_bold"
+        android:text="BMI RESULT:"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/materialDivider"
+        app:layout_constraintStart_toStartOf="@+id/materialDivider"
+        app:layout_constraintTop_toTopOf="@+id/materialDivider" />
+
+    <TextView
+        android:id="@+id/tvBMIResult"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:fontFamily="@font/sansation_regular"
+        android:text="No result yet."
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialDivider" />
+
+    <Button
+        android:id="@+id/btnNextFragment_VitalSign"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/blue"
+        android:fontFamily="@font/sansation_regular"
+        android:padding="16dp"
+        android:text="NEXT"
+        app:cornerRadius="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnCalculateBMI" />
+
+    <Button
+        android:id="@+id/btnCalculateBMI"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/blue"
+        android:fontFamily="@font/sansation_regular"
+        android:padding="16sp"
+        android:text="CALCULATE"
+        app:cornerRadius="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/btnNextFragment_VitalSign"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnNextFragment_VitalSign" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

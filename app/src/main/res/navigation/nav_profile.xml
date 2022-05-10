@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_profile"
+    app:startDestination="@id/profileFragment">
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.ppswe.view.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_syncCaregiverFragment"
+            app:destination="@id/syncCaregiverFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_personalInfoFragment"
+            app:destination="@id/personalInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/syncCaregiverFragment"
+        android:name="com.example.ppswe.view.profile.SyncCaregiverFragment"
+        android:label="fragment_sync_caregiver"
+        tools:layout="@layout/fragment_sync_caregiver" />
+    <fragment
+        android:id="@+id/personalInfoFragment"
+        android:name="com.example.ppswe.view.profile.PersonalInfoFragment"
+        android:label="fragment_personal_info"
+        tools:layout="@layout/fragment_personal_info" />
+</navigation>

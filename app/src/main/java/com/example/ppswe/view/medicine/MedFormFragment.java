@@ -17,9 +17,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ppswe.R;
 import com.example.ppswe.model.Medicine;
+import com.example.ppswe.model.SingletonMedicine;
 
 public class MedFormFragment extends Fragment {
 
@@ -48,6 +50,8 @@ public class MedFormFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        SingletonMedicine singletonMedicine = SingletonMedicine.getInstance();
+
         tvMedTypeDose = view.findViewById(R.id.tvMedType_Dose);
         navController = Navigation.findNavController(view);
 
@@ -74,7 +78,7 @@ public class MedFormFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 tvMedTypeDose.setText( medType.getText().toString());
-                Medicine.setMedType(medType.getText().toString());
+                singletonMedicine.setMedType(medType.getText().toString());
             }
         });
 
@@ -98,13 +102,50 @@ public class MedFormFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Medicine.setMedName(etNameMed.getText().toString().trim());
-                Medicine.setMedDose(Integer.parseInt(etDoseMed.getText().toString()));
-                Medicine.setMedFreq(Integer.parseInt(etFreqMed.getText().toString()));
+                String medName = etNameMed.getText().toString().trim();
+                String medDose = etDoseMed.getText().toString();
+                String medFreq = etFreqMed.getText().toString();
 
-                navController.navigate(R.id.action_medFormFragment_to_submitMedFragment);
+                if(validateInfo(medName, medDose, medFreq)){
+                    singletonMedicine.setMedName(medName);
+                    singletonMedicine.setMedDose(Integer.parseInt(medDose));
+                    singletonMedicine.setMedFreq(Integer.parseInt(medFreq));
+
+                    navController.navigate(R.id.action_medFormFragment_to_submitMedFragment);
+                } else {
+                    Toast.makeText(getActivity(), "nuts", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
+    }
+
+    // Input validation
+    private Boolean validateInfo(String medName, String medDose, String medFreq) {
+
+        if(medName.isEmpty()){
+            etNameMed.requestFocus();
+            etNameMed.setError("Please enter medicine name.");
+            return false;
+
+        } else if (!medName.matches("[a-zA-Z]+")){
+            etNameMed.requestFocus();
+            etNameMed.setError("Please enter using alphabetical letter.");
+            return false;
+
+        } else if (medDose.isEmpty()) {
+            etDoseMed.requestFocus();
+            etDoseMed.setError("Please enter medicine dose.");
+            return false;
+
+        } else if (medFreq.isEmpty()){
+            etFreqMed.requestFocus();
+            etFreqMed.setError("Please enter frequency of taking medicine.");
+            return false;
+
+        } else{
+            return true;
+        }
 
     }
 }

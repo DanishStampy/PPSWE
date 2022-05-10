@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.medicine.SubmitMedFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
 
     <TextView
         android:id="@+id/textView16"
@@ -19,9 +24,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/linearLayoutTime"
-        android:layout_width="0dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerTime"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
@@ -52,7 +57,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:helperTextEnabled="true"
         app:helperText="e.g. Before eat or after eat"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutTime">
+        app:layout_constraintTop_toBottomOf="@+id/recyclerTime">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etMedInstruction"
@@ -96,21 +101,26 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
+        <Button
+            android:id="@+id/btnSubmitMedData"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="32dp"
+            android:backgroundTint="@color/blue"
+            android:padding="16dp"
+            android:text="FINISH"
+            app:cornerRadius="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtInputLayout5" />
 
-    <Button
-        android:id="@+id/btnSubmitMedData"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:backgroundTint="@color/blue"
-        android:padding="16dp"
-        android:text="FINISH"
-        app:cornerRadius="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

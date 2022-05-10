@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="16dp"
+    app:strokeColor="@color/blue"
+    app:strokeWidth="4dp">
+
+    <LinearLayout
+        android:id="@+id/linearLayout7"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/linearLayout8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="18dp"
+            android:paddingTop="18dp"
+            android:paddingEnd="18dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvDisplayMedName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sansation_regular"
+                android:text="Paracetamol"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <Space
+                android:layout_width="190dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/tvDisplayMedTime"
+                android:layout_width="77dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sansation_regular"
+                android:text="9:00 AM"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout9"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingStart="18dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="18dp"
+            android:paddingBottom="18dp">
+
+            <TextView
+                android:id="@+id/tvDisplaMedDescription"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/sansation_regular"
+                android:text="Take 2 tablets after eat"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

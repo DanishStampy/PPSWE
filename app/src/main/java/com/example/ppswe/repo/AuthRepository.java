@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.ppswe.model.User;
@@ -15,7 +16,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,20 +30,31 @@ public class AuthRepository {
     private Application application;
     private MutableLiveData<FirebaseUser> firebaseUserMutableLiveData;
     private MutableLiveData<Boolean> userLoggedMutableLiveData;
+    private MutableLiveData<String> userRolesMutableLiveData;
+
+    private DocumentReference userRef;
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
+
+    private String uid;
 
     public AuthRepository(Application application) {
         this.application = application;
         firebaseUserMutableLiveData = new MutableLiveData<>();
         userLoggedMutableLiveData = new MutableLiveData<>();
+        userRolesMutableLiveData = new MutableLiveData<>();
 
         // Init firebase auth and firestore
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
         if(auth.getCurrentUser() != null){
+            uid = auth.getUid();
             firebaseUserMutableLiveData.postValue(auth.getCurrentUser());
+
+            // User doc reference
+            userRef = firestore.collection("users")
+                    .document(uid);
         }
     }
 
@@ -60,7 +76,7 @@ public class AuthRepository {
                     User user = new User(username, email, phoneNum, roles);
 
                     firestore.collection("users")
-                            .document(auth.getUid())
+                            .document(uid)
                             .set(user)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override

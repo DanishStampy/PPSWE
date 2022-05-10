@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_vital_sign"
+    app:startDestination="@id/weight_HeightFragment">
+
+    <fragment
+        android:id="@+id/weight_HeightFragment"
+        android:name="com.example.ppswe.view.vitalsign.Weight_HeightFragment"
+        android:label="fragment_weight__height"
+        tools:layout="@layout/fragment_weight__height" >
+        <action
+            android:id="@+id/action_weight_HeightFragment_to_vitalSignFragment"
+            app:destination="@id/vitalSignFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/vitalSignFragment"
+        android:name="com.example.ppswe.view.vitalsign.VitalSignFragment"
+        android:label="fragment_vital_sign"
+        tools:layout="@layout/fragment_vital_sign" >
+        <action
+            android:id="@+id/action_vitalSignFragment_to_vitalSign_ResultFragment"
+            app:destination="@id/vitalSign_ResultFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/vitalSign_ResultFragment"
+        android:name="com.example.ppswe.view.vitalsign.VitalSign_ResultFragment"
+        android:label="fragment_vital_sign__result"
+        tools:layout="@layout/fragment_vital_sign__result" />
+</navigation>

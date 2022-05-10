@@ -1,5 +1,6 @@
 package com.example.ppswe.view.authentication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -13,9 +14,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.ppswe.R;
+import com.example.ppswe.view.CaregiverMainActivity;
 import com.example.ppswe.view.MainMenuActivity;
 import com.example.ppswe.viewmodel.AuthViewModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -23,23 +34,21 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private TextView tvRegister;
 
-    private AuthViewModel authViewModel;
+    //private AuthViewModel authViewModel;
+    private FirebaseFirestore firestore;
+    private FirebaseAuth auth;
+
+    private DocumentReference roleRef;
+    String userRoles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        authViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(AuthViewModel.class);
-        authViewModel.getUserData().observe(this, new Observer<FirebaseUser>() {
-            @Override
-            public void onChanged(FirebaseUser firebaseUser) {
-                if (firebaseUser != null) {
-                    Log.d("FIREBASE_USER", firebaseUser.getEmail());
-                    showMainActivity();
-                }
-            }
-        });
+        // Init firestore
+        firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
         etEmail = findViewById(R.id.etLoginEmail);
         etPassword = findViewById(R.id.etLoginPassword);
@@ -52,7 +61,38 @@ public class LoginActivity extends AppCompatActivity {
                 String email = etEmail.getText().toString();
                 String password = etPassword.getText().toString();
 
-                authViewModel.login(email, password);
+                auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()){
+
+                                    firestore.collection("users")
+                                            .document(auth.getUid())
+                                            .get()
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    userRoles = documentSnapshot.getString("roles");
+                                                    if (userRoles.equals("patient")){
+                                                        showPatientActivity();
+                                                    } else {
+                                                        showCaregiverActivity();
+                                                    }
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    showRegisterActivity();
+                                                }
+                                            });
+
+                                } else {
+                                    showRegisterActivity();
+                                }
+                            }
+                        });
             }
         });
 
@@ -65,8 +105,13 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void showMainActivity(){
+    private void showPatientActivity(){
         Intent intent = new Intent(this, MainMenuActivity.class);
+        startActivity(intent);
+    }
+
+    private void showCaregiverActivity(){
+        Intent intent = new Intent(this, CaregiverMainActivity.class);
         startActivity(intent);
     }
 

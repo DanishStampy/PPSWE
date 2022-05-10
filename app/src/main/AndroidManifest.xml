@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PPSWE">
         <activity
+            android:name=".view.CaregiverMainActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.VitalSignActivity"
             android:exported="false" />
         <activity
