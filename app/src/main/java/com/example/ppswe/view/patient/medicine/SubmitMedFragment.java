@@ -1,4 +1,4 @@
-package com.example.ppswe.view.medicine;
+package com.example.ppswe.view.patient.medicine;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -13,28 +13,22 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.ppswe.R;
 import com.example.ppswe.adapter.OnAdapterItemClickListener;
 import com.example.ppswe.adapter.buttonTimePickerAdapter;
-import com.example.ppswe.model.Medicine;
 import com.example.ppswe.model.SingletonMedicine;
-import com.example.ppswe.view.MainMenuActivity;
+import com.example.ppswe.view.patient.MainMenuActivity;
 import com.example.ppswe.viewmodel.MedViewModel;
-import com.google.android.material.timepicker.MaterialTimePicker;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 public class SubmitMedFragment extends Fragment implements OnAdapterItemClickListener {
 

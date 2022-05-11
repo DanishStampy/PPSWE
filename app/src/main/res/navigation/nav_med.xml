@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/searchMedFragment"
-        android:name="com.example.ppswe.view.medicine.SearchMedFragment"
+        android:name="com.example.ppswe.view.patient.medicine.SearchMedFragment"
         android:label="fragment_search_med"
         tools:layout="@layout/fragment_search_med" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/medFormFragment"
-        android:name="com.example.ppswe.view.medicine.MedFormFragment"
+        android:name="com.example.ppswe.view.patient.medicine.MedFormFragment"
         android:label="fragment_med_form"
         tools:layout="@layout/fragment_med_form" >
         <action
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/submitMedFragment"
-        android:name="com.example.ppswe.view.medicine.SubmitMedFragment"
+        android:name="com.example.ppswe.view.patient.medicine.SubmitMedFragment"
         android:label="fragment_submit_med"
         tools:layout="@layout/fragment_submit_med" />
 </navigation>

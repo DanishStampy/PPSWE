@@ -22,14 +22,14 @@ public class VitalViewModel extends AndroidViewModel {
         super(application);
 
         repository = new VitalSignRepository(application);
-        //vitalSignData = repository.getVitalSignMutableLiveData();
+        vitalSignData = repository.getVitalSignMutableLiveData();
     }
 
     public void writeVitalSign(double height, double weight, List<Double> BPrate, double pulseRate, double respirationRate, double bodyTemperature) {
         repository.writeVitalSign(height, weight, BPrate, pulseRate, respirationRate, bodyTemperature);
     }
 
-//    public MutableLiveData<ArrayList<VitalSign>> getVitalSignData() {
-//        return vitalSignData;
-//    }
+    public MutableLiveData<ArrayList<VitalSign>> getVitalSignData() {
+        return vitalSignData;
+    }
 }

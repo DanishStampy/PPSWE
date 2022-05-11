@@ -1,8 +1,7 @@
-package com.example.ppswe.view;
+package com.example.ppswe.view.patient;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,19 +9,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.example.ppswe.R;
 import com.example.ppswe.adapter.medDataAdapter;
 import com.example.ppswe.view.authentication.LoginActivity;
+import com.example.ppswe.view.caregiver.CaregiverMainActivity;
 import com.example.ppswe.viewmodel.AuthViewModel;
 import com.example.ppswe.viewmodel.MedViewModel;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainMenuActivity extends AppCompatActivity {
 
@@ -30,11 +31,15 @@ public class MainMenuActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private RecyclerView recyclerViewMedList;
 
-    FirebaseAuth auth;
+    private FirebaseAuth auth;
+    private FirebaseFirestore firestore;
+
     private AuthViewModel authViewModel;
     private MedViewModel medViewModel;
 
     private medDataAdapter medDataAdapter;
+
+    private String role;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,21 +48,28 @@ public class MainMenuActivity extends AppCompatActivity {
 
         // Init auth
         auth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
         if(auth.getCurrentUser() == null){
             showLoggedOut();
+
         }
 
-        // Auth view model
-        authViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(AuthViewModel.class);
-        authViewModel.getLoggedStatus().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                if (aBoolean) {
-                    showLoggedOut();
-                }
-            }
-        });
+        // Get user roles
+        firestore.collection("users")
+                .document(auth.getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        role = documentSnapshot.getString("roles");
+                        Log.d("USER_ROLE", "My role is " + role);
+                        Log.d("BOOLEAN_ROLE", "That are " + role.equals("patient"));
+
+                        if(role.equals("caregiver"))
+                            showCaregiverActivity();
+                    }
+                });
 
         // recyclerview
         recyclerViewMedList = findViewById(R.id.rcMedList);
@@ -110,6 +122,18 @@ public class MainMenuActivity extends AppCompatActivity {
                 showLoggedOut();
             }
         });
+    }
+
+    private void showPatientActivity(){
+        Intent intent = new Intent(this, MainMenuActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void showCaregiverActivity(){
+        Intent intent = new Intent(this, CaregiverMainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public void showLoggedOut () {

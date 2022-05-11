@@ -1,4 +1,4 @@
-package com.example.ppswe.view.medicine;
+package com.example.ppswe.view.patient.medicine;
 
 import android.os.Bundle;
 

@@ -1,4 +1,4 @@
-package com.example.ppswe.view.vitalsign;
+package com.example.ppswe.view.patient.vitalsign;
 
 import android.os.Bundle;
 
@@ -8,8 +8,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,7 +84,7 @@ public class Weight_HeightFragment extends Fragment {
                     singletonVitalSign.setHeight(height);
                     singletonVitalSign.setWeight(weight);
 
-                    navController.navigate(R.id.action_weight_HeightFragment_to_vitalSignFragment);
+                    navController.navigate(R.id.action_weight_HeightFragment_to_vitalSign_ReadyFragment);
                 } else {
                     return;
                 }

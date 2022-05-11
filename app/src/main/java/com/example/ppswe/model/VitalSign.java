@@ -70,4 +70,8 @@ public class VitalSign {
     public void setBodyTemperature(double bodyTemperature) {
         this.bodyTemperature = bodyTemperature;
     }
+
+    public double getBMI() {
+        return weight/(height*height);
+    }
 }

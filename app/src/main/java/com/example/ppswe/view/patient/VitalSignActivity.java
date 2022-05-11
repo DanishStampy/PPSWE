@@ -1,4 +1,4 @@
-package com.example.ppswe.view;
+package com.example.ppswe.view.patient;
 
 import androidx.appcompat.app.AppCompatActivity;
 

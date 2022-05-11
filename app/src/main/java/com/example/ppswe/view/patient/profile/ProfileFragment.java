@@ -1,4 +1,4 @@
-package com.example.ppswe.view.profile;
+package com.example.ppswe.view.patient.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,18 +16,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.ppswe.R;
 import com.example.ppswe.model.User;
-import com.example.ppswe.view.MainMenuActivity;
 import com.example.ppswe.view.authentication.LoginActivity;
-import com.example.ppswe.viewmodel.AuthViewModel;
 import com.example.ppswe.viewmodel.UserViewModel;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -94,7 +89,7 @@ public class ProfileFragment extends Fragment {
         }
 
 
-        btnImgPersonalInfo = view.findViewById(R.id.imgBtnPersonalInfo);
+        btnImgPersonalInfo = view.findViewById(R.id.imgBtnLatestVitalSign);
         btnImgPersonalInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

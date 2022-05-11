@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.ppswe.model.Medicine;
+import com.example.ppswe.model.MedicineView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
@@ -27,7 +28,7 @@ import java.util.List;
 public class MedRepository {
 
     private Application application;
-    private MutableLiveData<ArrayList<Medicine>> medicineArrayList;
+    private MutableLiveData<ArrayList<MedicineView>> medicineArrayList;
 
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
@@ -81,16 +82,28 @@ public class MedRepository {
 
     // Get all med
 
-    public MutableLiveData<ArrayList<Medicine>> getMedicineArrayList() {
+    public MutableLiveData<ArrayList<MedicineView>> getMedicineArrayList() {
         medRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                ArrayList<Medicine> medicineList = new ArrayList<>();
+                ArrayList<MedicineView> medicineList = new ArrayList<>();
+                ArrayList<Integer> medicineTime;
 
                 if (!value.equals(null)){
                     for (QueryDocumentSnapshot doc : value) {
                         if (doc != null) {
-                            medicineList.add(doc.toObject(Medicine.class));
+                            medicineTime = (ArrayList<Integer>) doc.get("medTimes");
+                            Log.d("MED_TIMES", medicineTime.toString());
+
+                            for (int i = 0 ; i < medicineTime.size() ; i++){
+                                MedicineView medicineView = new MedicineView(doc.getString("medName"), doc.getString("medInstruction"), doc.getLong("medDose").intValue(), doc.getString("medType") );
+
+                                // Cast from long into integer
+                                medicineView.setMedTime(((Number)medicineTime.get(i)).intValue());
+                                //Log.d("DATA_TYPE", "Data type = " + medicineTime.get(i).getClass().getSimpleName());
+                                medicineList.add(medicineView);
+                            }
+
                             //Log.d("EXIST", "ada je = " + medicineArrayList.size());
                         }
                     }

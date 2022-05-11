@@ -10,16 +10,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PPSWE">
         <activity
-            android:name=".view.CaregiverMainActivity"
+            android:name=".view.caregiver.MedicationListActivity"
             android:exported="false" />
         <activity
-            android:name=".view.VitalSignActivity"
+            android:name=".view.caregiver.ReportActivity"
             android:exported="false" />
         <activity
-            android:name=".view.MedicineActivity"
+            android:name=".view.caregiver.CaregiverProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".view.ProfileActivity"
+            android:name=".view.caregiver.CaregiverMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.patient.VitalSignActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.patient.MedicineActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.patient.ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".view.authentication.LoginActivity"
@@ -28,7 +37,7 @@
             android:name=".view.authentication.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".view.MainMenuActivity"
+            android:name=".view.patient.MainMenuActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

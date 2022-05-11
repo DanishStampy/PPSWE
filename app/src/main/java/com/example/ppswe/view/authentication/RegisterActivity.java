@@ -2,8 +2,6 @@ package com.example.ppswe.view.authentication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,8 +14,8 @@ import android.widget.TextView;
 
 import com.example.ppswe.R;
 import com.example.ppswe.model.User;
-import com.example.ppswe.view.MainMenuActivity;
-import com.example.ppswe.view.authentication.LoginActivity;
+import com.example.ppswe.view.caregiver.CaregiverMainActivity;
+import com.example.ppswe.view.patient.MainMenuActivity;
 import com.example.ppswe.viewmodel.AuthViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,7 +23,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -83,7 +80,12 @@ public class RegisterActivity extends AppCompatActivity {
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void unused) {
-                                                        showMainActivity();
+                                                        if (roles.equals("patient")){
+                                                            showMainActivity();
+                                                        } else {
+                                                            showCaregiverActivity();
+                                                        }
+
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
@@ -116,6 +118,11 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void showMainActivity(){
         Intent intent = new Intent(this, MainMenuActivity.class);
+        startActivity(intent);
+    }
+
+    private void showCaregiverActivity(){
+        Intent intent = new Intent(this, CaregiverMainActivity.class);
         startActivity(intent);
     }
 

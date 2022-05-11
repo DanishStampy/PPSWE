@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    tools:context=".view.profile.ProfileFragment">
+    tools:context=".view.patient.profile.ProfileFragment">
 
 
     <TextView
@@ -111,28 +111,28 @@
 
 
     <TextView
-        android:id="@+id/tvPersonalInfo"
+        android:id="@+id/tvLatestVitalSign"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
         android:fontFamily="@font/sansation_regular"
-        android:text="Personal Information"
+        android:text="Latest Vital Sign"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView25" />
 
     <ImageButton
-        android:id="@+id/imgBtnPersonalInfo"
+        android:id="@+id/imgBtnLatestVitalSign"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginEnd="24dp"
         android:backgroundTint="@color/white"
-        android:src="@drawable/ic_baseline_person_outline_24"
-        app:layout_constraintBottom_toBottomOf="@+id/tvPersonalInfo"
+        android:src="@drawable/ic_outline_monitor_heart_24"
+        app:layout_constraintBottom_toBottomOf="@+id/tvLatestVitalSign"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvPersonalInfo" />
+        app:layout_constraintTop_toTopOf="@+id/tvLatestVitalSign" />
 
     <TextView
         android:id="@+id/tvChangePass"
@@ -145,7 +145,7 @@
         android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPersonalInfo" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLatestVitalSign" />
 
     <ImageButton
         android:id="@+id/imgBtnChangePass"

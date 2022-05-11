@@ -7,16 +7,16 @@
 
     <fragment
         android:id="@+id/weight_HeightFragment"
-        android:name="com.example.ppswe.view.vitalsign.Weight_HeightFragment"
+        android:name="com.example.ppswe.view.patient.vitalsign.Weight_HeightFragment"
         android:label="fragment_weight__height"
         tools:layout="@layout/fragment_weight__height" >
         <action
-            android:id="@+id/action_weight_HeightFragment_to_vitalSignFragment"
-            app:destination="@id/vitalSignFragment" />
+            android:id="@+id/action_weight_HeightFragment_to_vitalSign_ReadyFragment"
+            app:destination="@id/vitalSign_ReadyFragment" />
     </fragment>
     <fragment
         android:id="@+id/vitalSignFragment"
-        android:name="com.example.ppswe.view.vitalsign.VitalSignFragment"
+        android:name="com.example.ppswe.view.patient.vitalsign.VitalSignFragment"
         android:label="fragment_vital_sign"
         tools:layout="@layout/fragment_vital_sign" >
         <action
@@ -25,7 +25,16 @@
     </fragment>
     <fragment
         android:id="@+id/vitalSign_ResultFragment"
-        android:name="com.example.ppswe.view.vitalsign.VitalSign_ResultFragment"
+        android:name="com.example.ppswe.view.patient.vitalsign.VitalSign_ResultFragment"
         android:label="fragment_vital_sign__result"
         tools:layout="@layout/fragment_vital_sign__result" />
+    <fragment
+        android:id="@+id/vitalSign_ReadyFragment"
+        android:name="com.example.ppswe.view.patient.vitalsign.VitalSign_ReadyFragment"
+        android:label="fragment_vital_sign__ready"
+        tools:layout="@layout/fragment_vital_sign__ready" >
+        <action
+            android:id="@+id/action_vitalSign_ReadyFragment_to_vitalSignFragment"
+            app:destination="@id/vitalSignFragment" />
+    </fragment>
 </navigation>

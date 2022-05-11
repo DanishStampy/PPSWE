@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.ppswe.model.Medicine;
+import com.example.ppswe.model.MedicineView;
 import com.example.ppswe.repo.MedRepository;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public class MedViewModel extends AndroidViewModel {
 
     private MedRepository repository;
-    private MutableLiveData<ArrayList<Medicine>> medData;
+    private MutableLiveData<ArrayList<MedicineView>> medData;
 
     public MedViewModel(@NonNull Application application) {
         super(application);
@@ -29,7 +30,7 @@ public class MedViewModel extends AndroidViewModel {
         repository.writeMed(medName, medType, medDose, medFreq, medTimes, medInstruction, medDesc);
     }
 
-    public MutableLiveData<ArrayList<Medicine>> getMedData() {
+    public MutableLiveData<ArrayList<MedicineView>> getMedData() {
         return medData;
     }
 }

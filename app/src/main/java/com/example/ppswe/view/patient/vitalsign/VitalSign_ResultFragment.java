@@ -1,4 +1,4 @@
-package com.example.ppswe.view.vitalsign;
+package com.example.ppswe.view.patient.vitalsign;
 
 import android.os.Bundle;
 

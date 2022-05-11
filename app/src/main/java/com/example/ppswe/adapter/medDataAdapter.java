@@ -1,5 +1,6 @@
 package com.example.ppswe.adapter;
 
+import android.annotation.SuppressLint;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ppswe.R;
 import com.example.ppswe.model.Medicine;
+import com.example.ppswe.model.MedicineView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +24,9 @@ public class medDataAdapter extends RecyclerView.Adapter<medDataAdapter.DesignVi
     private static final int VIEW_TYPE_MEDICINE = 0;
     private static final int VIEW_TYPE_EMPTY = 1;
 
-    ArrayList<Medicine> medicineList;
+    ArrayList<MedicineView> medicineList;
 
-    public medDataAdapter(ArrayList<Medicine> medicineList) {
+    public medDataAdapter(ArrayList<MedicineView> medicineList) {
         this.medicineList = medicineList;
         Log.d("GET_COUNT", "COUNT IS " + medicineList.isEmpty());
     }
@@ -46,12 +48,39 @@ public class medDataAdapter extends RecyclerView.Adapter<medDataAdapter.DesignVi
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull DesignViewHolder holder, int position) {
 
         if (!medicineList.isEmpty()){
+            String am_pm = "AM";
+
             holder.medName.setText(medicineList.get(position).getMedName());
-            holder.medFullDesc.setText("Take " + medicineList.get(position).getMedDose() + " " + medicineList.get(position).getMedType() + " " + medicineList.get(position).getMedInstruction());
+            holder.medFullDesc.setText(medicineList.get(position).getAllDescription());
+
+            int medTime = medicineList.get(position).getMedTime();
+
+            double dhour = (double) medTime / 60 / 60;
+            double dminute = dhour % 1 * 60;
+
+            int hour = medTime / 60 / 60;
+
+            if (hour > 12) {
+                am_pm = "PM";
+                hour = hour - 12;
+            } else if (hour == 12) {
+                am_pm = "PM";
+            } else {
+                am_pm = "AM";
+            }
+
+            if ((int) Math.round(dminute) < 10) {
+                holder.medTime.setText(hour + ":0" + (int) Math.round(dminute) + "" + am_pm);
+            } else {
+                holder.medTime.setText(hour + ":" + (int) Math.round(dminute) + "" + am_pm);
+            }
+
+            //holder.medTime.setText(medicineList.get(position).getMedTime() + "AM");
         }
 
     }

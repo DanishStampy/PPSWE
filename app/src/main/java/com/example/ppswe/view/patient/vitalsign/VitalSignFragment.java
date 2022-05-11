@@ -1,4 +1,4 @@
-package com.example.ppswe.view.vitalsign;
+package com.example.ppswe.view.patient.vitalsign;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.ppswe.R;
 import com.example.ppswe.model.SingletonVitalSign;

@@ -1,4 +1,4 @@
-package com.example.ppswe.view.medicine;
+package com.example.ppswe.view.patient.medicine;
 
 import android.os.Bundle;
 
@@ -20,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ppswe.R;
-import com.example.ppswe.model.Medicine;
 import com.example.ppswe.model.SingletonMedicine;
 
 public class MedFormFragment extends Fragment {
