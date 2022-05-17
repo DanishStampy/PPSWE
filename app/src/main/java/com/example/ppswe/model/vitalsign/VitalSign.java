@@ -1,5 +1,8 @@
-package com.example.ppswe.model;
+package com.example.ppswe.model.vitalsign;
 
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.util.Date;
 import java.util.List;
 
 public class VitalSign {
@@ -10,6 +13,9 @@ public class VitalSign {
     private double pulseRate;
     private double respirationRate;
     private double bodyTemperature;
+
+    @ServerTimestamp
+    private Date date;
 
     public VitalSign() {
     }
@@ -73,5 +79,13 @@ public class VitalSign {
 
     public double getBMI() {
         return weight/(height*height);
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.ppswe.model;
+package com.example.ppswe.model.medicine;
 
 import java.util.List;
 

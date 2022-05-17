@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.ppswe.R;
-import com.example.ppswe.model.VitalSign;
+import com.example.ppswe.model.vitalsign.VitalSign;
 import com.example.ppswe.viewmodel.VitalViewModel;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.example.ppswe.model;
+package com.example.ppswe.model.medicine;
 
 public class MedicineView {
     private String medName;
@@ -6,15 +6,25 @@ public class MedicineView {
     private String medInstruction;
     private int medDose;
     private String medType;
+    private String medID;
 
     public MedicineView() {
     }
 
-    public MedicineView(String medName, String medInstruction, int medDose, String medType) {
+    public MedicineView(String medID, String medName, String medInstruction, int medDose, String medType) {
+        this.medID = medID;
         this.medName = medName;
         this.medInstruction = medInstruction;
         this.medDose = medDose;
         this.medType = medType;
+    }
+
+    public String getMedID() {
+        return medID + "." + medTime;
+    }
+
+    public void setMedID(String medID) {
+        this.medID = medID;
     }
 
     public String getMedName() {

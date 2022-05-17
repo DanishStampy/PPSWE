@@ -34,6 +34,10 @@ public class ProfileActivity extends AppCompatActivity {
                     startActivity(new Intent(getApplicationContext(), VitalSignActivity.class));
                     return true;
 
+                case R.id.report:
+                    startActivity(new Intent(getApplicationContext(), ReportPatientActivity.class));
+                    return true;
+
                 case R.id.home:
                     startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
                     return true;

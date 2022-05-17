@@ -20,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ppswe.R;
-import com.example.ppswe.model.SingletonMedicine;
+import com.example.ppswe.model.medicine.SingletonMedicine;
 
 public class MedFormFragment extends Fragment {
 

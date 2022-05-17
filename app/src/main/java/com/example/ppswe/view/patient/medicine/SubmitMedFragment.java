@@ -1,6 +1,12 @@
 package com.example.ppswe.view.patient.medicine;
 
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,11 +30,13 @@ import android.widget.Toast;
 import com.example.ppswe.R;
 import com.example.ppswe.adapter.OnAdapterItemClickListener;
 import com.example.ppswe.adapter.buttonTimePickerAdapter;
-import com.example.ppswe.model.SingletonMedicine;
+import com.example.ppswe.adapter.reciever.AlarmReceiver;
+import com.example.ppswe.model.medicine.SingletonMedicine;
 import com.example.ppswe.view.patient.MainMenuActivity;
 import com.example.ppswe.viewmodel.MedViewModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class SubmitMedFragment extends Fragment implements OnAdapterItemClickListener {
 
@@ -36,6 +44,10 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
     private buttonTimePickerAdapter buttonTimePickerAdapter;
     private Button btnSubmitMedData;
     private EditText etMedInstruction, etMedDesc;
+
+    Calendar[] calendar;
+    AlarmManager[] alarmManager;
+    ArrayList<PendingIntent> intentArray;
     ArrayList<Integer> medTimes = new ArrayList<>();
 
     private MedViewModel medViewModel;
@@ -47,6 +59,17 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
         if (getActivity().getApplication() != null) {
             medViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication()))
                     .get(MedViewModel.class);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "tutorialalarmmanager";
+            String description = "Channel for alarm manager";
+            int important = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("tutorialchannel", name, important);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
     }
 
@@ -95,7 +118,8 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
                     singletonMedicine.setMedDesc(medDescription);
                     singletonMedicine.setMedTimes(medTimes);
 
-                    medViewModel.writeMed(singletonMedicine.getMedName(), singletonMedicine.getMedType(), singletonMedicine.getMedDose(), singletonMedicine.getMedFreq(), singletonMedicine.getMedTimes(), singletonMedicine.getMedInstruction(), singletonMedicine.getMedDesc());
+                    medViewModel.writeMed(singletonMedicine.getMedName(), singletonMedicine.getMedType(), singletonMedicine.getMedDose(),
+                            singletonMedicine.getMedFreq(), singletonMedicine.getMedTimes(), singletonMedicine.getMedInstruction(), singletonMedicine.getMedDesc());
 
                     startActivity(new Intent(getActivity(), MainMenuActivity.class));
                 }
@@ -125,8 +149,60 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
         buttonTimePickerAdapter.setMedTimes(medTimes);
         recyclerViewTimePickerButton.setAdapter(buttonTimePickerAdapter);
 
+        ArrayList<Integer> list = new ArrayList<>();
+        list = buttonTimePickerAdapter.getMedTimes();
+
+        int[] hour = new int[list.size()];
+        int[] minute = new int[list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+
+            int timeInMillis = list.get(i);
+
+            hour[i] = timeInMillis / 60 / 60;
+
+            int tempMin = hour[i] % 1 * 60;
+            minute[i] = Math.round(tempMin);
+        }
+
+        setAlarm(list.size(), hour, minute);
+
+        Toast.makeText(getActivity(), "hour = " + hour[0], Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "minute = " + minute[0], Toast.LENGTH_SHORT).show();
+
     }
 
+    private void setAlarm(int size, int[] hour, int[] minute) {
+
+        calendar = new Calendar[size];
+        alarmManager = new AlarmManager[size];
+        intentArray = new ArrayList<PendingIntent>();
+
+        for (int i = 0; i < size; i++){
+
+            calendar[i] = Calendar.getInstance();
+            calendar[i].set(Calendar.HOUR_OF_DAY, hour[i]);
+            calendar[i].set(Calendar.MINUTE, minute[i]);
+            calendar[i].set(Calendar.SECOND, 00);
+            calendar[i].set(Calendar.MILLISECOND, 0);
+
+            alarmManager[i] = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
+            Intent intent = new Intent(getActivity(), AlarmReceiver.class);
+            intent.putExtra("reqCode", i);
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), i, intent, 0);
+
+            alarmManager[i].setRepeating(AlarmManager.RTC_WAKEUP, calendar[i].getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY, pendingIntent);
+
+            intentArray.add(pendingIntent);
+
+        }
+    }
+
+
+    @SuppressLint("InflateParams")
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onAdapterItemClickListener(int position) {

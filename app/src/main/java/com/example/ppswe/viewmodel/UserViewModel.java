@@ -6,10 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.ppswe.model.User;
+import com.example.ppswe.model.user.User;
 import com.example.ppswe.repo.UserRepository;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.example.ppswe.model;
+package com.example.ppswe.model.vitalsign;
 
 import java.util.List;
 

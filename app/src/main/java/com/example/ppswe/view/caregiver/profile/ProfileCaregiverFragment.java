@@ -1,6 +1,5 @@
-package com.example.ppswe.view.patient.profile;
+package com.example.ppswe.view.caregiver.profile;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -22,19 +21,16 @@ import android.widget.TextView;
 import com.example.ppswe.R;
 import com.example.ppswe.model.user.User;
 import com.example.ppswe.view.authentication.LoginActivity;
-import com.example.ppswe.view.patient.MainMenuActivity;
 import com.example.ppswe.viewmodel.UserViewModel;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
-public class ProfileFragment extends Fragment {
+public class ProfileCaregiverFragment extends Fragment {
 
-    private TextView tvUsername, tvEmail, tvPhoneNum, tvPersonalInfo;
-    private ImageButton btnImgLogout, btnImgPersonalInfo;
+    private TextView tvUsername, tvEmail, tvPhoneNum;
+    private ImageButton btnImgLogout;
     private NavController navController;
-    private MaterialAlertDialogBuilder builder;
 
     private UserViewModel userViewModel;
 
@@ -46,29 +42,28 @@ public class ProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getActivity().getApplication() != null) {
+        auth = FirebaseAuth.getInstance();
+
+        if(getActivity().getApplication() != null) {
             userViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication()))
                     .get(UserViewModel.class);
         }
-
-        auth = FirebaseAuth.getInstance();
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        return inflater.inflate(R.layout.fragment_profile_caregiver, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        tvUsername = view.findViewById(R.id.tvUsernameProfile);
-        tvEmail = view.findViewById(R.id.tvEmailProfile);
-        tvPhoneNum = view.findViewById(R.id.tvPhoneNumProfile);
+        tvUsername = view.findViewById(R.id.tvUsernameProfile_caregiver);
+        tvEmail = view.findViewById(R.id.tvEmailProfile_caregiver);
+        tvPhoneNum = view.findViewById(R.id.tvPhoneNumProfile_caregiver);
 
         navController = Navigation.findNavController(view);
 
@@ -92,39 +87,12 @@ public class ProfileFragment extends Fragment {
             Log.d("NULL_POINTER", e.getMessage());
         }
 
-
-        btnImgPersonalInfo = view.findViewById(R.id.imgBtnLatestVitalSign);
-        btnImgPersonalInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navController.navigate(R.id.action_profileFragment_to_personalInfoFragment);
-            }
-        });
-
-
-        btnImgLogout = view.findViewById(R.id.imgBtnLogOut);
-        builder = new MaterialAlertDialogBuilder(getActivity());
-
+        btnImgLogout = view.findViewById(R.id.imgBtnLogOut_profile_caregiver);
         btnImgLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                builder.setTitle("Logout")
-                        .setMessage("Are you sure want to logout?")
-                        .setCancelable(true)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                auth.signOut();
-                                startActivity(new Intent(getActivity(), LoginActivity.class));
-                            }
-                        })
-                        .setNegativeButton("Nope", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.cancel();
-                            }
-                        })
-                        .show();
+                auth.signOut();
+                startActivity(new Intent(getActivity(), LoginActivity.class));
             }
         });
     }

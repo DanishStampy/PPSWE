@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.ppswe.R;
-import com.example.ppswe.model.SingletonVitalSign;
+import com.example.ppswe.model.vitalsign.SingletonVitalSign;
 
 import java.util.List;
 
@@ -57,9 +57,11 @@ public class VitalSign_ResultFragment extends Fragment {
         if(pulseRate > 60 && pulseRate <= 100) {
             result += "The pulse rate is normal. Healthy adults pulse rate ranges from 60 to 100 beats per minute (BPM). ";
         } else if (pulseRate > 100) {
-            result += "The pulse rate is high. The pulse rate higher than 100 beats per minute (BPM). It is also called tachycardia. You may experiencing shortness of breath, dizziness or fainting spells.";
+            result += "The pulse rate is high. The pulse rate higher than 100 beats per minute (BPM). It is also called tachycardia. " +
+                    "You may experiencing shortness of breath, dizziness or fainting spells.";
         } else if (pulseRate < 60) {
-            result += "The pulse rate is low. The pulse rate lower than 60 beats per minute (BPM). It is also called bradycardia. Bradycardia can be life threatening if the heart is unable to maintain a rate that pumps enough oxygen-rich blood throughout the body.";
+            result += "The pulse rate is low. The pulse rate lower than 60 beats per minute (BPM). It is also called bradycardia. " +
+                    "Bradycardia can be life threatening if the heart is unable to maintain a rate that pumps enough oxygen-rich blood throughout the body.";
         }
 
         return result;
@@ -102,11 +104,13 @@ public class VitalSign_ResultFragment extends Fragment {
         double diastolic = BP.get(1);
 
         if((systolic >= 90 && systolic < 120) && (diastolic >=60 && diastolic < 80)) {
-            result += "The systolic and diastolic pressure is normal. Currently, you are free from high and low blood pressure. It is because your BP overall is between 120/80 and 90/60";
+            result += "The systolic and diastolic pressure is normal. Currently, you are free from high and low blood pressure. " +
+                    "It is because your BP overall is between 120/80 and 90/60";
         } else if(systolic < 90 && diastolic < 60) {
             result += "The systolic and diastolic pressure is low. You may have a low blood pressure. It is because your BP overall is lower than 90/60";
         } else if(systolic >= 120 && diastolic <= 80) {
-            result += "The systolic and diastolic pressure is high. You may have a high blood pressure or hypertension. It is because your BP overall is high than 120/80";
+            result += "The systolic and diastolic pressure is high. You may have a high blood pressure or hypertension. " +
+                    "It is because your BP overall is high than 120/80";
         }
 
         return result;

@@ -13,7 +13,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.ppswe.R;
-import com.example.ppswe.model.User;
+import com.example.ppswe.model.user.User;
 import com.example.ppswe.view.caregiver.CaregiverMainActivity;
 import com.example.ppswe.view.patient.MainMenuActivity;
 import com.example.ppswe.viewmodel.AuthViewModel;
@@ -73,9 +73,10 @@ public class RegisterActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()){
                                         User user = new User(username, email, phoneNum, roles);
+                                        String uid = auth.getUid();
 
                                         firestore.collection("users")
-                                                .document(auth.getUid())
+                                                .document(uid)
                                                 .set(user)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
@@ -153,7 +154,7 @@ public class RegisterActivity extends AppCompatActivity {
             etUsername.setError("Please enter the username.");
             return false;
 
-        } else if (!password.isEmpty()) {
+        } else if (password.isEmpty()) {
             etPassword.requestFocus();
             etPassword.setError("Please enter the password.");
             return false;

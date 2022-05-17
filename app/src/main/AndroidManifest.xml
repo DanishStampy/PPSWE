@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PPSWE">
         <activity
+            android:name=".view.patient.ReportPatientActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.patient.medicine.MedDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.caregiver.MedicationListActivity"
             android:exported="false" />
         <activity
@@ -45,6 +51,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".adapter.reciever.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

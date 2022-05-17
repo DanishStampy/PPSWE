@@ -18,7 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.ppswe.R;
-import com.example.ppswe.model.SingletonVitalSign;
+import com.example.ppswe.model.vitalsign.SingletonVitalSign;
 import com.example.ppswe.viewmodel.VitalViewModel;
 import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.Slider;

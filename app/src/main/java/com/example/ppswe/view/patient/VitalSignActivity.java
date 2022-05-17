@@ -34,6 +34,10 @@ public class VitalSignActivity extends AppCompatActivity {
                 case R.id.vitalSign:
                     return true;
 
+                case R.id.report:
+                    startActivity(new Intent(getApplicationContext(), ReportPatientActivity.class));
+                    return true;
+
                 case R.id.home:
                     startActivity(new Intent(getApplicationContext(), MainMenuActivity.class));
                     return true;

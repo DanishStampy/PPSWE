@@ -17,7 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.ppswe.R;
-import com.example.ppswe.model.SingletonVitalSign;
+import com.example.ppswe.model.vitalsign.SingletonVitalSign;
 
 public class Weight_HeightFragment extends Fragment {
 

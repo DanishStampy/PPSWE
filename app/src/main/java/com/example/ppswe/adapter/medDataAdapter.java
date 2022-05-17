@@ -1,23 +1,19 @@
 package com.example.ppswe.adapter;
 
 import android.annotation.SuppressLint;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ppswe.R;
-import com.example.ppswe.model.Medicine;
-import com.example.ppswe.model.MedicineView;
+import com.example.ppswe.model.medicine.MedicineView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class medDataAdapter extends RecyclerView.Adapter<medDataAdapter.DesignViewHolder> {
 
@@ -25,9 +21,11 @@ public class medDataAdapter extends RecyclerView.Adapter<medDataAdapter.DesignVi
     private static final int VIEW_TYPE_EMPTY = 1;
 
     ArrayList<MedicineView> medicineList;
+    private OnMedDetailListener onMedDetailListener;
 
-    public medDataAdapter(ArrayList<MedicineView> medicineList) {
+    public medDataAdapter(ArrayList<MedicineView> medicineList, OnMedDetailListener onMedDetailListener) {
         this.medicineList = medicineList;
+        this.onMedDetailListener = onMedDetailListener;
         Log.d("GET_COUNT", "COUNT IS " + medicineList.isEmpty());
     }
 
@@ -42,7 +40,7 @@ public class medDataAdapter extends RecyclerView.Adapter<medDataAdapter.DesignVi
         } else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_med_data, parent, false);
         }
-        medDataAdapter.DesignViewHolder DesignViewHolder = new medDataAdapter.DesignViewHolder(view);
+        medDataAdapter.DesignViewHolder DesignViewHolder = new medDataAdapter.DesignViewHolder(view, onMedDetailListener);
 
         return DesignViewHolder;
     }
@@ -108,9 +106,12 @@ public class medDataAdapter extends RecyclerView.Adapter<medDataAdapter.DesignVi
     public class DesignViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView medName, medFullDesc, medTime;
+        OnMedDetailListener onMedDetailListener;
 
-        public DesignViewHolder(@NonNull View itemView) {
+        public DesignViewHolder(@NonNull View itemView, OnMedDetailListener onMedDetailListener) {
             super(itemView);
+
+            this.onMedDetailListener = onMedDetailListener;
 
             if (!medicineList.isEmpty()){
                 medName = itemView.findViewById(R.id.tvDisplayMedName);
@@ -118,12 +119,16 @@ public class medDataAdapter extends RecyclerView.Adapter<medDataAdapter.DesignVi
                 medTime = itemView.findViewById(R.id.tvDisplayMedTime);
             }
 
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
+            onMedDetailListener.onMedDetailClick(getAdapterPosition(), medicineList.get(getAdapterPosition()).getMedID());
         }
     }
 
-
+    public interface OnMedDetailListener{
+        void onMedDetailClick(int position, String medID);
+    }
 }

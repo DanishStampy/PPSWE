@@ -6,9 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.ppswe.model.VitalSign;
+import com.example.ppswe.model.vitalsign.VitalSign;
 import com.example.ppswe.repo.VitalSignRepository;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
