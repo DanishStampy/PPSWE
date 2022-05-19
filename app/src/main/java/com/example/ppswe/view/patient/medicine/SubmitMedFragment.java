@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
     AlarmManager[] alarmManager;
     ArrayList<PendingIntent> intentArray;
     ArrayList<Integer> medTimes = new ArrayList<>();
+    ArrayList<Integer> list = new ArrayList<>();
 
     private MedViewModel medViewModel;
 
@@ -59,17 +61,6 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
         if (getActivity().getApplication() != null) {
             medViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getActivity().getApplication()))
                     .get(MedViewModel.class);
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CharSequence name = "tutorialalarmmanager";
-            String description = "Channel for alarm manager";
-            int important = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel("tutorialchannel", name, important);
-            channel.setDescription(description);
-
-            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
         }
     }
 
@@ -83,6 +74,9 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Init notification channel
+        createNoficationChannel();
 
         SingletonMedicine singletonMedicine = SingletonMedicine.getInstance();
         int btnCounter = singletonMedicine.getMedFreq();
@@ -99,6 +93,7 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
             medTimes.add(0);
         }
 
+        // Set time picker on button in recyclerview
         timePicker();
 
         etMedInstruction = view.findViewById(R.id.etMedInstruction);
@@ -113,6 +108,17 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
                 String medDescription = etMedDesc.getText().toString().trim();
 
                 if (validateInfo(medInstruction, medTimes)) {
+                    int[] hour = new int[list.size()];
+                    int[] minute = new int[list.size()];
+
+                    for (int i = 0; i < list.size(); i++) {
+                        int timeInMillis = list.get(i);
+                        hour[i] = timeInMillis / 60 / 60;
+
+                        int tempMin = hour[i] % 1 * 60;
+                        minute[i] = Math.round(tempMin);
+                    }
+                    setAlarm(list.size(), hour, minute);
 
                     singletonMedicine.setMedInstruction(medInstruction);
                     singletonMedicine.setMedDesc(medDescription);
@@ -125,6 +131,19 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
                 }
             }
         });
+    }
+
+    private void createNoficationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "medicationChannel";
+            String description = "Channel for alarm manager";
+            int important = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("medicationChannel", name, important);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     private Boolean validateInfo(String medInstruction, ArrayList<Integer> medTimes) {
@@ -149,29 +168,10 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
         buttonTimePickerAdapter.setMedTimes(medTimes);
         recyclerViewTimePickerButton.setAdapter(buttonTimePickerAdapter);
 
-        ArrayList<Integer> list = new ArrayList<>();
         list = buttonTimePickerAdapter.getMedTimes();
-
-        int[] hour = new int[list.size()];
-        int[] minute = new int[list.size()];
-
-        for (int i = 0; i < list.size(); i++) {
-
-            int timeInMillis = list.get(i);
-
-            hour[i] = timeInMillis / 60 / 60;
-
-            int tempMin = hour[i] % 1 * 60;
-            minute[i] = Math.round(tempMin);
-        }
-
-        setAlarm(list.size(), hour, minute);
-
-        Toast.makeText(getActivity(), "hour = " + hour[0], Toast.LENGTH_SHORT).show();
-        Toast.makeText(getActivity(), "minute = " + minute[0], Toast.LENGTH_SHORT).show();
-
     }
 
+    // method to set alarm
     private void setAlarm(int size, int[] hour, int[] minute) {
 
         calendar = new Calendar[size];
@@ -184,7 +184,7 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
             calendar[i].set(Calendar.HOUR_OF_DAY, hour[i]);
             calendar[i].set(Calendar.MINUTE, minute[i]);
             calendar[i].set(Calendar.SECOND, 00);
-            calendar[i].set(Calendar.MILLISECOND, 0);
+            calendar[i].set(Calendar.MILLISECOND, 00);
 
             alarmManager[i] = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 
@@ -193,11 +193,10 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), i, intent, 0);
 
-            alarmManager[i].setRepeating(AlarmManager.RTC_WAKEUP, calendar[i].getTimeInMillis(),
+            alarmManager[i].setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar[i].getTimeInMillis(),
                     AlarmManager.INTERVAL_DAY, pendingIntent);
 
             intentArray.add(pendingIntent);
-
         }
     }
 
@@ -207,7 +206,7 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
     @Override
     public void onAdapterItemClickListener(int position) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        Toast.makeText(getContext(), "deez"+position, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getContext(), "deez"+position, Toast.LENGTH_SHORT).show();
 
         View customLayout;
 

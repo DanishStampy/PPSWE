@@ -25,9 +25,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Log.d("ALARM", "Alarm fired with request code: " +reqCode);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "tutorialchannel")
-                .setSmallIcon(R.drawable.ic_launcher_background)
-                .setContentTitle("Tutorial Alarm Manager")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "medicationChannel")
+                .setContentTitle("PPSWE Medication Reminder")
                 .setContentText("This is first notification")
                 .setAutoCancel(true)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)

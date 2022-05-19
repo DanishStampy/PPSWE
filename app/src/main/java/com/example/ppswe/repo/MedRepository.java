@@ -1,5 +1,6 @@
 package com.example.ppswe.repo;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.os.Build;
 import android.util.Log;
@@ -12,6 +13,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.ppswe.model.medicine.Medicine;
 import com.example.ppswe.model.medicine.MedicineStatus;
 import com.example.ppswe.model.medicine.MedicineView;
+import com.example.ppswe.model.report.ReportFile;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,8 +28,11 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,6 +41,7 @@ public class MedRepository {
     private Application application;
     private MutableLiveData<ArrayList<MedicineView>> medicineArrayList;
     private MutableLiveData<ArrayList<Integer>> reportStatusCountList;
+    private MutableLiveData<ReportFile> reportDetail;
 
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
@@ -53,8 +59,10 @@ public class MedRepository {
 
     public MedRepository(Application application) {
         this.application = application;
+
         medicineArrayList = new MutableLiveData<>();
         reportStatusCountList = new MutableLiveData<>();
+        reportDetail = new MutableLiveData<>();
 
         // Init firebase auth and firestore
         auth = FirebaseAuth.getInstance();
@@ -224,5 +232,33 @@ public class MedRepository {
                 });
 
         return reportStatusCountList;
+    }
+
+    // Get all date from med history
+    public MutableLiveData<ReportFile> getReportDetail() {
+
+        medHistoryRef.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            ReportFile file;
+
+                            ArrayList<String> medHistoryDate = new ArrayList<>();
+                            ArrayList<String> medStatus = new ArrayList<>();
+                            ArrayList<String> medTimes = new ArrayList<>();
+
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                medHistoryDate.add(doc.getString("date"));
+                                medStatus.add(doc.getString("medStatus"));
+                                medTimes.add(doc.getString("medTime"));
+                            }
+
+                            file = new ReportFile(medHistoryDate, medStatus, medTimes);
+                            reportDetail.postValue(file);
+                        }
+                    }
+                });
+        return reportDetail;
     }
 }

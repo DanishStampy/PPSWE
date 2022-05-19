@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.ppswe.model.medicine.MedicineView;
+import com.example.ppswe.model.report.ReportFile;
 import com.example.ppswe.repo.MedRepository;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class MedViewModel extends AndroidViewModel {
     private MedRepository repository;
     private MutableLiveData<ArrayList<MedicineView>> medData;
     private MutableLiveData<ArrayList<Integer>> statusCountList;
+    private MutableLiveData<ReportFile> reportData;
 
     public MedViewModel(@NonNull Application application) {
         super(application);
@@ -26,6 +28,7 @@ public class MedViewModel extends AndroidViewModel {
         repository = new MedRepository(application);
         medData = repository.getMedicineArrayList();
         statusCountList = repository.getReportStatusCountList();
+        reportData = repository.getReportDetail();
     }
 
     public void writeMed(String medName, String medType, int medDose, int medFreq, List<Integer> medTimes, String medInstruction, String medDesc){
@@ -43,5 +46,9 @@ public class MedViewModel extends AndroidViewModel {
 
     public MutableLiveData<ArrayList<Integer>> getStatusCountList() {
         return statusCountList;
+    }
+
+    public MutableLiveData<ReportFile> getReportData() {
+        return reportData;
     }
 }
