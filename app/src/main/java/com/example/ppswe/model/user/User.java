@@ -6,6 +6,7 @@ public class User {
     private String email;
     private String phoneNumber;
     private String roles;
+    private String patientEmail;
 
     public User() {
     }
@@ -32,5 +33,13 @@ public class User {
 
     public String getRoles() {
         return roles;
+    }
+
+    public String getPatientEmail() {
+        return patientEmail;
+    }
+
+    public void setPatientEmail(String patientEmail) {
+        this.patientEmail = patientEmail;
     }
 }

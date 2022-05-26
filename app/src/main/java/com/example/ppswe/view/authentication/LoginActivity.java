@@ -9,8 +9,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ppswe.R;
+import com.example.ppswe.model.user.SingletonStatusPatient;
 import com.example.ppswe.view.caregiver.CaregiverMainActivity;
 import com.example.ppswe.view.patient.MainMenuActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -79,12 +81,12 @@ public class LoginActivity extends AppCompatActivity {
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-                                                    showRegisterActivity();
+                                                    Toast.makeText(LoginActivity.this, "Something went wrong!", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
 
                                 } else {
-                                    showRegisterActivity();
+                                    Toast.makeText(LoginActivity.this, "Task is not successful!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -103,11 +105,13 @@ public class LoginActivity extends AppCompatActivity {
     private void showPatientActivity(){
         Intent intent = new Intent(this, MainMenuActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private void showCaregiverActivity(){
         Intent intent = new Intent(this, CaregiverMainActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private void showRegisterActivity(){

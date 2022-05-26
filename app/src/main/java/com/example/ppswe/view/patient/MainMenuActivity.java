@@ -74,21 +74,7 @@ public class MainMenuActivity extends AppCompatActivity implements medDataAdapte
         tvTodayDate = findViewById(R.id.tvTodayDate);
         tvTodayDate.setText(todayDate());
 
-        // Get user roles
-        firestore.collection("users")
-                .document(uid)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        role = documentSnapshot.getString("roles");
-                        Log.d("USER_ROLE", "My role is " + role);
-                        Log.d("BOOLEAN_ROLE", "That are " + role.equals("patient"));
 
-                        if(role.equals("caregiver"))
-                            showCaregiverActivity();
-                    }
-                });
 
         // recyclerview
         recyclerViewMedList = findViewById(R.id.rcMedList);
@@ -180,18 +166,6 @@ public class MainMenuActivity extends AppCompatActivity implements medDataAdapte
         result += day;
 
         return result;
-    }
-
-    private void showPatientActivity(){
-        Intent intent = new Intent(this, MainMenuActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    private void showCaregiverActivity(){
-        Intent intent = new Intent(this, CaregiverMainActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     public void showLoggedOut () {

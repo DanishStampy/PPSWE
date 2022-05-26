@@ -73,6 +73,9 @@ public class RegisterActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()){
                                         User user = new User(username, email, phoneNum, roles);
+                                        if (roles.equals("caregiver")) {
+                                            user.setPatientEmail("empty");
+                                        }
                                         String uid = auth.getUid();
 
                                         firestore.collection("users")

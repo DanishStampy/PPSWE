@@ -87,6 +87,7 @@ public class ReportPatientActivity extends AppCompatActivity {
         medViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(MedViewModel.class);
         medViewModel.getStatusCountList().observe(this, statusCount -> {
             statusCountList = statusCount;
+            Log.d("CHECK_COUNT", " = " + statusCountList.toString());
             setupPieChart();
             loadPieChartData(statusCountList);
         });

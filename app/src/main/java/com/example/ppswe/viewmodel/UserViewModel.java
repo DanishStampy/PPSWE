@@ -26,4 +26,8 @@ public class UserViewModel extends AndroidViewModel {
     public MutableLiveData<List<User>> getUserMutableLiveData() {
         return userMutableLiveData;
     }
+
+    public void setPatientEmail() {
+        repository.setPatientEmailSingleton();
+    }
 }

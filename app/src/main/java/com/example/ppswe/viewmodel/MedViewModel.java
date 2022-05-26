@@ -19,6 +19,7 @@ public class MedViewModel extends AndroidViewModel {
 
     private MedRepository repository;
     private MutableLiveData<ArrayList<MedicineView>> medData;
+    private MutableLiveData<ArrayList<MedicineView>> medDataCaregiver;
     private MutableLiveData<ArrayList<Integer>> statusCountList;
     private MutableLiveData<ReportFile> reportData;
 
@@ -29,6 +30,9 @@ public class MedViewModel extends AndroidViewModel {
         medData = repository.getMedicineArrayList();
         statusCountList = repository.getReportStatusCountList();
         reportData = repository.getReportDetail();
+
+        // Caregiver
+        medDataCaregiver = repository.getMedicineArrayListCaregiver();
     }
 
     public void writeMed(String medName, String medType, int medDose, int medFreq, List<Integer> medTimes, String medInstruction, String medDesc){
@@ -50,5 +54,9 @@ public class MedViewModel extends AndroidViewModel {
 
     public MutableLiveData<ReportFile> getReportData() {
         return reportData;
+    }
+
+    public MutableLiveData<ArrayList<MedicineView>> getMedDataCaregiver() {
+        return medDataCaregiver;
     }
 }

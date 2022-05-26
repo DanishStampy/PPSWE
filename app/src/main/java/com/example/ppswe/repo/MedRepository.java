@@ -14,20 +14,24 @@ import com.example.ppswe.model.medicine.Medicine;
 import com.example.ppswe.model.medicine.MedicineStatus;
 import com.example.ppswe.model.medicine.MedicineView;
 import com.example.ppswe.model.report.ReportFile;
+import com.example.ppswe.model.user.SingletonStatusPatient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,11 +39,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class MedRepository {
 
     private Application application;
     private MutableLiveData<ArrayList<MedicineView>> medicineArrayList;
+    private MutableLiveData<ArrayList<MedicineView>> medicineArrayListCaregiver;
     private MutableLiveData<ArrayList<Integer>> reportStatusCountList;
     private MutableLiveData<ReportFile> reportDetail;
 
@@ -47,8 +53,11 @@ public class MedRepository {
     private FirebaseFirestore firestore;
 
     private CollectionReference medRef;
+    private CollectionReference medRefCaregiver;
     private DocumentReference userRef;
     private CollectionReference medHistoryRef;
+
+    private SingletonStatusPatient singletonStatusPatient;
 
     private String uid;
     public String existence;
@@ -63,10 +72,12 @@ public class MedRepository {
         medicineArrayList = new MutableLiveData<>();
         reportStatusCountList = new MutableLiveData<>();
         reportDetail = new MutableLiveData<>();
+        medicineArrayListCaregiver = new MutableLiveData<>();
 
         // Init firebase auth and firestore
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
+        singletonStatusPatient = SingletonStatusPatient.getInstance();
 
         if (auth.getCurrentUser() != null) {
             uid = auth.getUid();
@@ -80,6 +91,11 @@ public class MedRepository {
 
             // Medicine history doc reference
             medHistoryRef = userRef.collection("medHistory");
+
+            // Medicine list for certain patient
+            medRefCaregiver = firestore.collection("users");
+
+
         }
     }
 
@@ -134,22 +150,6 @@ public class MedRepository {
                         Log.w("FAIL", "Error writing doc", e);
                     }
                 });
-
-//        medHistoryRef.get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot doc : task.getResult()){
-//                                if (doc.getString("medId").equals(medId) && doc.getString("date").equals(status.getDate()) && doc.getString("medTime").equals(medTime)){
-//                                    Log.d("Update_medstatus", statusTemp);
-//                                }
-//                            }
-//                        } else {
-//                            Log.d("ERR", "Error getting doc: ", task.getException());
-//                        }
-//                    }
-//                });
     }
 
 
@@ -176,24 +176,75 @@ public class MedRepository {
                                 medicineList.add(medicineView);
                             }
 
-                            //Log.d("EXIST", "ada je = " + medicineArrayList.size());
+                            Log.d("EXIST", "ada je = " + medicineList.size());
                         }
                     }
                     medicineArrayList.postValue(medicineList);
-                } else {
-                    return ;
                 }
-
             }
         });
         //Log.d("MED_COUNT", "This is = " + medicineArrayList.size());
         return medicineArrayList;
     }
 
+    // Get all med caregiver
+    public MutableLiveData<ArrayList<MedicineView>> getMedicineArrayListCaregiver() {
+
+        Log.d("TEST", "HELLOO?");
+        Query queryPatientEmail = medRefCaregiver.whereEqualTo("email", singletonStatusPatient.getPatientEmail());
+
+        queryPatientEmail.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                Log.d("TEST", "INSIDE?");
+                if (value != null) {
+                    Log.d("TEST", "NOT NULL?");
+                    ArrayList<MedicineView> medicineList = new ArrayList<>();
+                    for (DocumentChange doc : value.getDocumentChanges()) {
+
+                        doc.getDocument().getReference().collection("medLists")
+                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                                        ArrayList<Integer> medicineTime;
+                                        Log.d("TEST", "EXISTS?");
+                                        if (value != null){
+                                            for (QueryDocumentSnapshot doc : value) {
+                                                if (doc != null) {
+                                                    medicineTime = (ArrayList<Integer>) doc.get("medTimes");
+                                                    //Log.d("MED_TIMES", medicineTime.toString());
+
+                                                    for (int i = 0 ; i < medicineTime.size() ; i++){
+                                                        MedicineView medicineView = new MedicineView(doc.getId(), doc.getString("medName"), doc.getString("medInstruction"), doc.getLong("medDose").intValue(), doc.getString("medType") );
+
+                                                        // Cast from long into integer
+                                                        medicineView.setMedTime(((Number)medicineTime.get(i)).intValue());
+                                                        medicineList.add(medicineView);
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                });
+                    }
+                    Log.d("MED_COUNT", "This is = " + medicineList.size());
+                    medicineArrayListCaregiver.postValue(medicineList);
+                } else {
+                    Log.d("TEST", "NOPE?");
+                }
+            }
+        });
+        return medicineArrayListCaregiver;
+    }
+
+    // get important data for report: count status
     public MutableLiveData<ArrayList<Integer>> getReportStatusCountList() {
 
         medHistoryRef.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
@@ -201,33 +252,59 @@ public class MedRepository {
                                     Arrays.asList(0, 0, 0)  // TAKEN, SKIP, POSTPONE
                             );
 
+                            ArrayList<String> currentDates = getAllDateForWeeks();
+
                             for (QueryDocumentSnapshot doc : task.getResult()){
 
-                                switch (Objects.requireNonNull(doc.getString("medStatus"))){
+                                String status = doc.getString("medStatus");
+                                String date = doc.getString("date");
 
-                                    case "taken":
-                                        int takenLatestCount = count.get(0);
-                                        takenLatestCount++;
-                                        count.set(0, takenLatestCount);
-                                        break;
+                                if (currentDates.contains(date)) {
+                                    switch (status){
 
-                                    case "skip":
-                                        int skipLatestCount = count.get(1);
-                                        skipLatestCount++;
-                                        count.set(1, skipLatestCount);
-                                        break;
+                                        case "taken":
+                                            int takenLatestCount = count.get(0);
+                                            takenLatestCount++;
+                                            count.set(0, takenLatestCount);
+                                            break;
 
-                                    case "postpone":
-                                        int postponeLatestCount = count.get(2);
-                                        postponeLatestCount++;
-                                        count.set(2, postponeLatestCount);
-                                        break;
+                                        case "skip":
+                                            int skipLatestCount = count.get(1);
+                                            skipLatestCount++;
+                                            count.set(1, skipLatestCount);
+                                            break;
+
+                                        case "postpone":
+                                            int postponeLatestCount = count.get(2);
+                                            postponeLatestCount++;
+                                            count.set(2, postponeLatestCount);
+                                            break;
+                                    }
                                 }
-                                reportStatusCountList.postValue(count);
                             }
+                            reportStatusCountList.postValue(count);
                         } else {
                             Log.d("ERR", "Error getting doc: ", task.getException());
                         }
+                    }
+
+                    private ArrayList<String> getAllDateForWeeks() {
+                        ArrayList<String> resultList = new ArrayList<>();
+
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+                        for (int i = 0; i >= -6; i--) {
+
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.add(Calendar.DATE, i);
+                            Date currentDate = calendar.getTime();
+                            String result = format.format(currentDate);
+
+                            resultList.add(result);
+                        }
+
+
+                        return resultList;
                     }
                 });
 

@@ -1,6 +1,7 @@
 package com.example.ppswe.adapter;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,41 +15,36 @@ import com.example.ppswe.model.medicine.MedicineView;
 
 import java.util.ArrayList;
 
-public class medDataAdapter extends RecyclerView.Adapter<medDataAdapter.DesignViewHolder> {
+public class medDataAdapterCaregiver extends RecyclerView.Adapter<medDataAdapterCaregiver.DesignViewHolder> {
 
     private static final int VIEW_TYPE_MEDICINE = 0;
     private static final int VIEW_TYPE_EMPTY = 1;
 
     ArrayList<MedicineView> medicineList;
-    private OnMedDetailListener onMedDetailListener;
 
-    public medDataAdapter(ArrayList<MedicineView> medicineList, OnMedDetailListener onMedDetailListener) {
+    public medDataAdapterCaregiver(ArrayList<MedicineView> medicineList) {
         this.medicineList = medicineList;
-        this.onMedDetailListener = onMedDetailListener;
-        //Log.d("GET_COUNT", "COUNT IS " + medicineList.isEmpty());
+        Log.d("GET_COUNT", "COUNT IS " + medicineList.isEmpty());
     }
 
     @NonNull
     @Override
     public DesignViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view;
 
         if (viewType == VIEW_TYPE_EMPTY){
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_med_data, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.empty_med_data_patient, parent, false);
         } else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.single_med_data, parent, false);
         }
-        medDataAdapter.DesignViewHolder DesignViewHolder = new medDataAdapter.DesignViewHolder(view, onMedDetailListener);
+        medDataAdapterCaregiver.DesignViewHolder DesignViewHolder = new medDataAdapterCaregiver.DesignViewHolder(view);
 
         return DesignViewHolder;
     }
 
-
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull DesignViewHolder holder, int position) {
-
+    public void onBindViewHolder(@NonNull medDataAdapterCaregiver.DesignViewHolder holder, int position) {
         if (!medicineList.isEmpty()){
             String am_pm = "AM";
 
@@ -79,7 +75,6 @@ public class medDataAdapter extends RecyclerView.Adapter<medDataAdapter.DesignVi
 
             //holder.medTime.setText(medicineList.get(position).getMedTime() + "AM");
         }
-
     }
 
     @Override
@@ -100,33 +95,18 @@ public class medDataAdapter extends RecyclerView.Adapter<medDataAdapter.DesignVi
         }
     }
 
-
-    //this will hold the View Design
-    public class DesignViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class DesignViewHolder extends RecyclerView.ViewHolder {
 
         TextView medName, medFullDesc, medTime;
-        OnMedDetailListener onMedDetailListener;
 
-        public DesignViewHolder(@NonNull View itemView, OnMedDetailListener onMedDetailListener) {
+        public DesignViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            this.onMedDetailListener = onMedDetailListener;
 
             if (!medicineList.isEmpty()){
                 medName = itemView.findViewById(R.id.tvDisplayMedName);
                 medFullDesc = itemView.findViewById(R.id.tvDisplaMedDescription);
                 medTime = itemView.findViewById(R.id.tvDisplayMedTime);
-                itemView.setOnClickListener(this);
             }
         }
-
-        @Override
-        public void onClick(View view) {
-            onMedDetailListener.onMedDetailClick(getAdapterPosition(), medicineList.get(getAdapterPosition()).getMedID());
-        }
-    }
-
-    public interface OnMedDetailListener{
-        void onMedDetailClick(int position, String medID);
     }
 }
