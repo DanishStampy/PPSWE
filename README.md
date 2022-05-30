@@ -1,5 +1,5 @@
 <p align="center">
-<img src="ppswe-logo.png" width="300" alt="PPSWE Logo">
+<img src="logo_ppswe.png" width="300" alt="PPSWE Logo">
 </p>
 
 ## About PPSWE
