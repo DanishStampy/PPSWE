@@ -104,4 +104,21 @@ public class UserRepository {
                     });
         }
     }
+
+    public String setCaregiverEmail(String email) {
+        String result = "";
+
+        userCollection.whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+
+                        }
+                    }
+                });
+
+        return result;
+    }
 }

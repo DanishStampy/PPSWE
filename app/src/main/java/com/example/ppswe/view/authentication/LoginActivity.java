@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
                                             });
 
                                 } else {
-                                    Toast.makeText(LoginActivity.this, "Task is not successful!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "User account doesn't exist! Please register one new account.", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });

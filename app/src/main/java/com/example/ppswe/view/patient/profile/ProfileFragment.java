@@ -32,7 +32,7 @@ import java.util.List;
 public class ProfileFragment extends Fragment {
 
     private TextView tvUsername, tvEmail, tvPhoneNum, tvPersonalInfo;
-    private ImageButton btnImgLogout, btnImgPersonalInfo;
+    private ImageButton btnImgLogout, btnImgPersonalInfo, btnImgAddCaregiver;
     private NavController navController;
     private MaterialAlertDialogBuilder builder;
 
@@ -101,6 +101,14 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+
+        btnImgAddCaregiver = view.findViewById(R.id.imgBtnAddCaregiver);
+        btnImgAddCaregiver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navController.navigate(R.id.action_profileFragment_to_syncCaregiverFragment);
+            }
+        });
 
         btnImgLogout = view.findViewById(R.id.imgBtnLogOut);
         builder = new MaterialAlertDialogBuilder(getActivity());
