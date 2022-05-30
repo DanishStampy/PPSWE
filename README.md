@@ -1,5 +1,5 @@
 <p align="center">
-<img src="public/img/ukmads-logo.png" width="300" alt="PPSWE Logo">
+<img src="ppswe-logo.png" width="300" alt="PPSWE Logo">
 </p>
 
 ## About PPSWE
