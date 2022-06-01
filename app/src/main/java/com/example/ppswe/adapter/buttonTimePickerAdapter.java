@@ -44,8 +44,8 @@ public class buttonTimePickerAdapter extends RecyclerView.Adapter<buttonTimePick
     @NonNull
     @Override
     public DesignViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.btn_timepicker,parent,false);
-        DesignViewHolder DesignViewHolder=new DesignViewHolder(view);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.btn_timepicker, parent,false);
+        DesignViewHolder DesignViewHolder = new DesignViewHolder(view);
 
         return DesignViewHolder;
     }

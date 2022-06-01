@@ -103,7 +103,7 @@ public class medDataAdapterCaregiver extends RecyclerView.Adapter<medDataAdapter
             super(itemView);
 
             if (!medicineList.isEmpty()){
-                medName = itemView.findViewById(R.id.tvDisplayMedName);
+                medName = itemView.findViewById(R.id.tvDisplaySingleMedInfo);
                 medFullDesc = itemView.findViewById(R.id.tvDisplaMedDescription);
                 medTime = itemView.findViewById(R.id.tvDisplayMedTime);
             }

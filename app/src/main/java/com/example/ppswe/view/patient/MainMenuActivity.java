@@ -12,8 +12,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ppswe.R;
 import com.example.ppswe.adapter.medDataAdapter;
@@ -36,13 +38,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class MainMenuActivity extends AppCompatActivity implements medDataAdapter.OnMedDetailListener {
+public class MainMenuActivity extends AppCompatActivity implements medDataAdapter.OnMedDetailListener, medDataAdapter.OnMedDeleteListener {
 
     private ImageButton imgBtnLogout;
     private BottomNavigationView bottomNavigationView;
     private RecyclerView recyclerViewMedList;
     private MaterialAlertDialogBuilder builder;
     private TextView tvTodayDate;
+    private Button btnListAllMed;
 
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
@@ -74,7 +77,13 @@ public class MainMenuActivity extends AppCompatActivity implements medDataAdapte
         tvTodayDate = findViewById(R.id.tvTodayDate);
         tvTodayDate.setText(todayDate());
 
-
+        btnListAllMed = findViewById(R.id.btnMedicationList);
+        btnListAllMed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainMenuActivity.this, ListMedicineActivity.class));
+            }
+        });
 
         // recyclerview
         recyclerViewMedList = findViewById(R.id.rcMedList);
@@ -88,9 +97,12 @@ public class MainMenuActivity extends AppCompatActivity implements medDataAdapte
         //Log.d("TEST_MED_DATA", "This is = " + medViewModel.getMedData().size());
         medViewModel.getMedData().observe(this, medData-> {
             medicineViews = medData;
-            medDataAdapter = new medDataAdapter(medicineViews, this);
+            medDataAdapter = new medDataAdapter(medicineViews, this, this);
             recyclerViewMedList.setAdapter(medDataAdapter);
 
+            if (medicineViews.size() == 0) {
+                btnListAllMed.setVisibility(View.GONE);
+            }
             //Log.d("MED_DATA", medicineViews.get(1).getMedID());
         });
 
@@ -180,5 +192,34 @@ public class MainMenuActivity extends AppCompatActivity implements medDataAdapte
         Intent intent = new Intent(this, MedDetailActivity.class);
         intent.putExtra("med_id", medID);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onMedDeleteLongClick(int position, String medId) {
+
+        String[] split = medId.split("\\.");
+        String id = split[0].concat(".").concat(split[1]);
+        int time = Integer.parseInt(split[split.length-1]);
+
+        builder = new MaterialAlertDialogBuilder(this);
+        builder.setTitle("Delete "+split[1].toLowerCase()+" time")
+                .setMessage("Are you sure want to delete?")
+                .setCancelable(true)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        medViewModel.deleteMedTime(id, time);
+                        Toast.makeText(MainMenuActivity.this, "Successfully delete the time for "+split[1].toLowerCase(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Nope", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                })
+                .show();
+
+        return true;
     }
 }

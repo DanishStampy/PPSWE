@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.ppswe.model.medicine.Medicine;
 import com.example.ppswe.model.medicine.MedicineView;
 import com.example.ppswe.model.report.ReportFile;
 import com.example.ppswe.repo.MedRepository;
@@ -22,6 +23,7 @@ public class MedViewModel extends AndroidViewModel {
     private MutableLiveData<ArrayList<MedicineView>> medDataCaregiver;
     private MutableLiveData<ArrayList<Integer>> statusCountList;
     private MutableLiveData<ReportFile> reportData;
+    private MutableLiveData<ArrayList<Medicine>> medListData;
 
     public MedViewModel(@NonNull Application application) {
         super(application);
@@ -30,9 +32,14 @@ public class MedViewModel extends AndroidViewModel {
         medData = repository.getMedicineArrayList();
         statusCountList = repository.getReportStatusCountList();
         reportData = repository.getReportDetail();
+        medListData = repository.getMedicineDataArrayList();
 
         // Caregiver
         medDataCaregiver = repository.getMedicineArrayListCaregiver();
+    }
+
+    public void deleteMedTime(String medId, int medTime) {
+        repository.deleteMedTime(medId, medTime);
     }
 
     public void writeMed(String medName, String medType, int medDose, int medFreq, List<Integer> medTimes, String medInstruction, String medDesc){
@@ -42,6 +49,10 @@ public class MedViewModel extends AndroidViewModel {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void updateMedStatus(int i, String medId, String medTime) {
         repository.updateMedStatus(i, medId, medTime);
+    }
+
+    public MutableLiveData<ArrayList<Medicine>> getMedListData() {
+        return medListData;
     }
 
     public MutableLiveData<ArrayList<MedicineView>> getMedData() {

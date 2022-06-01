@@ -25,6 +25,7 @@ import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -48,6 +49,7 @@ public class MedRepository {
     private MutableLiveData<ArrayList<MedicineView>> medicineArrayListCaregiver;
     private MutableLiveData<ArrayList<Integer>> reportStatusCountList;
     private MutableLiveData<ReportFile> reportDetail;
+    private MutableLiveData<ArrayList<Medicine>> medicineDataArrayList;
 
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
@@ -73,6 +75,7 @@ public class MedRepository {
         reportStatusCountList = new MutableLiveData<>();
         reportDetail = new MutableLiveData<>();
         medicineArrayListCaregiver = new MutableLiveData<>();
+        medicineDataArrayList = new MutableLiveData<>();
 
         // Init firebase auth and firestore
         auth = FirebaseAuth.getInstance();
@@ -337,5 +340,41 @@ public class MedRepository {
                     }
                 });
         return reportDetail;
+    }
+
+    // Delete specific med time
+    public void deleteMedTime(String medId, int medTime) {
+
+        medRef.document(medId)
+                .update("medTimes", FieldValue.arrayRemove(medTime))
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d("DELETE_MEDTIME", "SUCCESSFULLY DELETED!");
+                    }
+                });
+    }
+
+    // get all med data details
+    // no time separation
+    public MutableLiveData<ArrayList<Medicine>> getMedicineDataArrayList() {
+
+        medRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                ArrayList<Medicine> listData = new ArrayList<>();
+
+                if (value != null){
+                    for (QueryDocumentSnapshot doc : value) {
+                        if (doc != null) {
+                            listData.add(doc.toObject(Medicine.class));
+                        }
+                    }
+                    medicineDataArrayList.postValue(listData);
+                }
+            }
+        });
+
+        return medicineDataArrayList;
     }
 }

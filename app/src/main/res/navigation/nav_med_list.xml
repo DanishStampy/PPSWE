@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_med_list"
+    app:startDestination="@id/listAllMedicineFragment">
+
+    <fragment
+        android:id="@+id/listAllMedicineFragment"
+        android:name="com.example.ppswe.view.patient.medicine.ListAllMedicineFragment"
+        android:label="fragment_list_all_medicine"
+        tools:layout="@layout/fragment_list_all_medicine" >
+        <action
+            android:id="@+id/action_listAllMedicineFragment_to_medFullDetailFragment"
+            app:destination="@id/medFullDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/medFullDetailFragment"
+        android:name="com.example.ppswe.view.patient.medicine.MedFullDetailFragment"
+        android:label="fragment_med_full_detail"
+        tools:layout="@layout/fragment_med_full_detail" >
+        <action
+            android:id="@+id/action_medFullDetailFragment_to_updateMedFragment"
+            app:destination="@id/updateMedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/updateMedFragment"
+        android:name="com.example.ppswe.view.patient.medicine.UpdateMedFragment"
+        android:label="fragment_update_med"
+        tools:layout="@layout/fragment_update_med" >
+        <action
+            android:id="@+id/action_updateMedFragment_to_submitUpdateMedFragment"
+            app:destination="@id/submitUpdateMedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/submitUpdateMedFragment"
+        android:name="com.example.ppswe.view.patient.medicine.SubmitUpdateMedFragment"
+        android:label="fragment_submit_update_med"
+        tools:layout="@layout/fragment_submit_update_med" />
+</navigation>
