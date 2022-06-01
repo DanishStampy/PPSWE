@@ -18,11 +18,9 @@ import java.util.ArrayList;
 public class medDataDetailAdapter extends RecyclerView.Adapter<medDataDetailAdapter.DesignViewHolder> {
 
     ArrayList<Medicine> medicinesData;
-    private OnMedFullDetailListener onMedFullDetailListener;
 
-    public medDataDetailAdapter(ArrayList<Medicine> medicinesData, OnMedFullDetailListener onMedFullDetailListener) {
+    public medDataDetailAdapter(ArrayList<Medicine> medicinesData) {
         this.medicinesData = medicinesData;
-        this.onMedFullDetailListener = onMedFullDetailListener;
     }
 
     @NonNull
@@ -82,7 +80,7 @@ public class medDataDetailAdapter extends RecyclerView.Adapter<medDataDetailAdap
         return medicinesData.size();
     }
 
-    public class DesignViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class DesignViewHolder extends RecyclerView.ViewHolder {
 
         TextView medName, medTime, medDesc;
         ImageButton imgBtnMedDetails;
@@ -95,17 +93,6 @@ public class medDataDetailAdapter extends RecyclerView.Adapter<medDataDetailAdap
             medDesc = itemView.findViewById(R.id.tvDisplaySingleMedInfo);
 
             imgBtnMedDetails = itemView.findViewById(R.id.imgBtnMedDetails);
-            imgBtnMedDetails.setOnClickListener(this);
-
         }
-
-        @Override
-        public void onClick(View view) {
-            onMedFullDetailListener.onMedFullDetailClick(getAdapterPosition(), medicinesData.get(getAdapterPosition()));
-        }
-    }
-
-    public interface OnMedFullDetailListener{
-        void onMedFullDetailClick(int position, Medicine medicine);
     }
 }
