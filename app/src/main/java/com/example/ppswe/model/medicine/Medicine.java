@@ -1,8 +1,11 @@
 package com.example.ppswe.model.medicine;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
-public class Medicine {
+public class Medicine implements Parcelable {
 
     private String medName;
     private String medType;
@@ -11,6 +14,7 @@ public class Medicine {
     private List<Integer> medTimes;
     private String medInstruction;
     private String medDesc;
+    private String medId;
 
     public Medicine() {
     }
@@ -23,6 +27,54 @@ public class Medicine {
         this.medTimes = medTimes;
         this.medInstruction = medInstruction;
         this.medDesc = medDesc;
+    }
+
+//    Parcelable method
+
+    protected Medicine(Parcel in) {
+        medName = in.readString();
+        medType = in.readString();
+        medDose = in.readInt();
+        medFreq = in.readInt();
+        medInstruction = in.readString();
+        medDesc = in.readString();
+        medId = in.readString();
+    }
+
+    public static final Creator<Medicine> CREATOR = new Creator<Medicine>() {
+        @Override
+        public Medicine createFromParcel(Parcel in) {
+            return new Medicine(in);
+        }
+
+        @Override
+        public Medicine[] newArray(int size) {
+            return new Medicine[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(medName);
+        parcel.writeString(medType);
+        parcel.writeInt(medDose);
+        parcel.writeInt(medFreq);
+        parcel.writeString(medInstruction);
+        parcel.writeString(medDesc);
+        parcel.writeString(medId);
+    }
+
+    public String getMedId() {
+        return medId;
+    }
+
+    public void setMedId(String medId) {
+        this.medId = medId;
     }
 
     public String getMedName() {
@@ -52,4 +104,6 @@ public class Medicine {
     public String getMedDesc() {
         return medDesc;
     }
+
+
 }

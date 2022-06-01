@@ -22,6 +22,12 @@
         <action
             android:id="@+id/action_medFullDetailFragment_to_updateMedFragment"
             app:destination="@id/updateMedFragment" />
+        <argument
+            android:name="medicineData"
+            app:argType="com.example.ppswe.model.medicine.Medicine" />
+        <action
+            android:id="@+id/action_medFullDetailFragment_to_listAllMedicineFragment"
+            app:destination="@id/listAllMedicineFragment" />
     </fragment>
     <fragment
         android:id="@+id/updateMedFragment"
