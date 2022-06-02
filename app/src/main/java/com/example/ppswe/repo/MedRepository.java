@@ -38,7 +38,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -394,5 +396,39 @@ public class MedRepository {
         });
 
         return medicineDataArrayList;
+    }
+
+    // update med data details
+    public void updateMed (Medicine medicine) {
+
+        userRef.collection("medLists")
+                .document(medicine.getMedId())
+                .set(medicine)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("Success", "Medicine successfully udpated!");
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("FAIL", "Error updating doc", e);
+                    }
+                });
+
+        Map<String,Object> delete_id = new HashMap<>();
+        delete_id.put("medId", FieldValue.delete());
+
+        userRef.collection("medLists")
+                .document(medicine.getMedId())
+                .update(delete_id)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d("Success_delete_med_id", "Medicine successfully udpated!");
+                    }
+                });
     }
 }

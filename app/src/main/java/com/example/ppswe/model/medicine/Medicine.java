@@ -105,5 +105,31 @@ public class Medicine implements Parcelable {
         return medDesc;
     }
 
+    public void setMedName(String medName) {
+        this.medName = medName;
+    }
 
+    public void setMedType(String medType) {
+        this.medType = medType;
+    }
+
+    public void setMedDose(int medDose) {
+        this.medDose = medDose;
+    }
+
+    public void setMedFreq(int medFreq) {
+        this.medFreq = medFreq;
+    }
+
+    public void setMedTimes(List<Integer> medTimes) {
+        this.medTimes = medTimes;
+    }
+
+    public void setMedInstruction(String medInstruction) {
+        this.medInstruction = medInstruction;
+    }
+
+    public void setMedDesc(String medDesc) {
+        this.medDesc = medDesc;
+    }
 }

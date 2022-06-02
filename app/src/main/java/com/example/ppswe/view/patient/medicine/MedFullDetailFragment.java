@@ -106,7 +106,9 @@ public class MedFullDetailFragment extends Fragment {
             btnUpdateMed.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("update_medicine_data", medicine);
+                    navController.navigate(R.id.action_medFullDetailFragment_to_updateMedFragment, bundle);
                 }
             });
 

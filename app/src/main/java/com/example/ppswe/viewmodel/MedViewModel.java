@@ -46,6 +46,10 @@ public class MedViewModel extends AndroidViewModel {
         repository.deleteMedTime(medId, medTime);
     }
 
+    public void updateMed(Medicine medicine) {
+        repository.updateMed(medicine);
+    }
+
     public void writeMed(String medName, String medType, int medDose, int medFreq, List<Integer> medTimes, String medInstruction, String medDesc){
         repository.writeMed(medName, medType, medDose, medFreq, medTimes, medInstruction, medDesc);
     }
