@@ -213,6 +213,7 @@ public class ReportPatientActivity extends AppCompatActivity {
 
         medViewModel.getReportData().observe(this, reportData -> {
             Log.d("REPORT_DATA", " This is it " + reportData.getReportDate());
+            ArrayList<String> listMedName = reportData.getMedName();
             ArrayList<String> listReportData = reportData.getReportDate(); // history date for report
             ArrayList<String> listStatusMed = reportData.getMedStatus(); // status for report
 
@@ -265,7 +266,7 @@ public class ReportPatientActivity extends AppCompatActivity {
                 for (int j = 0; j < listReportData.size(); j++) {
                     if (listTable.get(i).equals(listReportData.get(j))){
                         ++rowToSpan;
-                        temp.add(listReportData.get(j));
+                        temp.add(listMedName.get(j));
                         tempStatus.add(listStatusMed.get(j));
                     }
                 }

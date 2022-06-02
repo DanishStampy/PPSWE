@@ -8,14 +8,24 @@ public class ReportFile {
     ArrayList<String> reportDate;
     ArrayList<String> medStatus;
     ArrayList<String> medTimes;
+    ArrayList<String> medName;
 
     public ReportFile() {
     }
 
-    public ReportFile(ArrayList<String> reportDate, ArrayList<String> medStatus, ArrayList<String> medTimes) {
+    public ReportFile(ArrayList<String> reportDate, ArrayList<String> medStatus, ArrayList<String> medTimes, ArrayList<String> medName) {
         this.reportDate = reportDate;
         this.medStatus = medStatus;
         this.medTimes = medTimes;
+        this.medName = medName;
+    }
+
+    public ArrayList<String> getMedName() {
+        return medName;
+    }
+
+    public void setMedName(ArrayList<String> medName) {
+        this.medName = medName;
     }
 
     public ArrayList<String> getMedTimes() {

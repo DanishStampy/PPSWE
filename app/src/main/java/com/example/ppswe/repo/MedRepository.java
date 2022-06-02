@@ -329,19 +329,36 @@ public class MedRepository {
                             ArrayList<String> medHistoryDate = new ArrayList<>();
                             ArrayList<String> medStatus = new ArrayList<>();
                             ArrayList<String> medTimes = new ArrayList<>();
+                            ArrayList<String> medName = new ArrayList<>();
 
                             for (QueryDocumentSnapshot doc : task.getResult()) {
+                                String[] split = doc.getString("medId").split("\\.");
+
+                                medName.add(split[1]);
                                 medHistoryDate.add(doc.getString("date"));
                                 medStatus.add(doc.getString("medStatus"));
                                 medTimes.add(doc.getString("medTime"));
                             }
 
-                            file = new ReportFile(medHistoryDate, medStatus, medTimes);
+                            file = new ReportFile(medHistoryDate, medStatus, medTimes, medName);
                             reportDetail.postValue(file);
                         }
                     }
                 });
         return reportDetail;
+    }
+
+    // Delete whole med data
+    public void deleteMedData(String medId) {
+
+        medRef.document(medId)
+                .delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d("DELETE_WWHOLE_MED_DATA", "SUCCESSFULLY DELETED!");
+                    }
+                });
     }
 
     // Delete specific med time

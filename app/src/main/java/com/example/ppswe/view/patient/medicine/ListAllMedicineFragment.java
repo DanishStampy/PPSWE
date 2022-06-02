@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,12 +22,13 @@ import com.example.ppswe.viewmodel.MedViewModel;
 
 import java.util.ArrayList;
 
-public class ListAllMedicineFragment extends Fragment {
+public class ListAllMedicineFragment extends Fragment implements medDataDetailAdapter.OnMedFullDetailListener {
 
     private MedViewModel medViewModel;
     private RecyclerView recyclerViewMedList;
 
     private ArrayList<Medicine> medList;
+    private NavController navController;
 
     private medDataDetailAdapter medDataDetailAdapter;
 
@@ -61,10 +63,19 @@ public class ListAllMedicineFragment extends Fragment {
         medViewModel.getMedListData().observe( getActivity(), medListData -> {
             medList = medListData;
             Log.d("SIZE_MED_LIST", "hm " + medList.size());
-            medDataDetailAdapter = new medDataDetailAdapter(medList);
+            medDataDetailAdapter = new medDataDetailAdapter(medList, this);
             Log.d("SIZE_MED_LIST", "hm what " + medDataDetailAdapter.getItemCount());
             recyclerViewMedList.setAdapter(medDataDetailAdapter);
         });
 
+    }
+
+    @Override
+    public void onMedFullDetailClick(int position, Medicine medicine) {
+        //Toast.makeText(getActivity(), "Id and name is " + medicine.getMedId() + " & " + medicine.getMedName(), Toast.LENGTH_SHORT).show();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("medicine_data", medicine);
+
+        navController.navigate(R.id.action_listAllMedicineFragment_to_medFullDetailFragment, bundle);
     }
 }

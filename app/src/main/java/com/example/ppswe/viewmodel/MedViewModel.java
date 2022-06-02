@@ -38,6 +38,10 @@ public class MedViewModel extends AndroidViewModel {
         medDataCaregiver = repository.getMedicineArrayListCaregiver();
     }
 
+    public void deleteMedData(String medId) {
+        repository.deleteMedData(medId);
+    }
+
     public void deleteMedTime(String medId, int medTime) {
         repository.deleteMedTime(medId, medTime);
     }
