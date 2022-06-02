@@ -344,20 +344,6 @@ public class MedRepository {
         return reportDetail;
     }
 
-    // Delete whole med data
-    public void deleteMedData(String medId) {
-
-        medRef.document(medId)
-                .delete()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Log.d("DELETE_WWHOLE_MED_DATA", "SUCCESSFULLY DELETED!");
-                    }
-                });
-    }
-
-
     // Delete specific med time
     public void deleteMedTime(String medId, int medTime) {
 
@@ -383,11 +369,7 @@ public class MedRepository {
                 if (value != null){
                     for (QueryDocumentSnapshot doc : value) {
                         if (doc != null) {
-                            Medicine medicine = new Medicine();
-                            medicine = doc.toObject(Medicine.class);
-                            medicine.setMedId(doc.getId());
-                            listData.add(medicine);
-                            Log.d("CHECK_ID", "ID = " + medicine.getMedId());
+                            listData.add(doc.toObject(Medicine.class));
                         }
                     }
                     medicineDataArrayList.postValue(listData);
