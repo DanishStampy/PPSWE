@@ -1,5 +1,6 @@
 package com.example.ppswe.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ public class medDataDetailAdapter extends RecyclerView.Adapter<medDataDetailAdap
 
     public medDataDetailAdapter(ArrayList<Medicine> medicinesData, OnMedFullDetailListener onMedFullDetailListener) {
         this.medicinesData = medicinesData;
+        Log.d("PASSED_DATA", "Total = " + medicinesData);
         this.onMedFullDetailListener = onMedFullDetailListener;
     }
 

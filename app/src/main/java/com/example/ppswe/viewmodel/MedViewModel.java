@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.ppswe.model.medicine.Medicine;
+import com.example.ppswe.model.medicine.MedicineStatus;
 import com.example.ppswe.model.medicine.MedicineView;
 import com.example.ppswe.model.report.ReportFile;
 import com.example.ppswe.repo.MedRepository;
@@ -50,13 +51,13 @@ public class MedViewModel extends AndroidViewModel {
         repository.updateMed(medicine);
     }
 
-    public void writeMed(String medName, String medType, int medDose, int medFreq, List<Integer> medTimes, String medInstruction, String medDesc){
-        repository.writeMed(medName, medType, medDose, medFreq, medTimes, medInstruction, medDesc);
+    public void writeMed(Medicine medicine){
+        repository.writeMed(medicine);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void updateMedStatus(int i, String medId, String medTime) {
-        repository.updateMedStatus(i, medId, medTime);
+    public void updateMedStatus(MedicineStatus status) {
+        repository.updateMedStatus(status);
     }
 
     public MutableLiveData<ArrayList<Medicine>> getMedListData() {

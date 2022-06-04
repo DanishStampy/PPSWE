@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ppswe.R;
+import com.example.ppswe.model.medicine.Medicine;
 import com.example.ppswe.model.medicine.SingletonMedicine;
 
 public class MedFormFragment extends Fragment {
@@ -31,6 +32,8 @@ public class MedFormFragment extends Fragment {
     private EditText etNameMed, etDoseMed, etFreqMed;
     private Button btnNextFragment;
     private NavController navController;
+
+    public Medicine med;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,7 @@ public class MedFormFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        SingletonMedicine singletonMedicine = SingletonMedicine.getInstance();
+        med = new Medicine();
 
         tvMedTypeDose = view.findViewById(R.id.tvMedType_Dose);
         navController = Navigation.findNavController(view);
@@ -77,7 +80,7 @@ public class MedFormFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 tvMedTypeDose.setText( medType.getText().toString());
-                singletonMedicine.setMedType(medType.getText().toString());
+                med.setMedType(medType.getText().toString());
             }
         });
 
@@ -106,11 +109,14 @@ public class MedFormFragment extends Fragment {
                 String medFreq = etFreqMed.getText().toString();
 
                 if(validateInfo(medName, medDose, medFreq)){
-                    singletonMedicine.setMedName(medName);
-                    singletonMedicine.setMedDose(Integer.parseInt(medDose));
-                    singletonMedicine.setMedFreq(Integer.parseInt(medFreq));
+                    med.setMedName(medName);
+                    med.setMedDose(Integer.parseInt(medDose));
+                    med.setMedFreq(Integer.parseInt(medFreq));
 
-                    navController.navigate(R.id.action_medFormFragment_to_submitMedFragment);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("new_med", med);
+
+                    navController.navigate(R.id.action_medFormFragment_to_submitMedFragment, bundle);
                 } else {
                     Toast.makeText(getActivity(), "nuts", Toast.LENGTH_SHORT).show();
                 }

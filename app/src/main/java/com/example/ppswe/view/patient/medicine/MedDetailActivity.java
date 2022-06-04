@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.ppswe.R;
+import com.example.ppswe.model.medicine.MedicineStatus;
 import com.example.ppswe.view.patient.MainMenuActivity;
 import com.example.ppswe.viewmodel.MedViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -107,7 +108,8 @@ public class MedDetailActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                medViewModel.updateMedStatus(0, docId, timeInMillis);
+                MedicineStatus status = new MedicineStatus(docId, timeInMillis, java.time.LocalDate.now().toString(), "taken");
+                medViewModel.updateMedStatus(status);
                 showPatientActivity();
             }
         });
@@ -124,7 +126,8 @@ public class MedDetailActivity extends AppCompatActivity {
                             @RequiresApi(api = Build.VERSION_CODES.O)
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                medViewModel.updateMedStatus(1, docId, timeInMillis);
+                                MedicineStatus status = new MedicineStatus(docId, timeInMillis, java.time.LocalDate.now().toString(), "skip");
+                                medViewModel.updateMedStatus(status);
                                 showPatientActivity();
                             }
                         })
@@ -143,7 +146,8 @@ public class MedDetailActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                medViewModel.updateMedStatus(2, docId, timeInMillis);
+                MedicineStatus status = new MedicineStatus(docId, timeInMillis, java.time.LocalDate.now().toString(), "postpone");
+                medViewModel.updateMedStatus(status);
                 showPatientActivity();
             }
         });

@@ -105,12 +105,11 @@ public class MedRepository {
     }
 
     // Insert med in firestore
-    public void writeMed (String medName, String medType, int medDose, int medFreq, List<Integer> medTimes, String medInstruction, String medDesc) {
-        Medicine med = new Medicine(medName, medType, medDose, medFreq, medTimes, medInstruction, medDesc);
+    public void writeMed (Medicine medicine) {
 
         userRef.collection("medLists")
-                .document(System.currentTimeMillis()+"."+medName)
-                .set(med)
+                .document(System.currentTimeMillis()+"."+medicine.getMedName())
+                .set(medicine)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -128,18 +127,7 @@ public class MedRepository {
 
     // Set/Update med status
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void updateMedStatus (int i, String medId, String medTime){
-        String statusTemp;
-
-        if( i == MED_STATUS_TAKEN){
-            statusTemp = "taken";
-        } else if ( i == MED_STATUS_SKIP){
-            statusTemp = "skip";
-        } else {
-            statusTemp = "postpone";
-        }
-
-        MedicineStatus status = new MedicineStatus(medId, medTime, java.time.LocalDate.now().toString(), statusTemp);
+    public void updateMedStatus (MedicineStatus status){
 
         medHistoryRef.document()
                 .set(status)
@@ -386,7 +374,11 @@ public class MedRepository {
                 if (value != null){
                     for (QueryDocumentSnapshot doc : value) {
                         if (doc != null) {
-                            listData.add(doc.toObject(Medicine.class));
+                            Medicine medicine = new Medicine();
+                            medicine = doc.toObject(Medicine.class);
+                            medicine.setMedId(doc.getId());
+                            listData.add(medicine);
+                            Log.d("CHECK_ID", "ID = " + medicine.getMedId());
                         }
                     }
                     medicineDataArrayList.postValue(listData);

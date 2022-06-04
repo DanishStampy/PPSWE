@@ -58,6 +58,8 @@ import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -281,8 +283,13 @@ public class ReportPatientActivity extends AppCompatActivity {
                     table.addCell(new Cell().add(new Paragraph(tempStatus.get(n))).setMargin(5));
                 }
             }
-
             document.add(table);
+
+            // generate time and date
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            Paragraph generateTimeandDate = new Paragraph("\n Report generate at: "+dtf.format(now));
+            document.add(generateTimeandDate);
 
             document.close();
             Toast.makeText(this, "File is download at " + pdfPath, Toast.LENGTH_SHORT).show();

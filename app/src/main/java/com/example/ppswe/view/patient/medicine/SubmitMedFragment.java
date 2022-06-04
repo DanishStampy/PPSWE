@@ -32,6 +32,7 @@ import com.example.ppswe.R;
 import com.example.ppswe.adapter.OnAdapterItemClickListener;
 import com.example.ppswe.adapter.buttonTimePickerAdapter;
 import com.example.ppswe.adapter.reciever.AlarmReceiver;
+import com.example.ppswe.model.medicine.Medicine;
 import com.example.ppswe.model.medicine.SingletonMedicine;
 import com.example.ppswe.view.patient.MainMenuActivity;
 import com.example.ppswe.viewmodel.MedViewModel;
@@ -53,6 +54,7 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
     ArrayList<Integer> list = new ArrayList<>();
 
     private MedViewModel medViewModel;
+    private Medicine medicine;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,8 +80,10 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
         // Init notification channel
         createNoficationChannel();
 
-        SingletonMedicine singletonMedicine = SingletonMedicine.getInstance();
-        int btnCounter = singletonMedicine.getMedFreq();
+        // check argument and get bundle
+        if (getArguments() != null) {
+            medicine = getArguments().getParcelable("new_med");
+        }
 
         // recyclerview
         recyclerViewTimePickerButton = view.findViewById(R.id.recyclerTime);
@@ -89,7 +93,7 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
         recyclerViewTimePickerButton.setLayoutManager(linearLayoutManager);
 
         // init array list - all zero
-        for (int i=0; i<btnCounter; i++){
+        for (int i = 0; i < medicine.getMedFreq(); i++) {
             medTimes.add(0);
         }
 
@@ -120,12 +124,12 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
                     }
                     setAlarm(list.size(), hour, minute);
 
-                    singletonMedicine.setMedInstruction(medInstruction);
-                    singletonMedicine.setMedDesc(medDescription);
-                    singletonMedicine.setMedTimes(medTimes);
 
-                    medViewModel.writeMed(singletonMedicine.getMedName(), singletonMedicine.getMedType(), singletonMedicine.getMedDose(),
-                            singletonMedicine.getMedFreq(), singletonMedicine.getMedTimes(), singletonMedicine.getMedInstruction(), singletonMedicine.getMedDesc());
+                    medicine.setMedInstruction(medInstruction);
+                    medicine.setMedDesc(medDescription);
+                    medicine.setMedTimes(medTimes);
+
+                    medViewModel.writeMed(medicine);
 
                     startActivity(new Intent(getActivity(), MainMenuActivity.class));
                 }
@@ -134,7 +138,7 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
     }
 
     private void createNoficationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "medicationChannel";
             String description = "Channel for alarm manager";
             int important = NotificationManager.IMPORTANCE_HIGH;
@@ -148,7 +152,7 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
 
     private Boolean validateInfo(String medInstruction, ArrayList<Integer> medTimes) {
 
-        if(medInstruction.isEmpty()) {
+        if (medInstruction.isEmpty()) {
             etMedInstruction.requestFocus();
             etMedInstruction.setError("Please enter medicine instruction.");
             return false;
@@ -163,7 +167,7 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
     }
 
     // method to init adapter
-    public void timePicker(){
+    public void timePicker() {
         buttonTimePickerAdapter = new buttonTimePickerAdapter(this);
         buttonTimePickerAdapter.setMedTimes(medTimes);
         recyclerViewTimePickerButton.setAdapter(buttonTimePickerAdapter);
@@ -178,7 +182,7 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
         alarmManager = new AlarmManager[size];
         intentArray = new ArrayList<PendingIntent>();
 
-        for (int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
 
             calendar[i] = Calendar.getInstance();
             calendar[i].set(Calendar.HOUR_OF_DAY, hour[i]);
@@ -216,16 +220,16 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
         picker.setIs24HourView(true);
 
         builder.setPositiveButton("OK", (dialogInterface, i) -> {
-           int hour, minute;
-           hour = picker.getHour();
-           minute = picker.getMinute();
+            int hour, minute;
+            hour = picker.getHour();
+            minute = picker.getMinute();
 
-           int time = hour * 60 * 60 + (minute * 60);
+            int time = hour * 60 * 60 + (minute * 60);
 
-            Toast.makeText(getActivity(), "Hour : " +hour+ " Minute : "+minute, Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Hour : " + hour + " Minute : " + minute, Toast.LENGTH_LONG).show();
 
-           medTimes.set(position, time);
-           timePicker();
+            medTimes.set(position, time);
+            timePicker();
         });
 
         builder.show();
