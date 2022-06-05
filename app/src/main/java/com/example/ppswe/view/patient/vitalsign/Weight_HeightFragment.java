@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.ppswe.R;
 import com.example.ppswe.model.vitalsign.SingletonVitalSign;
+import com.example.ppswe.model.vitalsign.VitalSign;
 
 public class Weight_HeightFragment extends Fragment {
 
@@ -43,9 +44,6 @@ public class Weight_HeightFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Init singleton
-        SingletonVitalSign singletonVitalSign = SingletonVitalSign.getInstance();
-
         etHeight = view.findViewById(R.id.etHeightPatient);
         etWeight = view.findViewById(R.id.etWeightPatient);
         tvBMIResult = view.findViewById(R.id.tvBMIResult);
@@ -55,41 +53,42 @@ public class Weight_HeightFragment extends Fragment {
         navController = Navigation.findNavController(view);
 
         // Calculate BMI
-        btnCalculateBMI.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnCalculateBMI.setOnClickListener(view12 -> {
 
-                try {
-                    height = Double.parseDouble(etHeight.getText().toString().trim());
-                    weight = Double.parseDouble(etWeight.getText().toString().trim());
+            try {
+                height = Double.parseDouble(etHeight.getText().toString().trim());
+                weight = Double.parseDouble(etWeight.getText().toString().trim());
 
-                    if (validateInfo(etHeight.getText().toString(), etWeight.getText().toString())) {
-                        String resultBMI = calculateBMI(height, weight);
-                        tvBMIResult.setText(resultBMI);
-                    } else {
-                        return;
-                    }
-                } catch (NumberFormatException e) {
-                    Log.d("NUMBER_ERR", e.getMessage());
+                if (validateInfo(etHeight.getText().toString(), etWeight.getText().toString())) {
+                    String resultBMI = calculateBMI(height, weight);
+                    tvBMIResult.setText(resultBMI);
+                } else {
+                    return;
                 }
+            } catch (NumberFormatException e) {
+                Log.d("NUMBER_ERR", e.getMessage());
             }
         });
 
         // Next page
-        btnNextFragment_vitalSign.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (validateInfo(etHeight.getText().toString(), etWeight.getText().toString())){
+        btnNextFragment_vitalSign.setOnClickListener(view1 -> {
+            if (validateInfo(etHeight.getText().toString(), etWeight.getText().toString())){
 
-                    singletonVitalSign.setHeight(height);
-                    singletonVitalSign.setWeight(weight);
+                VitalSign vitalSign = new VitalSign();
+                vitalSign.setHeight(height);
+                vitalSign.setWeight(weight);
 
-                    navController.navigate(R.id.action_weight_HeightFragment_to_vitalSign_ReadyFragment);
-                } else {
-                    return;
-                }
+                double BMI = weight/(height*height);
+                vitalSign.setBMI(BMI);
 
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("new_vital_sign", vitalSign);
+
+                navController.navigate(R.id.action_weight_HeightFragment_to_vitalSign_ReadyFragment, bundle);
+            } else {
+                return;
             }
+
         });
 
     }

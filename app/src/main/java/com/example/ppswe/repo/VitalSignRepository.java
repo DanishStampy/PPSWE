@@ -14,8 +14,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class VitalSignRepository {
 
@@ -44,50 +47,36 @@ public class VitalSignRepository {
 
     }
 
-    public void writeVitalSign (double height, double weight, List<Double> BPrate, double pulseRate, double respirationRate, double bodyTemp) {
-        VitalSign vitalSign = new VitalSign(height, weight, BPrate, pulseRate, respirationRate, bodyTemp);
+    public void writeVitalSign (VitalSign vitalSign) {
+
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        Date date = new Date();
+
+        vitalSign.setDate(format.format(date));
 
         firestore.collection("vitalSigns")
                 .document(uid)
                 .set(vitalSign)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d("Success", "Document successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("FAIL", "Error writing doc", e);
-                    }
-                });
+                .addOnSuccessListener(unused -> Log.d("Success", "Document successfully written!"))
+                .addOnFailureListener(e -> Log.w("FAIL", "Error writing doc", e));
     }
 
     public MutableLiveData<ArrayList<VitalSign>> getVitalSignMutableLiveData() {
         documentReference.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                .addOnSuccessListener(documentSnapshot -> {
 
-                        ArrayList<VitalSign> vitalList = new ArrayList<>();
-                        if (documentSnapshot.exists()){
+                    ArrayList<VitalSign> vitalList = new ArrayList<>();
+                    if (documentSnapshot.exists()){
 
-                            vitalList.add(documentSnapshot.toObject(VitalSign.class));
+                        vitalList.add(documentSnapshot.toObject(VitalSign.class));
 
-                            Log.d("VITAL_SIGN", "This is " + documentSnapshot.getLong("bodyTemperature").intValue());
-                        } else {
-                            Log.d("NOT_EXISTS", "Document didnt exist.");
-                        }
-                        vitalSignMutableLiveData.postValue(vitalList);
+                        Log.d("VITAL_SIGN", "This is " + Objects.requireNonNull(documentSnapshot.getLong("bodyTemperature")).intValue());
+                    } else {
+                        Log.d("NOT_EXISTS", "Document didnt exist.");
                     }
+                    vitalSignMutableLiveData.postValue(vitalList);
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("ERR", "Something went wrong.");
-                    }
-                });
+                .addOnFailureListener(e -> Log.d("ERR", "Something went wrong."));
         return vitalSignMutableLiveData;
     }
 }

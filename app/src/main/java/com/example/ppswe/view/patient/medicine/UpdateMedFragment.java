@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -27,14 +26,13 @@ import java.util.Arrays;
 
 public class UpdateMedFragment extends Fragment {
 
-    private EditText etUpdateMedName, etUpdateMedDose, etUpdateMedType, etUpdateMedFreq;
+    private EditText etUpdateMedName, etUpdateMedDose, etUpdateMedFreq;
     private Button btnNextFragment;
     private TextView tvUpdateMedType;
 
     private NavController navController;
 
     ArrayAdapter<String> adapter_medType;
-    ArrayAdapter<String> adapter_medFreq;
 
     private Medicine medicine;
 
@@ -88,28 +86,22 @@ public class UpdateMedFragment extends Fragment {
             medType.setAdapter(adapter_medType);
             medType.setText(adapter_medType.getItem(index), false);
 
-            medType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    tvUpdateMedType.setText(medType.getText().toString());
-                    medicine.setMedType(medType.getText().toString());
-                }
+            medType.setOnItemClickListener((adapterView, view1, i, l) -> {
+                tvUpdateMedType.setText(medType.getText().toString());
+                medicine.setMedType(medType.getText().toString());
             });
         }
 
         btnNextFragment = view.findViewById(R.id.btnNextFragment_submit_update);
-        btnNextFragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                medicine.setMedName(etUpdateMedName.getText().toString().trim());
-                medicine.setMedDose(Integer.parseInt(etUpdateMedDose.getText().toString()));
-                medicine.setMedFreq(Integer.parseInt(etUpdateMedFreq.getText().toString()));
+        btnNextFragment.setOnClickListener(view12 -> {
+            medicine.setMedName(etUpdateMedName.getText().toString().trim());
+            medicine.setMedDose(Integer.parseInt(etUpdateMedDose.getText().toString()));
+            medicine.setMedFreq(Integer.parseInt(etUpdateMedFreq.getText().toString()));
 
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("new_update_data", medicine);
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("new_update_data", medicine);
 
-                navController.navigate(R.id.action_updateMedFragment_to_submitUpdateMedFragment, bundle);
-            }
+            navController.navigate(R.id.action_updateMedFragment_to_submitUpdateMedFragment, bundle);
         });
     }
 }

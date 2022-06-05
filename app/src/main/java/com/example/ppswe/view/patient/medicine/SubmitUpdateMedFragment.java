@@ -1,5 +1,6 @@
 package com.example.ppswe.view.patient.medicine;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Build;
@@ -41,7 +42,6 @@ public class SubmitUpdateMedFragment extends Fragment implements OnAdapterItemCl
 
     private MedViewModel medViewModel;
 
-    private NavController navController;
     private Medicine medicine;
 
     ArrayList<Integer> medTimes = new ArrayList<>();
@@ -95,19 +95,16 @@ public class SubmitUpdateMedFragment extends Fragment implements OnAdapterItemCl
             etUpdateMedDesc.setText(medicine.getMedDesc());
         }
 
-        btnSubmitUpdateMed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnSubmitUpdateMed.setOnClickListener(view1 -> {
 
-                medicine.setMedTimes(medTimes);
-                medicine.setMedDesc(etUpdateMedDesc.getText().toString());
-                medicine.setMedInstruction(etUpdateMedInstruction.getText().toString());
+            medicine.setMedTimes(medTimes);
+            medicine.setMedDesc(etUpdateMedDesc.getText().toString());
+            medicine.setMedInstruction(etUpdateMedInstruction.getText().toString());
 
-                medViewModel.updateMed(medicine);
+            medViewModel.updateMed(medicine);
 
-                startActivity(new Intent(getActivity(), ListMedicineActivity.class));
-                getActivity().finish();
-            }
+            startActivity(new Intent(getActivity(), ListMedicineActivity.class));
+            getActivity().finish();
         });
     }
 
@@ -120,6 +117,7 @@ public class SubmitUpdateMedFragment extends Fragment implements OnAdapterItemCl
         list = buttonTimePickerAdapter.getMedTimes();
     }
 
+    @SuppressLint("InflateParams")
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onAdapterItemClickListener(int position) {

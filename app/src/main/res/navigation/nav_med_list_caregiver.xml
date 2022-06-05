@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_med_list_caregiver"
+    app:startDestination="@id/caregiverListAllMedicineFragment">
+
+    <fragment
+        android:id="@+id/caregiverListAllMedicineFragment"
+        android:name="com.example.ppswe.view.caregiver.medicine.CaregiverListAllMedicineFragment"
+        android:label="fragment_caregiver_list_all_medicine"
+        tools:layout="@layout/fragment_caregiver_list_all_medicine" >
+        <action
+            android:id="@+id/action_caregiverListAllMedicineFragment_to_caregiverMedFullDetailFragment"
+            app:destination="@id/caregiverMedFullDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/caregiverMedFullDetailFragment"
+        android:name="com.example.ppswe.view.caregiver.medicine.CaregiverMedFullDetailFragment"
+        android:label="fragment_caregiver_med_full_detail"
+        tools:layout="@layout/fragment_caregiver_med_full_detail" />
+</navigation>

@@ -104,35 +104,32 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
         etMedDesc = view.findViewById(R.id.etMedDescription);
 
         btnSubmitMedData = view.findViewById(R.id.btnSubmitMedData);
-        btnSubmitMedData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnSubmitMedData.setOnClickListener(view1 -> {
 
-                String medInstruction = etMedInstruction.getText().toString().trim();
-                String medDescription = etMedDesc.getText().toString().trim();
+            String medInstruction = etMedInstruction.getText().toString().trim();
+            String medDescription = etMedDesc.getText().toString().trim();
 
-                if (validateInfo(medInstruction, medTimes)) {
-                    int[] hour = new int[list.size()];
-                    int[] minute = new int[list.size()];
+            if (validateInfo(medInstruction, medTimes)) {
+                int[] hour = new int[list.size()];
+                int[] minute = new int[list.size()];
 
-                    for (int i = 0; i < list.size(); i++) {
-                        int timeInMillis = list.get(i);
-                        hour[i] = timeInMillis / 60 / 60;
+                for (int i = 0; i < list.size(); i++) {
+                    int timeInMillis = list.get(i);
+                    hour[i] = timeInMillis / 60 / 60;
 
-                        int tempMin = hour[i] % 1 * 60;
-                        minute[i] = Math.round(tempMin);
-                    }
-                    setAlarm(list.size(), hour, minute);
-
-
-                    medicine.setMedInstruction(medInstruction);
-                    medicine.setMedDesc(medDescription);
-                    medicine.setMedTimes(medTimes);
-
-                    medViewModel.writeMed(medicine);
-
-                    startActivity(new Intent(getActivity(), MainMenuActivity.class));
+                    int tempMin = hour[i] % 1 * 60;
+                    minute[i] = Math.round(tempMin);
                 }
+                setAlarm(list.size(), hour, minute);
+
+
+                medicine.setMedInstruction(medInstruction);
+                medicine.setMedDesc(medDescription);
+                medicine.setMedTimes(medTimes);
+
+                medViewModel.writeMed(medicine);
+
+                startActivity(new Intent(getActivity(), MainMenuActivity.class));
             }
         });
     }

@@ -56,6 +56,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
     private String role;
     private ArrayList<MedicineView> medicineViewsCaregiver;
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,28 +71,16 @@ public class CaregiverMainActivity extends AppCompatActivity {
             showLoggedOut();
         }
 
-        singletonStatusPatient = SingletonStatusPatient.getInstance();
-
-        tvTodayDateCaregiver = findViewById(R.id.tvTodayDate_caregiver);
-        tvTodayDateCaregiver.setText(todayDate(singletonStatusPatient.getPatientName()));
-
-
-
-        imgBtnLogout = findViewById(R.id.imgBtnLogout_Caregiver);
-        imgBtnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                auth.signOut();
-                showLoggedOut();
-            }
-        });
-
         // recyclerview
         recyclerViewMedListCaregiver = findViewById(R.id.rcMedList_caregiver);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         recyclerViewMedListCaregiver.setLayoutManager(linearLayoutManager);
+
+        // get parcelable object
+        Intent intent = new Intent();
+        medicineViewsCaregiver = intent.getParcelableExtra("med_view_data");
 
         // Med viewmodel
         medViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(MedViewModel.class);
@@ -102,7 +91,15 @@ public class CaregiverMainActivity extends AppCompatActivity {
             recyclerViewMedListCaregiver.setAdapter(medDataAdapterCaregiver);
         });
 
+        tvTodayDateCaregiver = findViewById(R.id.tvTodayDate_caregiver);
+        tvTodayDateCaregiver.setText(todayDate());
 
+
+        imgBtnLogout = findViewById(R.id.imgBtnLogout_Caregiver);
+        imgBtnLogout.setOnClickListener(view -> {
+            auth.signOut();
+            showLoggedOut();
+        });
 
         bottomNavigationView = findViewById(R.id.bottom_nav_caregiver);
         bottomNavigationView.setSelectedItemId(R.id.home_caregiver);
@@ -131,7 +128,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("SimpleDateFormat")
-    private String todayDate(String patientName) {
+    private String todayDate() {
 
         String result = "";
 

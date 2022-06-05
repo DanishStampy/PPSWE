@@ -77,39 +77,27 @@ public class MedFullDetailFragment extends Fragment {
 
             // Button
             btnDeleteMed = view.findViewById(R.id.btnDeleteDetailMed);
-            btnDeleteMed.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    builder.setTitle("Delete medicine info")
-                            .setMessage("Are you sure want to delete this medicine?")
-                            .setCancelable(true)
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    medViewModel.deleteMedData(medicine.getMedId());
-                                    Toast.makeText(getActivity(), "Medicine has been successfully deleted! " + medicine.getMedId(), Toast.LENGTH_SHORT).show();
-                                    navController.navigate(R.id.action_medFullDetailFragment_to_listAllMedicineFragment);
-                                }
-                            })
-                            .setNegativeButton("Nope", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.cancel();
-                                }
-                            })
-                            .show();
-                }
-            });
+            btnDeleteMed.setOnClickListener(view1 -> builder.setTitle("Delete medicine info")
+                    .setMessage("Are you sure want to delete this medicine?")
+                    .setCancelable(true)
+                    .setPositiveButton("Yes", (dialogInterface, i) -> {
+                        medViewModel.deleteMedData(medicine.getMedId());
+                        Toast.makeText(getActivity(), "Medicine has been successfully deleted! " + medicine.getMedId(), Toast.LENGTH_SHORT).show();
+                        navController.navigate(R.id.action_medFullDetailFragment_to_listAllMedicineFragment);
+                    })
+                    .setNegativeButton("Nope", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    })
+                    .show());
 
             btnUpdateMed = view.findViewById(R.id.btnUpdateDetailMed);
-            btnUpdateMed.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("update_medicine_data", medicine);
-                    navController.navigate(R.id.action_medFullDetailFragment_to_updateMedFragment, bundle);
-                }
+            btnUpdateMed.setOnClickListener(view12 -> {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("update_medicine_data", medicine);
+                navController.navigate(R.id.action_medFullDetailFragment_to_updateMedFragment, bundle);
             });
 
         }

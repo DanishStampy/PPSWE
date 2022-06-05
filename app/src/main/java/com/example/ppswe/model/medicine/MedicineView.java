@@ -1,6 +1,9 @@
 package com.example.ppswe.model.medicine;
 
-public class MedicineView {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class MedicineView implements Parcelable {
     private String medName;
     private int medTime;
     private String medInstruction;
@@ -18,6 +21,27 @@ public class MedicineView {
         this.medDose = medDose;
         this.medType = medType;
     }
+
+    protected MedicineView(Parcel in) {
+        medName = in.readString();
+        medTime = in.readInt();
+        medInstruction = in.readString();
+        medDose = in.readInt();
+        medType = in.readString();
+        medID = in.readString();
+    }
+
+    public static final Creator<MedicineView> CREATOR = new Creator<MedicineView>() {
+        @Override
+        public MedicineView createFromParcel(Parcel in) {
+            return new MedicineView(in);
+        }
+
+        @Override
+        public MedicineView[] newArray(int size) {
+            return new MedicineView[size];
+        }
+    };
 
     public String getMedID() {
         return medID + "." + medTime;
@@ -69,5 +93,20 @@ public class MedicineView {
 
     public String getAllDescription() {
         return "Take " + medDose + " " + medType + " " + medInstruction;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(medName);
+        parcel.writeInt(medTime);
+        parcel.writeString(medInstruction);
+        parcel.writeInt(medDose);
+        parcel.writeString(medType);
+        parcel.writeString(medID);
     }
 }

@@ -24,8 +24,8 @@ public class VitalViewModel extends AndroidViewModel {
         vitalSignData = repository.getVitalSignMutableLiveData();
     }
 
-    public void writeVitalSign(double height, double weight, List<Double> BPrate, double pulseRate, double respirationRate, double bodyTemperature) {
-        repository.writeVitalSign(height, weight, BPrate, pulseRate, respirationRate, bodyTemperature);
+    public void writeVitalSign(VitalSign vitalSign) {
+        repository.writeVitalSign(vitalSign);
     }
 
     public MutableLiveData<ArrayList<VitalSign>> getVitalSignData() {

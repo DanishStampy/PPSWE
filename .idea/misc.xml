@@ -39,6 +39,8 @@
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/dialog_timepicker.xml" value="0.17831813576494426" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/empty_med_data.xml" value="0.33" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/empty_med_data_patient.xml" value="0.36666666666666664" />
+        <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_caregiver_list_all_medicine.xml" value="0.36666666666666664" />
+        <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_caregiver_med_full_detail.xml" value="0.36666666666666664" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_list_all_medicine.xml" value="0.36666666666666664" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_med_form.xml" value="0.36666666666666664" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_med_full_detail.xml" value="0.36666666666666664" />

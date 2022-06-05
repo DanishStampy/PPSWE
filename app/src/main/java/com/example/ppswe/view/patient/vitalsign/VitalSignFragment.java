@@ -19,6 +19,7 @@ import android.widget.EditText;
 
 import com.example.ppswe.R;
 import com.example.ppswe.model.vitalsign.SingletonVitalSign;
+import com.example.ppswe.model.vitalsign.VitalSign;
 import com.example.ppswe.viewmodel.VitalViewModel;
 import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.Slider;
@@ -35,6 +36,7 @@ public class VitalSignFragment extends Fragment {
     List<Double> BPrate;
     double systolicBP, diastolicBP, bodyTemp, pulseRate, respirationRate;
 
+    private VitalSign vitalSign;
     private VitalViewModel vitalViewModel;
 
     @Override
@@ -61,6 +63,10 @@ public class VitalSignFragment extends Fragment {
         // Init singleton
         SingletonVitalSign singletonVitalSign = SingletonVitalSign.getInstance();
 
+        if (getArguments() != null) {
+            vitalSign = getArguments().getParcelable("added_BMI");
+        }
+
         etSystolicBP = view.findViewById(R.id.etSystolicBP);
         etDiastolicBP = view.findViewById(R.id.etDiastolicBP);
         etPulseRate = view.findViewById(R.id.etPulseRate);
@@ -69,13 +75,7 @@ public class VitalSignFragment extends Fragment {
 
         // Slider listener
         sliderBodyTemp = view.findViewById(R.id.sliderBodyTemp);
-        sliderBodyTemp.setLabelFormatter(new LabelFormatter() {
-            @NonNull
-            @Override
-            public String getFormattedValue(float value) {
-                return value+"°C";
-            }
-        });
+        sliderBodyTemp.setLabelFormatter(value -> value+"°C");
 
         sliderBodyTemp.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
             @SuppressLint("RestrictedApi")
@@ -92,40 +92,40 @@ public class VitalSignFragment extends Fragment {
         // Navigate to next page
         navController = Navigation.findNavController(view);
         btnCheckResult = view.findViewById(R.id.btnSubmitResultVitalSign);
-        btnCheckResult.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
+        btnCheckResult.setOnClickListener(view1 -> {
+            try {
 
-                    systolicBP = Double.parseDouble(etSystolicBP.getText().toString());
-                    diastolicBP = Double.parseDouble(etDiastolicBP.getText().toString());
-                    pulseRate = Double.parseDouble(etPulseRate.getText().toString());
-                    respirationRate = Double.parseDouble(etRespirationRate.getText().toString());
+                systolicBP = Double.parseDouble(etSystolicBP.getText().toString());
+                diastolicBP = Double.parseDouble(etDiastolicBP.getText().toString());
+                pulseRate = Double.parseDouble(etPulseRate.getText().toString());
+                respirationRate = Double.parseDouble(etRespirationRate.getText().toString());
 
-                    BPrate = new ArrayList<>();
+                BPrate = new ArrayList<>();
 
-                    if (validateInfo(systolicBP, diastolicBP, pulseRate, respirationRate)) {
+                if (validateInfo(systolicBP, diastolicBP, pulseRate, respirationRate)) {
 
-                        BPrate.add(systolicBP);
-                        BPrate.add(diastolicBP);
+                    BPrate.add(systolicBP);
+                    BPrate.add(diastolicBP);
 
-                        singletonVitalSign.setBP(BPrate);
-                        singletonVitalSign.setBodyTemp(bodyTemp);
-                        singletonVitalSign.setPulseRate(pulseRate);
-                        singletonVitalSign.setRespiraitonRate(respirationRate);
+                    vitalSign.setBPrate(BPrate);
+                    vitalSign.setBodyTemperature(bodyTemp);
+                    vitalSign.setPulseRate(pulseRate);
+                    vitalSign.setRespirationRate(respirationRate);
 
-                        vitalViewModel.writeVitalSign(singletonVitalSign.getHeight(), singletonVitalSign.getWeight(), BPrate, pulseRate, respirationRate, bodyTemp );
+                    vitalViewModel.writeVitalSign(vitalSign);
 
-                        navController.navigate(R.id.action_vitalSignFragment_to_vitalSign_ResultFragment);
-                    } else {
-                        return;
-                    }
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("vital_sign_data", vitalSign);
 
-                } catch (NumberFormatException e) {
-                    Log.d("ERR", e.getMessage());
+                    navController.navigate(R.id.action_vitalSignFragment_to_vitalSign_ResultFragment, bundle);
+                } else {
+                    return;
                 }
 
+            } catch (NumberFormatException e) {
+                Log.d("ERR", e.getMessage());
             }
+
         });
 
     }

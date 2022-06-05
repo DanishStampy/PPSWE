@@ -25,6 +25,7 @@ public class MedViewModel extends AndroidViewModel {
     private MutableLiveData<ArrayList<Integer>> statusCountList;
     private MutableLiveData<ReportFile> reportData;
     private MutableLiveData<ArrayList<Medicine>> medListData;
+    private MutableLiveData<ArrayList<Medicine>> medListDataCaregiver;
 
     public MedViewModel(@NonNull Application application) {
         super(application);
@@ -36,7 +37,7 @@ public class MedViewModel extends AndroidViewModel {
         medListData = repository.getMedicineDataArrayList();
 
         // Caregiver
-        medDataCaregiver = repository.getMedicineArrayListCaregiver();
+        medListDataCaregiver = repository.getMedicineDataCaregiverArrayList();
     }
 
     public void deleteMedData(String medId) {
@@ -77,6 +78,10 @@ public class MedViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<ArrayList<MedicineView>> getMedDataCaregiver() {
-        return medDataCaregiver;
+        return repository.getMedicineArrayListCaregiver();
+    }
+
+    public MutableLiveData<ArrayList<Medicine>> getMedListDataCaregiver() {
+        return medListDataCaregiver;
     }
 }

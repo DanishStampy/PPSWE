@@ -74,18 +74,15 @@ public class ProfileFragment extends Fragment {
 
         try {
 
-            userViewModel.getUserMutableLiveData().observe(getActivity(), new Observer<List<User>>() {
-                @Override
-                public void onChanged(List<User> users) {
-                    user = new User();
-                    user = users.get(0);
+            userViewModel.getUserMutableLiveData().observe(getActivity(), users -> {
+                user = new User();
+                user = users.get(0);
 
-                    Log.d("user_profile", user.getUsername());
+                Log.d("user_profile", user.getUsername());
 
-                    tvUsername.setText(user.getUsername());
-                    tvEmail.setText(user.getEmail());
-                    tvPhoneNum.setText(user.getPhoneNumber());
-                }
+                tvUsername.setText(user.getUsername());
+                tvEmail.setText(user.getEmail());
+                tvPhoneNum.setText(user.getPhoneNumber());
             });
 
         } catch (NullPointerException e) {
@@ -94,47 +91,24 @@ public class ProfileFragment extends Fragment {
 
 
         btnImgPersonalInfo = view.findViewById(R.id.imgBtnLatestVitalSign);
-        btnImgPersonalInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navController.navigate(R.id.action_profileFragment_to_personalInfoFragment);
-            }
-        });
+        btnImgPersonalInfo.setOnClickListener(view1 -> navController.navigate(R.id.action_profileFragment_to_personalInfoFragment));
 
 
         btnImgAddCaregiver = view.findViewById(R.id.imgBtnAddCaregiver);
-        btnImgAddCaregiver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navController.navigate(R.id.action_profileFragment_to_syncCaregiverFragment);
-            }
-        });
+        btnImgAddCaregiver.setOnClickListener(view12 -> navController.navigate(R.id.action_profileFragment_to_syncCaregiverFragment));
 
         btnImgLogout = view.findViewById(R.id.imgBtnLogOut);
         builder = new MaterialAlertDialogBuilder(getActivity());
 
-        btnImgLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                builder.setTitle("Logout")
-                        .setMessage("Are you sure want to logout?")
-                        .setCancelable(true)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                auth.signOut();
-                                startActivity(new Intent(getActivity(), LoginActivity.class));
-                                getActivity().finish();
-                            }
-                        })
-                        .setNegativeButton("Nope", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.cancel();
-                            }
-                        })
-                        .show();
-            }
-        });
+        btnImgLogout.setOnClickListener(view13 -> builder.setTitle("Logout")
+                .setMessage("Are you sure want to logout?")
+                .setCancelable(true)
+                .setPositiveButton("Yes", (dialogInterface, i) -> {
+                    auth.signOut();
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    getActivity().finish();
+                })
+                .setNegativeButton("Nope", (dialogInterface, i) -> dialogInterface.cancel())
+                .show());
     }
 }

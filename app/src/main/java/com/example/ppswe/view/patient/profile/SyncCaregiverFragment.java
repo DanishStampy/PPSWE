@@ -64,86 +64,78 @@ public class SyncCaregiverFragment extends Fragment {
         etCaregiverEmail_Sync = view.findViewById(R.id.etCaregiverEmail_sync);
         btnSubmitCaregiverEmail = view.findViewById(R.id.btnSubmitSyncCaregiver);
 
-        btnSubmitCaregiverEmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnSubmitCaregiverEmail.setOnClickListener(view1 -> {
 
-                if (validation(etCaregiverEmail_Sync.getText().toString())) {
+            if (validation(etCaregiverEmail_Sync.getText().toString())) {
 
-                    final String uid = auth.getUid();
-                    final String email = etCaregiverEmail_Sync.getText().toString();
+                final String uid = auth.getUid();
+                final String email = etCaregiverEmail_Sync.getText().toString();
 
-                    Toast.makeText(getActivity(), "hallo" + uid, Toast.LENGTH_SHORT).show();
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_SUBMIT,
-                            new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    try {
-                                        // on below line we are passing our response
-                                        // to json object to extract data from it.
+                Toast.makeText(getActivity(), "hallo" + uid, Toast.LENGTH_SHORT).show();
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_SUBMIT,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    // on below line we are passing our response
+                                    // to json object to extract data from it.
 
-                                        Log.i("tagconvertstr", "["+response+"]");
-                                        JSONObject respObj = new JSONObject(response);
+                                    Log.i("tagconvertstr", "["+response+"]");
+                                    JSONObject respObj = new JSONObject(response);
 
-                                        // below are the strings which we
-                                        // extract from our json object.
-                                        String id = respObj.getString("uid");
-                                        String email = respObj.getString("email");
+                                    // below are the strings which we
+                                    // extract from our json object.
+                                    String id = respObj.getString("uid");
+                                    String email = respObj.getString("email");
 
-                                        // we just toast the value we got from API, 1 for success, 0 otherwise
-                                        Toast.makeText(getActivity(), "result is " + id + ", Hi " + email, Toast.LENGTH_SHORT).show();
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                        Toast.makeText(getActivity(), "Error: " + e.toString(), Toast.LENGTH_LONG).show();
-                                    }
+                                    // we just toast the value we got from API, 1 for success, 0 otherwise
+                                    Toast.makeText(getActivity(), "result is " + id + ", Hi " + email, Toast.LENGTH_SHORT).show();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(getActivity(), "Error: " + e.toString(), Toast.LENGTH_LONG).show();
                                 }
-                            },
-                            new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Toast.makeText(getActivity(), "Error volley: " + error.toString(), Toast.LENGTH_SHORT).show();
-                                }
-                            }) {
-                        @Nullable
-                        @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
+                            }
+                        },
+                        error -> Toast.makeText(getActivity(), "Error volley: " + error.toString(), Toast.LENGTH_SHORT).show()) {
+                    @NonNull
+                    @Override
+                    protected Map<String, String> getParams() {
 
-                            Map<String, String> params = new HashMap<>();
-                            params.put("uid", uid);
-                            params.put("email", email);
+                        Map<String, String> params = new HashMap<>();
+                        params.put("uid", uid);
+                        params.put("email", email);
 
-                            return params;
+                        return params;
 
-                        }
-                    };
+                    }
+                };
 
-                    stringRequest.setRetryPolicy(new RetryPolicy() {
-                        @Override
-                        public int getCurrentTimeout() {
-                            return 50000;
-                        }
+                stringRequest.setRetryPolicy(new RetryPolicy() {
+                    @Override
+                    public int getCurrentTimeout() {
+                        return 50000;
+                    }
 
-                        @Override
-                        public int getCurrentRetryCount() {
-                            return 50000;
-                        }
+                    @Override
+                    public int getCurrentRetryCount() {
+                        return 50000;
+                    }
 
-                        @Override
-                        public void retry(VolleyError error) throws VolleyError {
+                    @Override
+                    public void retry(VolleyError error) throws VolleyError {
 
-                        }
-                    });
+                    }
+                });
 
-                    RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-                    requestQueue.add(stringRequest);
-                }
+                RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+                requestQueue.add(stringRequest);
             }
         });
     }
 
     private boolean validation(String email) {
 
-        Pattern pattern = Pattern.compile("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
+        Pattern pattern = Pattern.compile(getString(R.string.email_pattern));
         Matcher matcher;
 
         if (email.isEmpty()) {

@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.ppswe.R;
+import com.example.ppswe.model.vitalsign.VitalSign;
 
 public class VitalSign_ReadyFragment extends Fragment {
 
@@ -39,10 +40,15 @@ public class VitalSign_ReadyFragment extends Fragment {
         navController = Navigation.findNavController(view);
         btnGoToVitalSign_Form = view.findViewById(R.id.btnGoToVitalSignForm);
 
-        btnGoToVitalSign_Form.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navController.navigate(R.id.action_vitalSign_ReadyFragment_to_vitalSignFragment);
+        btnGoToVitalSign_Form.setOnClickListener(view1 -> {
+
+            if (getArguments() != null) {
+                VitalSign vitalSign = getArguments().getParcelable("new_vital_sign");
+
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("added_BMI", vitalSign);
+
+                navController.navigate(R.id.action_vitalSign_ReadyFragment_to_vitalSignFragment, bundle);
             }
         });
 

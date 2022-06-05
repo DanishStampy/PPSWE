@@ -54,71 +54,17 @@ public class UserRepository {
 
     public MutableLiveData<List<User>> getUserMutableLiveData() {
 
-        Log.i("TAG", "getBlogListMutableLiveData: ");
         userRef.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()){
-                            List<User> userList = new ArrayList<>();
-                            userList.add(documentSnapshot.toObject(User.class));
-                            userMutableLiveData.postValue(userList);
-                        } else {
-                            Log.d("NOT_EXISTS", "Document didnt exist.");
-                        }
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()){
+                        List<User> userList = new ArrayList<>();
+                        userList.add(documentSnapshot.toObject(User.class));
+                        userMutableLiveData.postValue(userList);
+                    } else {
+                        Log.d("NOT_EXISTS", "Document didnt exist.");
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("ERR", "Something went wrong.");
-                    }
-                });
+                .addOnFailureListener(e -> Log.d("ERR", "Something went wrong."));
         return userMutableLiveData;
-    }
-
-    public void setPatientEmailSingleton() {
-        userRef.get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        singletonStatusPatient.setPatientEmail(documentSnapshot.getString("patientEmail"));
-                        singletonStatusPatient.setPatientName(" ");
-                        Log.d("EMAIL_PATIENT", "This is it " + singletonStatusPatient.getPatientEmail().equals("empty")); // true
-                    }
-                });
-
-        if (!("empty".equals(singletonStatusPatient.getPatientEmail()))) {
-            userCollection.whereEqualTo("email", singletonStatusPatient.getPatientEmail())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot doc : task.getResult()) {
-                                    singletonStatusPatient.setPatientName(doc.getString("username"));
-                                }
-                            }
-                        }
-                    });
-        }
-    }
-
-    public String setCaregiverEmail(String email) {
-        String result = "";
-
-        userCollection.whereEqualTo("email", email)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-
-                        }
-                    }
-                });
-
-        return result;
     }
 }

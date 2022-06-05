@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.ppswe.R;
 import com.example.ppswe.model.vitalsign.SingletonVitalSign;
+import com.example.ppswe.model.vitalsign.VitalSign;
 
 import java.util.List;
 
@@ -36,18 +37,19 @@ public class VitalSign_ResultFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Init singleton
-        SingletonVitalSign singletonVitalSign = SingletonVitalSign.getInstance();
-
         tvBP = view.findViewById(R.id.tvResultBP);
         tvBodyTemp = view.findViewById(R.id.tvResultBodyTemp);
         tvPulseRate = view.findViewById(R.id.tvResultPulseRate);
         tvRespirationRate = view.findViewById(R.id.tvResultRespiratoryRate);
 
-        tvBP.setText(BPresult(singletonVitalSign.getBP()));
-        tvBodyTemp.setText(BodyTemperatureResult(singletonVitalSign.getBodyTemp()));
-        tvPulseRate.setText(PulseRateResult(singletonVitalSign.getPulseRate()));
-        tvRespirationRate.setText(RespirationResult(singletonVitalSign.getRespiraitonRate()));
+        if (getArguments() != null) {
+            VitalSign vitalSign = getArguments().getParcelable("vital_sign_data");
+
+            tvBP.setText(BPresult(vitalSign.getBPrate()));
+            tvBodyTemp.setText(BodyTemperatureResult(vitalSign.getBodyTemperature()));
+            tvPulseRate.setText(PulseRateResult(vitalSign.getPulseRate()));
+            tvRespirationRate.setText(RespirationResult(vitalSign.getRespirationRate()));
+        }
     }
 
     private String PulseRateResult(double pulseRate) {

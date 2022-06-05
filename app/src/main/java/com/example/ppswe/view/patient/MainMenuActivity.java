@@ -78,12 +78,7 @@ public class MainMenuActivity extends AppCompatActivity implements medDataAdapte
         tvTodayDate.setText(todayDate());
 
         btnListAllMed = findViewById(R.id.btnMedicationList);
-        btnListAllMed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainMenuActivity.this, ListMedicineActivity.class));
-            }
-        });
+        btnListAllMed.setOnClickListener(view -> startActivity(new Intent(MainMenuActivity.this, ListMedicineActivity.class)));
 
         // recyclerview
         recyclerViewMedList = findViewById(R.id.rcMedList);
@@ -139,28 +134,15 @@ public class MainMenuActivity extends AppCompatActivity implements medDataAdapte
         imgBtnLogout = findViewById(R.id.imgMainBtnLogout);
         builder = new MaterialAlertDialogBuilder(MainMenuActivity.this);
 
-        imgBtnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                builder.setTitle("Logout")
-                        .setMessage("Are you sure want to logout?")
-                        .setCancelable(true)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                auth.signOut();
-                                showLoggedOut();
-                            }
-                        })
-                        .setNegativeButton("Nope", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.cancel();
-                            }
-                        })
-                        .show();
-            }
-        });
+        imgBtnLogout.setOnClickListener(view -> builder.setTitle("Logout")
+                .setMessage("Are you sure want to logout?")
+                .setCancelable(true)
+                .setPositiveButton("Yes", (dialogInterface, i) -> {
+                    auth.signOut();
+                    showLoggedOut();
+                })
+                .setNegativeButton("Nope", (dialogInterface, i) -> dialogInterface.cancel())
+                .show());
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -205,19 +187,11 @@ public class MainMenuActivity extends AppCompatActivity implements medDataAdapte
         builder.setTitle("Delete "+split[1].toLowerCase()+" time")
                 .setMessage("Are you sure want to delete?")
                 .setCancelable(true)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        medViewModel.deleteMedTime(id, time);
-                        Toast.makeText(MainMenuActivity.this, "Successfully delete the time for "+split[1].toLowerCase(), Toast.LENGTH_SHORT).show();
-                    }
+                .setPositiveButton("Yes", (dialogInterface, i) -> {
+                    medViewModel.deleteMedTime(id, time);
+                    Toast.makeText(MainMenuActivity.this, "Successfully delete the time for "+split[1].toLowerCase(), Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton("Nope", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                })
+                .setNegativeButton("Nope", (dialogInterface, i) -> dialogInterface.cancel())
                 .show();
 
         return true;

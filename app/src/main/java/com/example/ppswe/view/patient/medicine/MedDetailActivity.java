@@ -44,6 +44,8 @@ public class MedDetailActivity extends AppCompatActivity {
     private String medId, uid, docId;
     private String timeInMillis;
 
+    @SuppressLint("SetTextI18n")
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,14 +66,11 @@ public class MedDetailActivity extends AppCompatActivity {
         // Get intent data
         if (getIntent().hasExtra("med_id")) {
             medId = getIntent().getStringExtra("med_id");
-            //Log.d("CHECK_MED_ID", "my med is " + medId);
 
             String[] split = medId.split("\\.");
             docId = split[0] + "." + split[1];
-            //Log.d("CHECK_DOC_ID", "my med is " + docId);
 
             timeInMillis = split[2];
-            //Log.d("CHECK_DOC_ID", "time in millis " + timeInMillis);
         }
 
         // Get all data base on medId
@@ -80,25 +79,21 @@ public class MedDetailActivity extends AppCompatActivity {
                 .collection("medLists")
                 .document(docId)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        ArrayList<Integer> time = new ArrayList<>();
-                        DocumentSnapshot documentSnapshot = task.getResult();
+                .addOnCompleteListener(task -> {
+                    ArrayList<Integer> time = new ArrayList<>();
+                    DocumentSnapshot documentSnapshot = task.getResult();
 
-                        time = (ArrayList<Integer>) documentSnapshot.get("medTimes");
+                    time = (ArrayList<Integer>) documentSnapshot.get("medTimes");
 
-                        for (int i = 0; i < time.size(); i++) {
+                    for (int i = 0; i < time.size(); i++) {
 
-                            if (((Number)time.get(i)).intValue() == Integer.parseInt(timeInMillis)){
-                                properTime(Integer.parseInt(timeInMillis)); // Change millis to proper time
-                            }
+                        if (((Number)time.get(i)).intValue() == Integer.parseInt(timeInMillis)){
+                            properTime(Integer.parseInt(timeInMillis)); // Change millis to proper time
                         }
-
-                        tvMedNameAndDose.setText( documentSnapshot.getLong("medDose").intValue() + " " + documentSnapshot.getString("medType") + " of " + documentSnapshot.getString("medName"));
-                        tvMedInstruction.setText("Don't forget to take " + documentSnapshot.getString("medInstruction"));
                     }
+
+                    tvMedNameAndDose.setText( documentSnapshot.getLong("medDose").intValue() + " " + documentSnapshot.getString("medType") + " of " + documentSnapshot.getString("medName"));
+                    tvMedInstruction.setText("Don't forget to take " + documentSnapshot.getString("medInstruction"));
                 });
 
         builder = new MaterialAlertDialogBuilder(MedDetailActivity.this);
@@ -115,41 +110,22 @@ public class MedDetailActivity extends AppCompatActivity {
         });
 
         btnSkip = findViewById(R.id.btnSkipMed);
-        btnSkip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                builder.setTitle("Skip Medicine")
-                        .setMessage("Are you sure want to skip this medicine?")
-                        .setCancelable(true)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @RequiresApi(api = Build.VERSION_CODES.O)
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                MedicineStatus status = new MedicineStatus(docId, timeInMillis, java.time.LocalDate.now().toString(), "skip");
-                                medViewModel.updateMedStatus(status);
-                                showPatientActivity();
-                            }
-                        })
-                        .setNegativeButton("Nope", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.cancel();
-                            }
-                        })
-                        .show();
-            }
-        });
+        btnSkip.setOnClickListener(view -> builder.setTitle("Skip Medicine")
+                .setMessage("Are you sure want to skip this medicine?")
+                .setCancelable(true)
+                .setPositiveButton("Yes", (dialogInterface, i) -> {
+                    MedicineStatus status = new MedicineStatus(docId, timeInMillis, java.time.LocalDate.now().toString(), "skip");
+                    medViewModel.updateMedStatus(status);
+                    showPatientActivity();
+                })
+                .setNegativeButton("Nope", (dialogInterface, i) -> dialogInterface.cancel())
+                .show());
 
         btnPostpone = findViewById(R.id.btnPostponeMed);
-        btnPostpone.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View view) {
-                MedicineStatus status = new MedicineStatus(docId, timeInMillis, java.time.LocalDate.now().toString(), "postpone");
-                medViewModel.updateMedStatus(status);
-                showPatientActivity();
-            }
+        btnPostpone.setOnClickListener(view -> {
+            MedicineStatus status = new MedicineStatus(docId, timeInMillis, java.time.LocalDate.now().toString(), "postpone");
+            medViewModel.updateMedStatus(status);
+            showPatientActivity();
         });
 
 

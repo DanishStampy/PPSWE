@@ -43,6 +43,7 @@ public class PersonalInfoFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_personal_info, container, false);
     }
 
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -57,22 +58,18 @@ public class PersonalInfoFragment extends Fragment {
         tvPulseRate = view.findViewById(R.id.tvPulseRate);
 
 
-        vitalViewModel.getVitalSignData().observe(getActivity(), new Observer<ArrayList<VitalSign>>() {
-            @SuppressLint({"SetTextI18n", "DefaultLocale"})
-            @Override
-            public void onChanged(ArrayList<VitalSign> vitalSigns) {
-                vital = new VitalSign();
-                vital = vitalSigns.get(0);
+        vitalViewModel.getVitalSignData().observe(getActivity(), vitalSigns -> {
+            vital = new VitalSign();
+            vital = vitalSigns.get(0);
 
-                tvWeight.setText(vital.getWeight() + " kg");
-                tvHeight.setText(vital.getHeight() + " Metres(m)");
-                tvBMI.setText( String.format("%.2f", vital.getBMI()) + " kg/m2");
+            tvWeight.setText(vital.getWeight() + " kg");
+            tvHeight.setText(vital.getHeight() + " Metres(m)");
+            tvBMI.setText( String.format("%.2f", vital.getBMI()) + " kg/m2");
 
-                tvBodyTemperature.setText( String.format("%.1f", vital.getBodyTemperature()) + "°C");
-                tvBloodPressure.setText( vital.getBPrate().get(0).intValue() + "/" + vital.getBPrate().get(1).intValue() + " mmHg");
-                tvPulseRate.setText( (int)vital.getPulseRate() + " pulse/min");
-                tvRespiratoryRate.setText( (int)vital.getRespirationRate() + " breath/min");
-            }
+            tvBodyTemperature.setText( String.format("%.1f", vital.getBodyTemperature()) + "°C");
+            tvBloodPressure.setText( vital.getBPrate().get(0).intValue() + "/" + vital.getBPrate().get(1).intValue() + " mmHg");
+            tvPulseRate.setText( (int)vital.getPulseRate() + " pulse/min");
+            tvRespiratoryRate.setText( (int)vital.getRespirationRate() + " breath/min");
         });
     }
 }

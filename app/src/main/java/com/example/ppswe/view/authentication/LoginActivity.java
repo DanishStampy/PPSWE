@@ -1,7 +1,7 @@
 package com.example.ppswe.view.authentication;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,14 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ppswe.R;
-import com.example.ppswe.model.user.SingletonStatusPatient;
 import com.example.ppswe.view.caregiver.CaregiverMainActivity;
 import com.example.ppswe.view.patient.MainMenuActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.example.ppswe.viewmodel.UserViewModel;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
 
-    private DocumentReference roleRef;
     String userRoles;
 
     @Override
@@ -51,55 +46,36 @@ public class LoginActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etLoginPassword);
 
         btnLogin = findViewById(R.id.btnLogin);
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnLogin.setOnClickListener(view -> {
 
-                String email = etEmail.getText().toString();
-                String password = etPassword.getText().toString();
+            String email = etEmail.getText().toString();
+            String password = etPassword.getText().toString();
 
-                auth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()){
+            auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()){
 
-                                    firestore.collection("users")
-                                            .document(auth.getUid())
-                                            .get()
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                    userRoles = documentSnapshot.getString("roles");
-                                                    if (userRoles.equals("patient")){
-                                                        showPatientActivity();
-                                                    } else {
-                                                        showCaregiverActivity();
-                                                    }
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(LoginActivity.this, "Something went wrong!", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
+                            firestore.collection("users")
+                                    .document(auth.getUid())
+                                    .get()
+                                    .addOnSuccessListener(documentSnapshot -> {
+                                        userRoles = documentSnapshot.getString("roles");
+                                        if (userRoles.equals("patient")){
+                                            showPatientActivity();
+                                        } else {
+                                            showCaregiverActivity();
+                                        }
+                                    })
+                                    .addOnFailureListener(e -> Toast.makeText(LoginActivity.this, "Something went wrong!", Toast.LENGTH_SHORT).show());
 
-                                } else {
-                                    Toast.makeText(LoginActivity.this, "User account doesn't exist! Please register one new account.", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-            }
+                        } else {
+                            Toast.makeText(LoginActivity.this, "User account doesn't exist! Please register one new account.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
         });
 
         tvRegister = findViewById(R.id.tvRegisterHere);
-        tvRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showRegisterActivity();
-            }
-        });
+        tvRegister.setOnClickListener(view -> showRegisterActivity());
     }
 
     private void showPatientActivity(){

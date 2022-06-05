@@ -76,22 +76,16 @@ public class MedFormFragment extends Fragment {
         AutoCompleteTextView medType = view.findViewById(R.id.dropdown_medType);
         medType.setAdapter(adapter_medType);
 
-        medType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                tvMedTypeDose.setText( medType.getText().toString());
-                med.setMedType(medType.getText().toString());
-            }
+        medType.setOnItemClickListener((adapterView, view1, i, l) -> {
+            tvMedTypeDose.setText( medType.getText().toString());
+            med.setMedType(medType.getText().toString());
         });
 
         AutoCompleteTextView medFreqDay = view.findViewById(R.id.dropdown_freqMed);
         medFreqDay.setAdapter(adapter_medFreq);
 
-        medFreqDay.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        medFreqDay.setOnItemClickListener((adapterView, view12, i, l) -> {
 
-            }
         });
 
         etFreqMed = view.findViewById(R.id.etFreqMed);
@@ -100,26 +94,23 @@ public class MedFormFragment extends Fragment {
 
         // Button for next fragment
         btnNextFragment = view.findViewById(R.id.btnNextFragment_submit);
-        btnNextFragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnNextFragment.setOnClickListener(view13 -> {
 
-                String medName = etNameMed.getText().toString().trim();
-                String medDose = etDoseMed.getText().toString();
-                String medFreq = etFreqMed.getText().toString();
+            String medName = etNameMed.getText().toString().trim();
+            String medDose = etDoseMed.getText().toString();
+            String medFreq = etFreqMed.getText().toString();
 
-                if(validateInfo(medName, medDose, medFreq)){
-                    med.setMedName(medName);
-                    med.setMedDose(Integer.parseInt(medDose));
-                    med.setMedFreq(Integer.parseInt(medFreq));
+            if(validateInfo(medName, medDose, medFreq)){
+                med.setMedName(medName);
+                med.setMedDose(Integer.parseInt(medDose));
+                med.setMedFreq(Integer.parseInt(medFreq));
 
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("new_med", med);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("new_med", med);
 
-                    navController.navigate(R.id.action_medFormFragment_to_submitMedFragment, bundle);
-                } else {
-                    Toast.makeText(getActivity(), "nuts", Toast.LENGTH_SHORT).show();
-                }
+                navController.navigate(R.id.action_medFormFragment_to_submitMedFragment, bundle);
+            } else {
+                Toast.makeText(getActivity(), "nuts", Toast.LENGTH_SHORT).show();
             }
         });
 
