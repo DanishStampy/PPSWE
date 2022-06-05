@@ -301,6 +301,39 @@ public class MedRepository {
                 .addOnCompleteListener(task -> Log.d("DELETE_WWHOLE_MED_DATA", "SUCCESSFULLY DELETED!"));
     }
 
+    // Delete whole med data tru caregiver
+    public void deleteCaregiverMedData(String medId) {
+
+        userRef.get()
+                .addOnCompleteListener(task -> {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    String patientEmail = documentSnapshot.getString("patientEmail");
+
+                    if ( !patientEmail.equals("empty")) {
+                        Query queryPatientEmail = medRefCaregiver.whereEqualTo("email", patientEmail);
+                        queryPatientEmail.addSnapshotListener((value, error) -> {
+
+                            if (value != null) {
+                                for (QueryDocumentSnapshot doc : value) {
+                                    if (doc != null) {
+                                        String uid = doc.getId();
+
+                                        medRefCaregiver.document(uid)
+                                                .collection("medLists")
+                                                .document(medId)
+                                                .delete()
+                                                .addOnCompleteListener(task1 -> Log.d("DELETE_WWHOLE_MED_DATA", "SUCCESSFULLY DELETED!"));
+                                    }
+                                }
+
+                            } else {
+                                Log.d("TEST", "NOPE?");
+                            }
+                        });
+                    }
+                });
+    }
+
     // Delete specific med time
     public void deleteMedTime(String medId, int medTime) {
 
@@ -353,9 +386,6 @@ public class MedRepository {
 
     public MutableLiveData<ArrayList<Medicine>> getMedicineDataCaregiverArrayList() {
 
-        getPatientEmail();
-        Log.d("PATIENT_EMAIL_FETCH", "email = "+patient_email);
-
         userRef.get()
                 .addOnCompleteListener(task -> {
                     DocumentSnapshot documentSnapshot = task.getResult();
@@ -404,13 +434,44 @@ public class MedRepository {
         return medicineDataCaregiverArrayList;
     }
 
-    private void getPatientEmail() {
+    // update med data details tru caregiver
+    public void updateMedCaregiver(Medicine medicine) {
+
         userRef.get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot documentSnapshot = task.getResult();
-                        patient_email = documentSnapshot.getString("patientEmail");
+                .addOnCompleteListener(task -> {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    String patientEmail = documentSnapshot.getString("patientEmail");
+
+                    if ( !patientEmail.equals("empty")) {
+                        Query queryPatientEmail = medRefCaregiver.whereEqualTo("email", patientEmail);
+                        queryPatientEmail.addSnapshotListener((value, error) -> {
+
+                            if (value != null) {
+                                for (QueryDocumentSnapshot doc : value) {
+                                    if (doc != null) {
+                                        String uid = doc.getId();
+
+                                        medRefCaregiver.document(uid)
+                                                .collection("medLists")
+                                                .document(medicine.getMedId())
+                                                .set(medicine)
+                                                .addOnCompleteListener(task1 -> Log.d("Update_whole_data", "SUCCESSFULLY UPDATED!"));
+
+                                        Map<String,Object> delete_id = new HashMap<>();
+                                        delete_id.put("medId", FieldValue.delete());
+
+                                        medRefCaregiver.document(uid)
+                                                .collection("medLists")
+                                                .document(medicine.getMedId())
+                                                .update(delete_id)
+                                                .addOnCompleteListener(task12 -> Log.d("Success_delete_med_id", "Medicine successfully udpated!"));
+                                    }
+                                }
+
+                            } else {
+                                Log.d("TEST", "NOPE?");
+                            }
+                        });
                     }
                 });
     }

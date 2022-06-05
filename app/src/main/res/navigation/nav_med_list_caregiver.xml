@@ -18,5 +18,30 @@
         android:id="@+id/caregiverMedFullDetailFragment"
         android:name="com.example.ppswe.view.caregiver.medicine.CaregiverMedFullDetailFragment"
         android:label="fragment_caregiver_med_full_detail"
-        tools:layout="@layout/fragment_caregiver_med_full_detail" />
+        tools:layout="@layout/fragment_caregiver_med_full_detail" >
+        <action
+            android:id="@+id/action_caregiverMedFullDetailFragment_to_caregiverListAllMedicineFragment"
+            app:destination="@id/caregiverListAllMedicineFragment" />
+        <action
+            android:id="@+id/action_caregiverMedFullDetailFragment_to_caregiverUpdateMedFragment"
+            app:destination="@id/caregiverUpdateMedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/caregiverUpdateMedFragment"
+        android:name="com.example.ppswe.view.caregiver.medicine.CaregiverUpdateMedFragment"
+        android:label="fragment_caregiver_update_med"
+        tools:layout="@layout/fragment_caregiver_update_med" >
+        <action
+            android:id="@+id/action_caregiverUpdateMedFragment_to_caregiverSubmitUpdateMedFragment"
+            app:destination="@id/caregiverSubmitUpdateMedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/caregiverSubmitUpdateMedFragment"
+        android:name="com.example.ppswe.view.caregiver.medicine.CaregiverSubmitUpdateMedFragment"
+        android:label="fragment_caregiver_submit_update_med"
+        tools:layout="@layout/fragment_caregiver_submit_update_med" >
+        <action
+            android:id="@+id/action_caregiverSubmitUpdateMedFragment_to_caregiverListAllMedicineFragment"
+            app:destination="@id/caregiverListAllMedicineFragment" />
+    </fragment>
 </navigation>

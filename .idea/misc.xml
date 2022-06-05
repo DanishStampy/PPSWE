@@ -33,7 +33,7 @@
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/activity_profile.xml" value="0.36666666666666664" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/activity_register.xml" value="0.3138586956521739" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/activity_report.xml" value="0.33" />
-        <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/activity_report_patient.xml" value="0.5" />
+        <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/activity_report_patient.xml" value="0.2743764172335601" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/activity_vital_sign.xml" value="0.36666666666666664" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/btn_timepicker.xml" value="0.36666666666666664" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/dialog_timepicker.xml" value="0.17831813576494426" />
@@ -41,6 +41,8 @@
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/empty_med_data_patient.xml" value="0.36666666666666664" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_caregiver_list_all_medicine.xml" value="0.36666666666666664" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_caregiver_med_full_detail.xml" value="0.36666666666666664" />
+        <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_caregiver_submit_update_med.xml" value="0.35260416666666666" />
+        <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_caregiver_update_med.xml" value="0.36666666666666664" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_list_all_medicine.xml" value="0.36666666666666664" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_med_form.xml" value="0.36666666666666664" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_med_full_detail.xml" value="0.36666666666666664" />

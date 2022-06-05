@@ -1,4 +1,4 @@
-package com.example.ppswe.view.patient.medicine;
+package com.example.ppswe.view.caregiver.medicine;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,7 @@ import com.example.ppswe.model.medicine.Medicine;
 
 import java.util.Arrays;
 
-public class UpdateMedFragment extends Fragment {
+public class CaregiverUpdateMedFragment extends Fragment {
 
     private EditText etUpdateMedName, etUpdateMedDose, etUpdateMedFreq;
     private Button btnNextFragment;
@@ -36,7 +35,6 @@ public class UpdateMedFragment extends Fragment {
 
     private Medicine medicine;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +44,7 @@ public class UpdateMedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_update_med, container, false);
+        return inflater.inflate(R.layout.fragment_caregiver_update_med, container, false);
     }
 
     @SuppressLint("SetTextI18n")
@@ -56,14 +54,14 @@ public class UpdateMedFragment extends Fragment {
 
         navController = Navigation.findNavController(view);
 
-        etUpdateMedName = view.findViewById(R.id.etUpdateMedName);
-        etUpdateMedDose = view.findViewById(R.id.etUpdateMedDose);
-        etUpdateMedFreq = view.findViewById(R.id.etUpdateFreqMed);
+        etUpdateMedName = view.findViewById(R.id.etUpdateCaregiverMedName);
+        etUpdateMedDose = view.findViewById(R.id.etUpdateCaregiverMedDose);
+        etUpdateMedFreq = view.findViewById(R.id.etUpdateCaregiverFreqMed);
 
-        tvUpdateMedType = view.findViewById(R.id.tvUpdateMedType_Dose);
+        tvUpdateMedType = view.findViewById(R.id.tvUpdateCaregiverMedType_Dose);
 
         if (getArguments() != null) {
-            medicine = getArguments().getParcelable("update_medicine_data");
+            medicine = getArguments().getParcelable("update_medicine_caregiver_data");
 
             etUpdateMedName.setText(medicine.getMedName());
             etUpdateMedDose.setText(""+medicine.getMedDose());
@@ -81,7 +79,7 @@ public class UpdateMedFragment extends Fragment {
             int index = Arrays.asList(type).indexOf(medicine.getMedType());
 
             // Dropdown adapter
-            AutoCompleteTextView medType = view.findViewById(R.id.dropdown_update_medType);
+            AutoCompleteTextView medType = view.findViewById(R.id.dropdown_update_caregiver_medType);
             medType.setAdapter(adapter_medType);
             medType.setText(adapter_medType.getItem(index), false);
 
@@ -91,16 +89,16 @@ public class UpdateMedFragment extends Fragment {
             });
         }
 
-        btnNextFragment = view.findViewById(R.id.btnNextFragment_submit_update);
+        btnNextFragment = view.findViewById(R.id.btnNextFragment_submit_update_caregiver);
         btnNextFragment.setOnClickListener(view12 -> {
             medicine.setMedName(etUpdateMedName.getText().toString().trim());
             medicine.setMedDose(Integer.parseInt(etUpdateMedDose.getText().toString()));
             medicine.setMedFreq(Integer.parseInt(etUpdateMedFreq.getText().toString()));
 
             Bundle bundle = new Bundle();
-            bundle.putParcelable("new_update_data", medicine);
+            bundle.putParcelable("new_update_caregiver_data", medicine);
 
-            navController.navigate(R.id.action_updateMedFragment_to_submitUpdateMedFragment, bundle);
+            navController.navigate(R.id.action_caregiverUpdateMedFragment_to_caregiverSubmitUpdateMedFragment, bundle);
         });
     }
 }

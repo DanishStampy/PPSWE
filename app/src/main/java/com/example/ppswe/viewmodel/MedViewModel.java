@@ -40,6 +40,8 @@ public class MedViewModel extends AndroidViewModel {
         medListDataCaregiver = repository.getMedicineDataCaregiverArrayList();
     }
 
+    public void deleteCaregiverMedData(String medId) {repository.deleteCaregiverMedData(medId);}
+
     public void deleteMedData(String medId) {
         repository.deleteMedData(medId);
     }
@@ -83,5 +85,9 @@ public class MedViewModel extends AndroidViewModel {
 
     public MutableLiveData<ArrayList<Medicine>> getMedListDataCaregiver() {
         return medListDataCaregiver;
+    }
+
+    public void updateMedCaregiver(Medicine medicine) {
+        repository.updateMedCaregiver(medicine);
     }
 }
