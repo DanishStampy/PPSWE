@@ -47,13 +47,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
 
-    private UserViewModel userViewModel;
     private MedViewModel medViewModel;
-    private SingletonStatusPatient singletonStatusPatient;
-
     private medDataAdapterCaregiver medDataAdapterCaregiver;
-
-    private String role;
     private ArrayList<MedicineView> medicineViewsCaregiver;
 
     @SuppressLint("NonConstantResourceId")
@@ -81,6 +76,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
         // get parcelable object
         Intent intent = new Intent();
         medicineViewsCaregiver = intent.getParcelableExtra("med_view_data");
+        //Log.d("Size", "Size is " +medicineViewsCaregiver.size());
 
         // Med viewmodel
         medViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(MedViewModel.class);

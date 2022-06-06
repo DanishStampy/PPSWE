@@ -40,7 +40,7 @@ public class SyncCaregiverFragment extends Fragment {
     private Button btnSubmitCaregiverEmail;
     private FirebaseAuth auth;
 
-    private static final String URL_SUBMIT = "http://192.168.95.101/api_ppswe/sync_account.php";
+    private static final String URL_SUBMIT = "http://192.168.219.101/api_ppswe/sync_account.php";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

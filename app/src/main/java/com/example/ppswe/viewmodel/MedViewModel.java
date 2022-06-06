@@ -26,6 +26,8 @@ public class MedViewModel extends AndroidViewModel {
     private MutableLiveData<ReportFile> reportData;
     private MutableLiveData<ArrayList<Medicine>> medListData;
     private MutableLiveData<ArrayList<Medicine>> medListDataCaregiver;
+    private MutableLiveData<ArrayList<Integer>> statusCountListCaregiver;
+    private MutableLiveData<ReportFile> reportDataCaregiver;
 
     public MedViewModel(@NonNull Application application) {
         super(application);
@@ -33,11 +35,12 @@ public class MedViewModel extends AndroidViewModel {
         repository = new MedRepository(application);
         medData = repository.getMedicineArrayList();
         statusCountList = repository.getReportStatusCountList();
+        statusCountListCaregiver = repository.getReportStatusCountListCaregiver();
         reportData = repository.getReportDetail();
         medListData = repository.getMedicineDataArrayList();
 
-        // Caregiver
-        medListDataCaregiver = repository.getMedicineDataCaregiverArrayList();
+        reportDataCaregiver = repository.getReportDetailCaregiver();
+
     }
 
     public void deleteCaregiverMedData(String medId) {repository.deleteCaregiverMedData(medId);}
@@ -75,6 +78,10 @@ public class MedViewModel extends AndroidViewModel {
         return statusCountList;
     }
 
+    public MutableLiveData<ArrayList<Integer>> getStatusCountListCaregiver() {
+        return statusCountListCaregiver;
+    }
+
     public MutableLiveData<ReportFile> getReportData() {
         return reportData;
     }
@@ -84,10 +91,14 @@ public class MedViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<ArrayList<Medicine>> getMedListDataCaregiver() {
-        return medListDataCaregiver;
+        return repository.getMedicineDataCaregiverArrayList();
     }
 
     public void updateMedCaregiver(Medicine medicine) {
         repository.updateMedCaregiver(medicine);
+    }
+
+    public MutableLiveData<ReportFile> getReportDataCaregiver() {
+        return reportDataCaregiver;
     }
 }

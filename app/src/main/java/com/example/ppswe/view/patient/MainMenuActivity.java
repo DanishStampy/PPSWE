@@ -98,7 +98,7 @@ public class MainMenuActivity extends AppCompatActivity implements medDataAdapte
             if (medicineViews.size() == 0) {
                 btnListAllMed.setVisibility(View.GONE);
             }
-            //Log.d("MED_DATA", medicineViews.get(1).getMedID());
+            Log.d("MED_DATA", medicineViews.get(1).getMedID());
         });
 
         bottomNavigationView = findViewById(R.id.bottom_nav);
