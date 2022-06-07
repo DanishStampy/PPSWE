@@ -272,6 +272,7 @@ public class ReportPatientActivity extends AppCompatActivity {
                         tempStatus.add(listStatusMed.get(j));
                     }
                 }
+                // Nothing just to streak HAHAH
                 // Rowspan each date
                 Cell cell = new Cell(rowToSpan - 1, 1)
                         .add(new Paragraph(listTable.get(i)))
