@@ -22,6 +22,7 @@ import com.example.ppswe.R;
 import com.example.ppswe.model.user.User;
 import com.example.ppswe.view.authentication.LoginActivity;
 import com.example.ppswe.viewmodel.UserViewModel;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class ProfileCaregiverFragment extends Fragment {
     private TextView tvUsername, tvEmail, tvPhoneNum;
     private ImageButton btnImgLogout;
     private NavController navController;
+    private MaterialAlertDialogBuilder builder;
 
     private UserViewModel userViewModel;
 
@@ -88,12 +90,21 @@ public class ProfileCaregiverFragment extends Fragment {
         }
 
         btnImgLogout = view.findViewById(R.id.imgBtnLogOut_profile_caregiver);
-        btnImgLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                auth.signOut();
-                startActivity(new Intent(getActivity(), LoginActivity.class));
-            }
+        builder = new MaterialAlertDialogBuilder(getActivity());
+
+        btnImgLogout.setOnClickListener(view1 -> {
+            builder.setTitle("Logout")
+                    .setMessage("Are you sure want to logout?")
+                    .setCancelable(true)
+                    .setPositiveButton("Yes", (dialogInterface, i) -> {
+                        auth.signOut();
+                        startActivity(new Intent(getActivity(), LoginActivity.class));
+                    })
+                    .setNegativeButton("Nope", (dialogInterface, i) -> {
+                        dialogInterface.cancel();
+                    })
+                    .show();
+
         });
     }
 }

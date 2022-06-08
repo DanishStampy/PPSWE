@@ -27,6 +27,7 @@ import com.example.ppswe.viewmodel.MedViewModel;
 import com.example.ppswe.viewmodel.UserViewModel;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -43,6 +44,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private TextView tvTodayDateCaregiver;
     private RecyclerView recyclerViewMedListCaregiver;
+    private MaterialAlertDialogBuilder builder;
 
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
@@ -92,9 +94,21 @@ public class CaregiverMainActivity extends AppCompatActivity {
 
 
         imgBtnLogout = findViewById(R.id.imgBtnLogout_Caregiver);
+        builder = new MaterialAlertDialogBuilder(CaregiverMainActivity.this);
+
         imgBtnLogout.setOnClickListener(view -> {
-            auth.signOut();
-            showLoggedOut();
+            builder.setTitle("Logout")
+                    .setMessage("Are you sure want to logout?")
+                    .setCancelable(true)
+                    .setPositiveButton("Yes", (dialogInterface, i) -> {
+                        auth.signOut();
+                        showLoggedOut();
+                    })
+                    .setNegativeButton("Nope", (dialogInterface, i) -> {
+                        dialogInterface.cancel();
+                    })
+                    .show();
+
         });
 
         bottomNavigationView = findViewById(R.id.bottom_nav_caregiver);

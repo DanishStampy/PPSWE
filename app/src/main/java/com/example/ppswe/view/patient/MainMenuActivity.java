@@ -134,7 +134,8 @@ public class MainMenuActivity extends AppCompatActivity implements medDataAdapte
         imgBtnLogout = findViewById(R.id.imgMainBtnLogout);
         builder = new MaterialAlertDialogBuilder(MainMenuActivity.this);
 
-        imgBtnLogout.setOnClickListener(view -> builder.setTitle("Logout")
+        imgBtnLogout.setOnClickListener(view ->
+                builder.setTitle("Logout")
                 .setMessage("Are you sure want to logout?")
                 .setCancelable(true)
                 .setPositiveButton("Yes", (dialogInterface, i) -> {

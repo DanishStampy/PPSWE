@@ -3,6 +3,8 @@ package com.example.ppswe.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,12 +49,16 @@ public class SplashScreenActivity extends AppCompatActivity {
             // Med view model
             medViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(MedViewModel.class);
             medViewModel.getMedDataCaregiver().observe(this, medicineViews -> {
+                //Log.d("PATIENT_screen", "UMMM " +medicineViews.size());
+
                 firestore.collection("users")
                         .document(auth.getUid())
                         .get()
                         .addOnSuccessListener(documentSnapshot -> {
                             userRoles = documentSnapshot.getString("roles");
+
                             if (userRoles.equals("patient")){
+                                //Log.d("PATIENT_screen", "UMMM");
                                 startActivity(new Intent(SplashScreenActivity.this, MainMenuActivity.class));
                                 finish();
                             } else {

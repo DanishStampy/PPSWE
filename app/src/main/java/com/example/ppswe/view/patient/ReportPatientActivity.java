@@ -241,7 +241,7 @@ public class ReportPatientActivity extends AppCompatActivity {
 
             // Log.d("NEW_ARRAYLIST", "result" + listTable);
             // Header
-            Paragraph p = new Paragraph("\n\n\n\nName: Danish Irfan")
+            Paragraph p = new Paragraph("\n\n\n\nName: "+reportData.getPatientName())
                     .add(new Tab())
                     .addTabStops(new TabStop(1000, TabAlignment.RIGHT))
                     .add(String.valueOf(java.time.LocalDate.now()))

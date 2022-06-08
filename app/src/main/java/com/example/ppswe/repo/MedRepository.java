@@ -14,18 +14,15 @@ import com.example.ppswe.model.medicine.MedicineStatus;
 import com.example.ppswe.model.medicine.MedicineView;
 import com.example.ppswe.model.report.ReportFile;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -156,37 +153,43 @@ public class MedRepository {
                     DocumentSnapshot documentSnapshot = task.getResult();
                     String path = documentSnapshot.getString("patientRef");
 
-                    firestore.document(path)
-                            .collection("medLists")
-                            .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                @Override
-                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    if ( path != null) {
+                        firestore.document(path)
+                                .collection("medLists")
+                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 
-                                    if (value != null) {
-                                        ArrayList<MedicineView> medicineViews = new ArrayList<>();
-                                        ArrayList<Integer> medicineTime;
+                                        if (value != null) {
+                                            ArrayList<MedicineView> medicineViews = new ArrayList<>();
+                                            ArrayList<Integer> medicineTime;
 
-                                        for (QueryDocumentSnapshot doc : value) {
-                                            if (doc != null) {
-                                                medicineTime = (ArrayList<Integer>) doc.get("medTimes");
-                                                Log.d("MED_TIMES", medicineTime.toString());
+                                            for (QueryDocumentSnapshot doc : value) {
+                                                if (doc != null) {
+                                                    medicineTime = (ArrayList<Integer>) doc.get("medTimes");
+                                                    Log.d("MED_TIMES", medicineTime.toString());
 
-                                                for (int i = 0 ; i < medicineTime.size() ; i++){
-                                                    MedicineView medicineView = new MedicineView(doc.getId(), doc.getString("medName"),
-                                                            doc.getString("medInstruction"), doc.getLong("medDose").intValue(), doc.getString("medType") );
+                                                    for (int i = 0 ; i < medicineTime.size() ; i++){
+                                                        MedicineView medicineView = new MedicineView(doc.getId(), doc.getString("medName"),
+                                                                doc.getString("medInstruction"), doc.getLong("medDose").intValue(), doc.getString("medType") );
 
-                                                    // Cast from long into integer
-                                                    medicineView.setMedTime(((Number)medicineTime.get(i)).intValue());
-                                                    medicineViews.add(medicineView);
+                                                        // Cast from long into integer
+                                                        medicineView.setMedTime(((Number)medicineTime.get(i)).intValue());
+                                                        medicineViews.add(medicineView);
+                                                    }
                                                 }
                                             }
+                                            medicineArrayListCaregiver.postValue(medicineViews);
+                                        } else {
+                                            Log.d("testing_else", "not existss?");
                                         }
-                                        medicineArrayListCaregiver.postValue(medicineViews);
-                                    } else {
-                                        Log.d("testing_else", "not existss?");
                                     }
-                                }
-                            });
+                                });
+                    } else {
+                        ArrayList<MedicineView> medicineViews = new ArrayList<>();
+                        medicineArrayListCaregiver.postValue(medicineViews);
+                    }
+
                 });
 
         return medicineArrayListCaregiver;
@@ -285,8 +288,15 @@ public class MedRepository {
                             medStatus.add(doc.getString("medStatus"));
                             medTimes.add(doc.getString("medTime"));
                         }
-
                         file = new ReportFile(medHistoryDate, medStatus, medTimes, medName);
+
+                        userRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                                file.setPatientName(value.getString("username"));
+                            }
+                        });
+
                         reportDetail.postValue(file);
                     }
                 });
@@ -301,29 +311,32 @@ public class MedRepository {
                     DocumentSnapshot documentSnapshot = task.getResult();
                     String path = documentSnapshot.getString("patientRef");
 
-                    firestore.document(path)
-                            .collection("medHistory")
-                            .get()
-                            .addOnCompleteListener(task1 -> {
-                                ReportFile file;
+                    if ( path != null ){
+                        firestore.document(path)
+                                .collection("medHistory")
+                                .get()
+                                .addOnCompleteListener(task1 -> {
+                                    ReportFile file;
 
-                                ArrayList<String> medHistoryDate = new ArrayList<>();
-                                ArrayList<String> medStatus = new ArrayList<>();
-                                ArrayList<String> medTimes = new ArrayList<>();
-                                ArrayList<String> medName = new ArrayList<>();
+                                    ArrayList<String> medHistoryDate = new ArrayList<>();
+                                    ArrayList<String> medStatus = new ArrayList<>();
+                                    ArrayList<String> medTimes = new ArrayList<>();
+                                    ArrayList<String> medName = new ArrayList<>();
 
-                                for (QueryDocumentSnapshot doc : task1.getResult()) {
-                                    String[] split = doc.getString("medId").split("\\.");
+                                    for (QueryDocumentSnapshot doc : task1.getResult()) {
+                                        String[] split = doc.getString("medId").split("\\.");
 
-                                    medName.add(split[1]);
-                                    medHistoryDate.add(doc.getString("date"));
-                                    medStatus.add(doc.getString("medStatus"));
-                                    medTimes.add(doc.getString("medTime"));
-                                }
+                                        medName.add(split[1]);
+                                        medHistoryDate.add(doc.getString("date"));
+                                        medStatus.add(doc.getString("medStatus"));
+                                        medTimes.add(doc.getString("medTime"));
+                                    }
 
-                                file = new ReportFile(medHistoryDate, medStatus, medTimes, medName);
-                                reportDetailCaregiver.postValue(file);
-                            });
+                                    file = new ReportFile(medHistoryDate, medStatus, medTimes, medName);
+                                    reportDetailCaregiver.postValue(file);
+                                });
+                    }
+
                 });
 
         return reportDetailCaregiver;
@@ -345,11 +358,14 @@ public class MedRepository {
                     DocumentSnapshot documentSnapshot = task.getResult();
                     String path = documentSnapshot.getString("patientRef");
 
-                    firestore.document(path)
-                            .collection("medLists")
-                            .document(medId)
-                            .delete()
-                            .addOnCompleteListener(task1 -> Log.d("delete_whole_med_data", "SUCCESSFULLY DELETED!"));
+                    if (path != null) {
+                        firestore.document(path)
+                                .collection("medLists")
+                                .document(medId)
+                                .delete()
+                                .addOnCompleteListener(task1 -> Log.d("delete_whole_med_data", "SUCCESSFULLY DELETED!"));
+                    }
+
                 });
     }
 
@@ -410,25 +426,28 @@ public class MedRepository {
                     DocumentSnapshot documentSnapshot = task.getResult();
                     String path = documentSnapshot.getString("patientRef");
 
-                   firestore.document(path)
-                           .collection("medLists")
-                           .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                               @Override
-                               public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                   ArrayList<Medicine> listNewData = new ArrayList<>();
+                    if (path != null) {
+                        firestore.document(path)
+                                .collection("medLists")
+                                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                        ArrayList<Medicine> listNewData = new ArrayList<>();
 
-                                   for (QueryDocumentSnapshot doc : value) {
-                                       if (doc != null) {
-                                           Medicine medicine = doc.toObject(Medicine.class);
-                                           medicine.setMedId(doc.getId());
-                                           listNewData.add(medicine);
-                                           Log.d("CHECK_ID_caregiver", "ID = " + medicine.getMedId());
-                                       }
-                                   }
-                                   Log.d("listdata", "size " + listNewData.size());
-                                   medicineDataCaregiverArrayList.postValue(listNewData);
-                               }
-                           });
+                                        for (QueryDocumentSnapshot doc : value) {
+                                            if (doc != null) {
+                                                Medicine medicine = doc.toObject(Medicine.class);
+                                                medicine.setMedId(doc.getId());
+                                                listNewData.add(medicine);
+                                                Log.d("CHECK_ID_caregiver", "ID = " + medicine.getMedId());
+                                            }
+                                        }
+                                        Log.d("listdata", "size " + listNewData.size());
+                                        medicineDataCaregiverArrayList.postValue(listNewData);
+                                    }
+                                });
+                    }
+
                 });
         return medicineDataCaregiverArrayList;
     }
@@ -441,20 +460,23 @@ public class MedRepository {
                     DocumentSnapshot documentSnapshot = task.getResult();
                     String path = documentSnapshot.getString("patientRef");
 
-                    firestore.document(path)
-                            .collection("medLists")
-                            .document(medicine.getMedId())
-                            .set(medicine)
-                            .addOnCompleteListener(task1 -> Log.d("update_whole_data", "SUCCESSFULLY UPDATED!"));
+                    if (path != null) {
+                        firestore.document(path)
+                                .collection("medLists")
+                                .document(medicine.getMedId())
+                                .set(medicine)
+                                .addOnCompleteListener(task1 -> Log.d("update_whole_data", "SUCCESSFULLY UPDATED!"));
 
-                    Map<String,Object> delete_id = new HashMap<>();
-                    delete_id.put("medId", FieldValue.delete());
+                        Map<String,Object> delete_id = new HashMap<>();
+                        delete_id.put("medId", FieldValue.delete());
 
-                    firestore.document(path)
-                            .collection("medLists")
-                            .document(medicine.getMedId())
-                            .update(delete_id)
-                            .addOnCompleteListener(task12 -> Log.d("Success_delete_med_id", "Medicine successfully udpated!"));
+                        firestore.document(path)
+                                .collection("medLists")
+                                .document(medicine.getMedId())
+                                .update(delete_id)
+                                .addOnCompleteListener(task12 -> Log.d("Success_delete_med_id", "Medicine successfully udpated!"));
+                    }
+
                 });
     }
 
@@ -465,72 +487,74 @@ public class MedRepository {
                     DocumentSnapshot documentSnapshot = task.getResult();
                     String path = documentSnapshot.getString("patientRef");
 
-                    firestore.document(path)
-                            .collection("medHistory")
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        ArrayList<Integer> count = new ArrayList<>(
-                                                Arrays.asList(0, 0, 0)  // TAKEN, SKIP, POSTPONE
-                                        );
+                    if (path != null){
+                        firestore.document(path)
+                                .collection("medHistory")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            ArrayList<Integer> count = new ArrayList<>(
+                                                    Arrays.asList(0, 0, 0)  // TAKEN, SKIP, POSTPONE
+                                            );
 
-                                        ArrayList<String> currentDates = getAllDateForWeeks();
+                                            ArrayList<String> currentDates = getAllDateForWeeks();
 
-                                        for (QueryDocumentSnapshot doc : task.getResult()){
+                                            for (QueryDocumentSnapshot doc : task.getResult()){
 
-                                            String status = doc.getString("medStatus");
-                                            String date = doc.getString("date");
+                                                String status = doc.getString("medStatus");
+                                                String date = doc.getString("date");
 
-                                            if (currentDates.contains(date)) {
-                                                switch (status){
+                                                if (currentDates.contains(date)) {
+                                                    switch (status){
 
-                                                    case "taken":
-                                                        int takenLatestCount = count.get(0);
-                                                        takenLatestCount++;
-                                                        count.set(0, takenLatestCount);
-                                                        break;
+                                                        case "taken":
+                                                            int takenLatestCount = count.get(0);
+                                                            takenLatestCount++;
+                                                            count.set(0, takenLatestCount);
+                                                            break;
 
-                                                    case "skip":
-                                                        int skipLatestCount = count.get(1);
-                                                        skipLatestCount++;
-                                                        count.set(1, skipLatestCount);
-                                                        break;
+                                                        case "skip":
+                                                            int skipLatestCount = count.get(1);
+                                                            skipLatestCount++;
+                                                            count.set(1, skipLatestCount);
+                                                            break;
 
-                                                    case "postpone":
-                                                        int postponeLatestCount = count.get(2);
-                                                        postponeLatestCount++;
-                                                        count.set(2, postponeLatestCount);
-                                                        break;
+                                                        case "postpone":
+                                                            int postponeLatestCount = count.get(2);
+                                                            postponeLatestCount++;
+                                                            count.set(2, postponeLatestCount);
+                                                            break;
+                                                    }
                                                 }
                                             }
+                                            reportStatusCountListCaregiver.postValue(count);
+                                        } else {
+                                            Log.d("ERR", "Error getting doc: ", task.getException());
                                         }
-                                        reportStatusCountListCaregiver.postValue(count);
-                                    } else {
-                                        Log.d("ERR", "Error getting doc: ", task.getException());
-                                    }
-                                }
-
-                                private ArrayList<String> getAllDateForWeeks() {
-                                    ArrayList<String> resultList = new ArrayList<>();
-
-                                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-                                    for (int i = 0; i >= -6; i--) {
-
-                                        Calendar calendar = Calendar.getInstance();
-                                        calendar.add(Calendar.DATE, i);
-                                        Date currentDate = calendar.getTime();
-                                        String result = format.format(currentDate);
-
-                                        resultList.add(result);
                                     }
 
+                                    private ArrayList<String> getAllDateForWeeks() {
+                                        ArrayList<String> resultList = new ArrayList<>();
 
-                                    return resultList;
-                                }
-                            });
+                                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+                                        for (int i = 0; i >= -6; i--) {
+
+                                            Calendar calendar = Calendar.getInstance();
+                                            calendar.add(Calendar.DATE, i);
+                                            Date currentDate = calendar.getTime();
+                                            String result = format.format(currentDate);
+
+                                            resultList.add(result);
+                                        }
+
+
+                                        return resultList;
+                                    }
+                                });
+                    }
                 });
         return reportStatusCountListCaregiver;
     }
