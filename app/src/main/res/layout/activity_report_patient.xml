@@ -44,6 +44,37 @@
 
     </com.github.mikephil.charting.charts.PieChart>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtInputLayout8"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:hint="Report Type"
+        android:textColor="@color/grey"
+        app:boxCornerRadiusBottomEnd="8sp"
+        app:boxCornerRadiusBottomStart="8sp"
+        app:boxCornerRadiusTopEnd="8sp"
+        app:boxCornerRadiusTopStart="8sp"
+        app:boxStrokeColor="@color/blue"
+        app:helperText="Select type of report"
+        app:helperTextEnabled="true"
+        app:hintTextColor="@color/blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pieChartReport">
+
+        <AutoCompleteTextView
+            android:id="@+id/dropdown_reportType_patient"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
     <Button
         android:id="@+id/btnGenerateReport"
         android:layout_width="0dp"

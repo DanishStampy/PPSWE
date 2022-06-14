@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +37,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.protobuf.StringValue;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.parser.listener.TextChunk;
@@ -58,6 +61,7 @@ import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -66,6 +70,9 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 public class ReportPatientActivity extends AppCompatActivity {
+
+    ArrayAdapter<String> adapter_reportType;
+    String selectedReportType;
 
     private PieChart pieChart;
     private BottomNavigationView bottomNavigationView;
@@ -94,10 +101,41 @@ public class ReportPatientActivity extends AppCompatActivity {
             loadPieChartData(statusCountList);
         });
 
-
         tvDateReport = findViewById(R.id.tvReportDate);
         String dayBefore = getAWeekBeforeCurrentDay();
         tvDateReport.setText(dayBefore);
+
+        // Dropdown item
+        String[] type = new String[] {"Daily Report", "Weekly Report", "Monthly Report"};
+        adapter_reportType = new ArrayAdapter<>(
+                getApplicationContext(),
+                R.layout.med_type_dropdown,
+                type
+        );
+
+        // Dropdown adapter
+        AutoCompleteTextView reportType = findViewById(R.id.dropdown_reportType_patient);
+        reportType.setAdapter(adapter_reportType);
+
+        reportType.setOnItemClickListener(((adapterView, view, i, l) -> {
+            selectedReportType = reportType.getText().toString();
+
+            switch (selectedReportType) {
+                case "Weekly Report":
+                    Toast.makeText(this, "week", Toast.LENGTH_SHORT).show();
+                    tvDateReport.setText(getAWeekBeforeCurrentDay());
+                    break;
+                case "Daily Report":
+                    Toast.makeText(this, "day", Toast.LENGTH_SHORT).show();
+                    tvDateReport.setText(getACurrentData());
+                    break;
+                case "Monthly Report":
+                    Toast.makeText(this, "month", Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
+        }));
 
         btnGenerateReport = findViewById(R.id.btnGenerateReport);
         btnGenerateReport.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +143,21 @@ public class ReportPatientActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    createPDF(String.valueOf(System.currentTimeMillis()));
+                    Toast.makeText(ReportPatientActivity.this, "Report type: "+selectedReportType, Toast.LENGTH_SHORT).show();
+
+                    switch (selectedReportType) {
+                        case "Weekly Report":
+                            createPDF_weekly(String.valueOf(System.currentTimeMillis()));
+                            break;
+                        case "Daily Report":
+                            createPDF_daily(String.valueOf(System.currentTimeMillis()));
+                            break;
+                        case "Monthly Report":
+                            createPDF_monthly(String.valueOf(System.currentTimeMillis()));
+                            break;
+                    }
+
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -167,6 +219,29 @@ public class ReportPatientActivity extends AppCompatActivity {
         return result;
     }
 
+    @SuppressLint("SimpleDateFormat")
+    private String getACurrentData() {
+        String result = "";
+        String currentDay, currentMonth;
+
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
+        SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+
+        Calendar calendar = Calendar.getInstance();
+
+        Date currentDate = calendar.getTime();
+        currentDay = dayFormat.format(currentDate);
+        currentMonth = monthFormat.format(currentDate);
+
+        result += currentDay + " " + currentMonth + " 2022";
+        return result;
+    }
+
+    public static String theMonth(int month){
+        String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+        return monthNames[month-1];
+    }
+
     private void setupPieChart() {
         pieChart.setDrawHoleEnabled(true);
         pieChart.setUsePercentValues(true);
@@ -211,7 +286,7 @@ public class ReportPatientActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void createPDF(String fileId) throws FileNotFoundException {
+    private void createPDF_weekly(String fileId) throws FileNotFoundException {
 
         medViewModel.getReportData().observe(this, reportData -> {
             Log.d("REPORT_DATA", " This is it " + reportData.getReportDate());
@@ -296,6 +371,190 @@ public class ReportPatientActivity extends AppCompatActivity {
             Toast.makeText(this, "File is download at " + pdfPath, Toast.LENGTH_SHORT).show();
         });
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createPDF_daily(String fileId) throws FileNotFoundException {
+
+        medViewModel.getReportData().observe(this, reportData -> {
+            ArrayList<String> listMedName = reportData.getMedName();
+            ArrayList<String> listReportData = reportData.getReportDate(); // history date for report
+            ArrayList<String> listStatusMed = reportData.getMedStatus(); // status for report
+
+            String pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+            File file = new File(pdfPath, fileId + ".pdf");
+
+            PdfWriter pdfWriter = null;
+            try {
+                pdfWriter = new PdfWriter(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+            Document document = new Document(pdfDocument);
+
+            String todayDate = String.valueOf(java.time.LocalDate.now());
+
+            Paragraph p = new Paragraph("\n\n\n\nName: "+reportData.getPatientName())
+                    .add(new Tab())
+                    .addTabStops(new TabStop(1000, TabAlignment.RIGHT))
+                    .add(String.valueOf(java.time.LocalDate.now()))
+                    .setBold()
+                    .setFontSize(16)
+                    .add("\n\n\n");
+            document.add(p);
+
+            // Table
+            float[] pointColumnWidths = {150F, 150F, 150F}; // 3 columns
+
+            // header**
+            Table table = new Table(UnitValue.createPercentArray(new float[]{5, 5, 5}))
+                    .setWidth(UnitValue.createPercentValue(100))
+                    .addCell(new Cell().add(new Paragraph("Date").setBold()).setTextAlignment(TextAlignment.CENTER).setMargin(5))
+                    .addCell(new Cell().add(new Paragraph("Medicine").setBold()).setTextAlignment(TextAlignment.CENTER).setMargin(5))
+                    .addCell(new Cell().add(new Paragraph("Status").setBold()).setTextAlignment(TextAlignment.CENTER).setMargin(5));
+
+            int rowToSpan = 0;
+            ArrayList<String> temp = new ArrayList<>();
+            ArrayList<String> tempStatus = new ArrayList<>();
+            for (int j = 0; j < listReportData.size(); j++) {
+                if (todayDate.equals(listReportData.get(j))){
+                    ++rowToSpan;
+                    temp.add(listMedName.get(j));
+                    tempStatus.add(listStatusMed.get(j));
+                }
+            }
+            // Nothing just to streak HAHAH
+            // Rowspan each date
+            Cell cell = new Cell(rowToSpan, 1)
+                    .add(new Paragraph(todayDate))
+                    .setMargin(5);
+            table.addCell(cell);
+
+            for (int n = 0; n < temp.size(); n++) {
+                table.addCell(new Cell().add(new Paragraph(temp.get(n))).setMargin(5));
+                table.addCell(new Cell().add(new Paragraph(tempStatus.get(n))).setMargin(5));
+            }
+
+            document.add(table);
+
+            // generate time and date
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            Paragraph generateTimeandDate = new Paragraph("\n Report generate at: "+dtf.format(now));
+            document.add(generateTimeandDate);
+
+            document.close();
+        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createPDF_monthly(String fileId) throws  FileNotFoundException {
+
+        medViewModel.getReportData().observe(this, reportData -> {
+            Log.d("REPORT_DATA", " This is it " + reportData.getReportDate());
+            ArrayList<String> listMedName = reportData.getMedName();
+            ArrayList<String> listReportData = reportData.getReportDate(); // history date for report
+            ArrayList<String> listStatusMed = reportData.getMedStatus(); // status for report
+
+            String pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+            File file = new File(pdfPath, fileId + ".pdf");
+
+            PdfWriter pdfWriter = null;
+            try {
+                pdfWriter = new PdfWriter(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+            Document document = new Document(pdfDocument);
+
+            String currMonth = getCurrMonth();
+
+            ArrayList<String> tempDate = new ArrayList<>();
+            String tempStrDate;
+            for (int i = 0; i < listReportData.size(); i++) {
+                String[] tempDateArr = listReportData.get(i).split("-");
+                tempStrDate = listReportData.get(i);
+                if (tempDateArr[1].equals(currMonth)){
+                    if (tempDate.size() == 0) {
+                        tempDate.add(listReportData.get(i));
+                    } else if (!tempDate.contains(listReportData.get(i))){
+                        tempDate.add(listReportData.get(i));
+                    }
+                }
+            }
+
+
+            // Log.d("NEW_ARRAYLIST", "result" + listTable);
+            // Header
+            Paragraph p = new Paragraph("\n\n\n\nName: "+reportData.getPatientName())
+                    .add(new Tab())
+                    .addTabStops(new TabStop(1000, TabAlignment.RIGHT))
+                    .add(String.valueOf(LocalDate.now()))
+                    .setBold()
+                    .setFontSize(16)
+                    .add("\n\n\n");
+            document.add(p);
+
+            // Table
+            float[] pointColumnWidths = {150F, 150F, 150F}; // 3 columns
+
+            // header**
+            Table table = new Table(UnitValue.createPercentArray(new float[]{5, 5, 5}))
+                    .setWidth(UnitValue.createPercentValue(100))
+                    .addCell(new Cell().add(new Paragraph("Date").setBold()).setTextAlignment(TextAlignment.CENTER).setMargin(5))
+                    .addCell(new Cell().add(new Paragraph("Medicine").setBold()).setTextAlignment(TextAlignment.CENTER).setMargin(5))
+                    .addCell(new Cell().add(new Paragraph("Status").setBold()).setTextAlignment(TextAlignment.CENTER).setMargin(5));
+
+            for (int i = 0; i<tempDate.size(); i++) {
+
+                int rowToSpan = 1;
+                ArrayList<String> temp = new ArrayList<>();
+                ArrayList<String> tempStatus = new ArrayList<>();
+                for (int j = 0; j < listReportData.size(); j++) {
+                    if (listReportData.get(j).equals(tempDate.get(i))){
+                        ++rowToSpan;
+                        temp.add(listMedName.get(j));
+                        tempStatus.add(listStatusMed.get(j));
+                    }
+                }
+
+                // Nothing just to streak HAHAH
+                // Rowspan each date
+                Cell cell = new Cell(rowToSpan - 1, 1)
+                        .add(new Paragraph(tempDate.get(i)))
+                        .setMargin(5);
+                table.addCell(cell);
+
+                for (int n = 0; n < temp.size(); n++) {
+                    table.addCell(new Cell().add(new Paragraph(temp.get(n))).setMargin(5));
+                    table.addCell(new Cell().add(new Paragraph(tempStatus.get(n))).setMargin(5));
+                }
+            }
+
+            document.add(table);
+
+            // generate time and date
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            Paragraph generateTimeandDate = new Paragraph("\n Report generate at: "+dtf.format(now));
+            document.add(generateTimeandDate);
+
+            document.close();
+            Toast.makeText(this, "File is download at " + pdfPath, Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private String getCurrMonth() {
+        String result = "";
+
+        Calendar calendar = Calendar.getInstance();
+        int monthNum = calendar.get(Calendar.MONTH) + 1;
+
+
+        result = (monthNum < 10) ? "0"+monthNum : String.valueOf(monthNum);
+        return result;
     }
 
     private ArrayList<String> getAllDateForWeek() {
