@@ -143,20 +143,24 @@ public class ReportPatientActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    Toast.makeText(ReportPatientActivity.this, "Report type: "+selectedReportType, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ReportPatientActivity.this, "Report type: "+selectedReportType, Toast.LENGTH_SHORT).show();
 
-                    switch (selectedReportType) {
-                        case "Weekly Report":
-                            createPDF_weekly(String.valueOf(System.currentTimeMillis()));
-                            break;
-                        case "Daily Report":
-                            createPDF_daily(String.valueOf(System.currentTimeMillis()));
-                            break;
-                        case "Monthly Report":
-                            createPDF_monthly(String.valueOf(System.currentTimeMillis()));
-                            break;
+                    if (selectedReportType != null) {
+
+                        switch (selectedReportType) {
+                            case "Weekly Report":
+                                createPDF_weekly(String.valueOf(System.currentTimeMillis()));
+                                break;
+                            case "Daily Report":
+                                createPDF_daily(String.valueOf(System.currentTimeMillis()));
+                                break;
+                            case "Monthly Report":
+                                createPDF_monthly(String.valueOf(System.currentTimeMillis()));
+                                break;
+                        }
+                    } else {
+                        Toast.makeText(ReportPatientActivity.this, "Please select a report type to generate.", Toast.LENGTH_SHORT).show();
                     }
-
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -293,6 +297,7 @@ public class ReportPatientActivity extends AppCompatActivity {
             ArrayList<String> listMedName = reportData.getMedName();
             ArrayList<String> listReportData = reportData.getReportDate(); // history date for report
             ArrayList<String> listStatusMed = reportData.getMedStatus(); // status for report
+            ArrayList<String> listMedTimes = reportData.getMedTimes(); // time data for medicine
 
             String pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
             File file = new File(pdfPath, fileId + ".pdf");
@@ -343,7 +348,7 @@ public class ReportPatientActivity extends AppCompatActivity {
                 for (int j = 0; j < listReportData.size(); j++) {
                     if (listTable.get(i).equals(listReportData.get(j))){
                         ++rowToSpan;
-                        temp.add(listMedName.get(j));
+                        temp.add(listMedName.get(j)+ " (" + getSpecificMedTime(listMedTimes.get(j)) + ")");
                         tempStatus.add(listStatusMed.get(j));
                     }
                 }
@@ -380,6 +385,7 @@ public class ReportPatientActivity extends AppCompatActivity {
             ArrayList<String> listMedName = reportData.getMedName();
             ArrayList<String> listReportData = reportData.getReportDate(); // history date for report
             ArrayList<String> listStatusMed = reportData.getMedStatus(); // status for report
+            ArrayList<String> listMedTimes = reportData.getMedTimes(); // time data for medicine
 
             String pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
             File file = new File(pdfPath, fileId + ".pdf");
@@ -420,7 +426,7 @@ public class ReportPatientActivity extends AppCompatActivity {
             for (int j = 0; j < listReportData.size(); j++) {
                 if (todayDate.equals(listReportData.get(j))){
                     ++rowToSpan;
-                    temp.add(listMedName.get(j));
+                    temp.add(listMedName.get(j)+ " (" + getSpecificMedTime(listMedTimes.get(j)) + ")");
                     tempStatus.add(listStatusMed.get(j));
                 }
             }
@@ -456,6 +462,7 @@ public class ReportPatientActivity extends AppCompatActivity {
             ArrayList<String> listMedName = reportData.getMedName();
             ArrayList<String> listReportData = reportData.getReportDate(); // history date for report
             ArrayList<String> listStatusMed = reportData.getMedStatus(); // status for report
+            ArrayList<String> listMedTimes = reportData.getMedTimes(); // time data for medicine
 
             String pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
             File file = new File(pdfPath, fileId + ".pdf");
@@ -515,12 +522,11 @@ public class ReportPatientActivity extends AppCompatActivity {
                 for (int j = 0; j < listReportData.size(); j++) {
                     if (listReportData.get(j).equals(tempDate.get(i))){
                         ++rowToSpan;
-                        temp.add(listMedName.get(j));
+                        temp.add(listMedName.get(j)+ " (" + getSpecificMedTime(listMedTimes.get(j)) + ")");
                         tempStatus.add(listStatusMed.get(j));
                     }
                 }
 
-                // Nothing just to streak HAHAH
                 // Rowspan each date
                 Cell cell = new Cell(rowToSpan - 1, 1)
                         .add(new Paragraph(tempDate.get(i)))
@@ -575,5 +581,35 @@ public class ReportPatientActivity extends AppCompatActivity {
 
 
         return resultList;
+    }
+
+    private String getSpecificMedTime(String time) {
+        String result = "";
+
+        String am_pm = "AM";
+
+        int medTime = Integer.parseInt(time);
+
+        double dhour = (double) medTime / 60 / 60;
+        double dminute = dhour % 1 * 60;
+
+        int hour = medTime / 60 / 60;
+
+        if (hour > 12) {
+            am_pm = "PM";
+            hour = hour - 12;
+        } else if (hour == 12) {
+            am_pm = "PM";
+        } else {
+            am_pm = "AM";
+        }
+
+        if ((int) Math.round(dminute) < 10) {
+            result += hour + ":0" + (int) Math.round(dminute) + " " + am_pm;
+        } else {
+            result += hour + ":" + (int) Math.round(dminute) + " " + am_pm;
+        }
+
+        return result;
     }
 }

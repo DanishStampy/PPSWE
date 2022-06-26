@@ -23,6 +23,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -198,7 +199,8 @@ public class MedRepository {
     // get important data for report: count status
     public MutableLiveData<ArrayList<Integer>> getReportStatusCountList() {
 
-        medHistoryRef.get()
+        medHistoryRef.orderBy("date", Query.Direction.ASCENDING)
+                .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
@@ -314,6 +316,7 @@ public class MedRepository {
                     if ( path != null ){
                         firestore.document(path)
                                 .collection("medHistory")
+                                .orderBy("date", Query.Direction.ASCENDING)
                                 .get()
                                 .addOnCompleteListener(task1 -> {
                                     ReportFile file;
@@ -333,6 +336,14 @@ public class MedRepository {
                                     }
 
                                     file = new ReportFile(medHistoryDate, medStatus, medTimes, medName);
+
+                                    userRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                                            file.setCaregiverName(value.getString("username"));
+                                        }
+                                    });
+
                                     reportDetailCaregiver.postValue(file);
                                 });
                     }
