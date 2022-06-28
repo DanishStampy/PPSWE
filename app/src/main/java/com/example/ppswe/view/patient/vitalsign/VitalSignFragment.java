@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.ppswe.R;
 import com.example.ppswe.model.vitalsign.SingletonVitalSign;
@@ -114,6 +115,8 @@ public class VitalSignFragment extends Fragment {
 
                     vitalViewModel.writeVitalSign(vitalSign);
 
+                    Toast.makeText(getActivity(), "Vital sign information has been saved,", Toast.LENGTH_SHORT).show();
+
                     Bundle bundle = new Bundle();
                     bundle.putParcelable("vital_sign_data", vitalSign);
 
@@ -151,6 +154,26 @@ public class VitalSignFragment extends Fragment {
         } else if (respirationRate == 0) {
             etRespirationRate.requestFocus();
             etRespirationRate.setError("Please enter the respiration rate.");
+            return false;
+
+        } else if (systolicBP > 200) {
+            etSystolicBP.requestFocus();
+            etSystolicBP.setError("Please enter logic systolic blood pressure.");
+            return false;
+
+        } else if (diastolicBP > 120) {
+            etDiastolicBP.requestFocus();
+            etDiastolicBP.setError("Please enter logic diastolic blood pressure.");
+            return false;
+
+        } else if (pulseRate > 200 || pulseRate < 20) {
+            etPulseRate.requestFocus();
+            etPulseRate.setError("Please enter proper pulse rate.");
+            return false;
+
+        } else if (respirationRate > 40 ) {
+            etRespirationRate.requestFocus();
+            etRespirationRate.setError("Please enter proper respiration rate.");
             return false;
 
         } else {

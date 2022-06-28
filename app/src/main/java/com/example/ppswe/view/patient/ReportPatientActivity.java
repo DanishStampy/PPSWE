@@ -91,13 +91,13 @@ public class ReportPatientActivity extends AppCompatActivity {
         statusCountList = new ArrayList<>();
 
         pieChart = findViewById(R.id.pieChartReport);
+        setupPieChart();
 
         // Med view model
         medViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(MedViewModel.class);
         medViewModel.getStatusCountList().observe(this, statusCount -> {
             statusCountList = statusCount;
-            Log.d("CHECK_COUNT", " = " + statusCountList.toString());
-            setupPieChart();
+            //Log.d("CHECK_COUNT", " = " + statusCountList.toString());
             loadPieChartData(statusCountList);
         });
 
@@ -321,13 +321,19 @@ public class ReportPatientActivity extends AppCompatActivity {
 
             // Log.d("NEW_ARRAYLIST", "result" + listTable);
             // Header
-            Paragraph p = new Paragraph("\n\n\n\nName: "+reportData.getPatientName())
+            // Header
+            Paragraph p = new Paragraph("\nName: "+reportData.getPatientName())
                     .add(new Tab())
                     .addTabStops(new TabStop(1000, TabAlignment.RIGHT))
-                    .add(String.valueOf(java.time.LocalDate.now()))
+                    .add(String.valueOf(LocalDate.now()))
                     .setBold()
                     .setFontSize(16)
-                    .add("\n\n\n");
+                    .add("\n")
+                    .add(new Paragraph("Weekly Report")
+                            .setFontSize(24)
+                            .setBold())
+                    .setTextAlignment(TextAlignment.CENTER)
+                    .add("\n\n");
             document.add(p);
 
             // Table
@@ -369,11 +375,11 @@ public class ReportPatientActivity extends AppCompatActivity {
             // generate time and date
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
-            Paragraph generateTimeandDate = new Paragraph("\n Report generate at: "+dtf.format(now));
+            Paragraph generateTimeandDate = new Paragraph("\n Report generate at: "+dtf.format(now) + " from PPSWE apps");
             document.add(generateTimeandDate);
 
             document.close();
-            Toast.makeText(this, "File is download at " + pdfPath, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Weekly report has been downloaded.", Toast.LENGTH_SHORT).show();
         });
 
     }
@@ -401,13 +407,19 @@ public class ReportPatientActivity extends AppCompatActivity {
 
             String todayDate = String.valueOf(java.time.LocalDate.now());
 
-            Paragraph p = new Paragraph("\n\n\n\nName: "+reportData.getPatientName())
+            // Header
+            Paragraph p = new Paragraph("\nName: "+reportData.getPatientName())
                     .add(new Tab())
                     .addTabStops(new TabStop(1000, TabAlignment.RIGHT))
-                    .add(String.valueOf(java.time.LocalDate.now()))
+                    .add(String.valueOf(LocalDate.now()))
                     .setBold()
                     .setFontSize(16)
-                    .add("\n\n\n");
+                    .add("\n")
+                    .add(new Paragraph("Daily Report")
+                            .setFontSize(24)
+                            .setBold())
+                    .setTextAlignment(TextAlignment.CENTER)
+                    .add("\n\n");
             document.add(p);
 
             // Table
@@ -447,10 +459,11 @@ public class ReportPatientActivity extends AppCompatActivity {
             // generate time and date
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
-            Paragraph generateTimeandDate = new Paragraph("\n Report generate at: "+dtf.format(now));
+            Paragraph generateTimeandDate = new Paragraph("\n Report generate at: "+dtf.format(now) + " from PPSWE apps");
             document.add(generateTimeandDate);
 
             document.close();
+            Toast.makeText(this, "Daily report has been downloaded.", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -495,13 +508,18 @@ public class ReportPatientActivity extends AppCompatActivity {
 
             // Log.d("NEW_ARRAYLIST", "result" + listTable);
             // Header
-            Paragraph p = new Paragraph("\n\n\n\nName: "+reportData.getPatientName())
+            Paragraph p = new Paragraph("\nName: "+reportData.getPatientName())
                     .add(new Tab())
                     .addTabStops(new TabStop(1000, TabAlignment.RIGHT))
                     .add(String.valueOf(LocalDate.now()))
                     .setBold()
                     .setFontSize(16)
-                    .add("\n\n\n");
+                    .add("\n")
+                    .add(new Paragraph("Monthly Report")
+                    .setFontSize(24)
+                    .setBold())
+                    .setTextAlignment(TextAlignment.CENTER)
+                    .add("\n\n");
             document.add(p);
 
             // Table
@@ -544,11 +562,12 @@ public class ReportPatientActivity extends AppCompatActivity {
             // generate time and date
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
-            Paragraph generateTimeandDate = new Paragraph("\n Report generate at: "+dtf.format(now));
+            Paragraph generateTimeandDate = new Paragraph("\n Report generate at: "+dtf.format(now) +" from PPSWE apps");
             document.add(generateTimeandDate);
 
             document.close();
-            Toast.makeText(this, "File is download at " + pdfPath, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Monthly report has been downloaded.", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "File is download at " + pdfPath, Toast.LENGTH_SHORT).show();
         });
     }
 

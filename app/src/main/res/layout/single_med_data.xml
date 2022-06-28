@@ -9,70 +9,60 @@
     app:strokeColor="@color/blue"
     app:strokeWidth="4dp">
 
-    <LinearLayout
-        android:id="@+id/linearLayout7"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/linearLayout8"
+        <TextView
+            android:id="@+id/tvDisplaySingleMedInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingStart="18dp"
-            android:paddingTop="18dp"
-            android:paddingEnd="18dp"
-            android:paddingBottom="8dp">
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/sansation_regular"
+            android:text="Paracetamol"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tvDisplaySingleMedInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/sansation_regular"
-                android:text="Paracetamol"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+        <TextView
+            android:id="@+id/tvDisplayMedTime"
+            android:layout_width="77dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/sansation_regular"
+            android:text="9:00 AM"
+            android:textColor="#4C4949"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDisplaySingleMedInfo" />
 
-            <Space
-                android:layout_width="190dp"
-                android:layout_height="match_parent" />
-
-            <TextView
-                android:id="@+id/tvDisplayMedTime"
-                android:layout_width="77dp"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/sansation_regular"
-                android:text="9:00 AM"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout9"
+        <TextView
+            android:id="@+id/tvDisplaMedDescription"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:paddingStart="18dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="18dp"
-            android:paddingBottom="18dp">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="@font/sansation_regular"
+            android:text="Take 2 tablets after eat"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDisplayMedTime" />
 
-            <TextView
-                android:id="@+id/tvDisplaMedDescription"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/sansation_regular"
-                android:text="Take 2 tablets after eat"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
+        <ImageView
+            android:id="@+id/imgMedStatus"
+            android:layout_width="87dp"
+            android:layout_height="67dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_access_time_24" />
 
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

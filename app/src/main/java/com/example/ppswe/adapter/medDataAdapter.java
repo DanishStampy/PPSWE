@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -80,6 +81,13 @@ public class medDataAdapter extends RecyclerView.Adapter<medDataAdapter.DesignVi
                 holder.medTime.setText(hour + ":" + (int) Math.round(dminute) + "" + am_pm);
             }
 
+            if (medicineList.get(position).getMedStatus().equals("taken")) {
+                holder.medStatus.setImageResource(R.drawable.ic_baseline_check_24);
+            } else if (medicineList.get(position).getMedStatus().equals("skip")) {
+                holder.medStatus.setImageResource(R.drawable.ic_baseline_do_not_disturb_24);
+            } else {
+                holder.medStatus.setImageResource(R.drawable.ic_baseline_access_time_24);
+            }
             //holder.medTime.setText(medicineList.get(position).getMedTime() + "AM");
         }
 
@@ -108,6 +116,7 @@ public class medDataAdapter extends RecyclerView.Adapter<medDataAdapter.DesignVi
     public class DesignViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
 
         TextView medName, medFullDesc, medTime;
+        ImageView medStatus;
         OnMedDetailListener onMedDetailListener;
         OnMedDeleteListener onMedDeleteListener;
 
@@ -121,6 +130,7 @@ public class medDataAdapter extends RecyclerView.Adapter<medDataAdapter.DesignVi
                 medName = itemView.findViewById(R.id.tvDisplaySingleMedInfo);
                 medFullDesc = itemView.findViewById(R.id.tvDisplaMedDescription);
                 medTime = itemView.findViewById(R.id.tvDisplayMedTime);
+                medStatus = itemView.findViewById(R.id.imgMedStatus);
                 itemView.setOnClickListener(this);
                 itemView.setOnLongClickListener(this);
             }

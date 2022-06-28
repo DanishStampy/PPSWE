@@ -26,8 +26,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         Log.d("ALARM", "Alarm fired with request code: " +reqCode);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "medicationChannel")
+                .setSmallIcon(R.drawable.logo_ppswe)
                 .setContentTitle("PPSWE Medication Reminder")
-                .setContentText("This is first notification")
+                .setContentText("Please take your medicine right now")
                 .setAutoCancel(true)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)

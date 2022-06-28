@@ -77,9 +77,6 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Init notification channel
-        createNoficationChannel();
-
         // check argument and get bundle
         if (getArguments() != null) {
             medicine = getArguments().getParcelable("new_med");
@@ -102,6 +99,9 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
 
         etMedInstruction = view.findViewById(R.id.etMedInstruction);
         etMedDesc = view.findViewById(R.id.etMedDescription);
+
+        // Init notification channel
+        createNoficationChannel();
 
         btnSubmitMedData = view.findViewById(R.id.btnSubmitMedData);
         btnSubmitMedData.setOnClickListener(view1 -> {
@@ -191,11 +191,12 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
 
             Intent intent = new Intent(getActivity(), AlarmReceiver.class);
             intent.putExtra("reqCode", i);
+            final int id = (int) System.currentTimeMillis();
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), i, intent, 0);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), id, intent, 0);
 
-            alarmManager[i].setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar[i].getTimeInMillis(),
-                    AlarmManager.INTERVAL_DAY, pendingIntent);
+            alarmManager[i].setRepeating(AlarmManager.RTC_WAKEUP, calendar[i].getTimeInMillis(),
+                    alarmManager[i].INTERVAL_DAY, pendingIntent);
 
             intentArray.add(pendingIntent);
         }

@@ -34,7 +34,7 @@ public class MedViewModel extends AndroidViewModel {
 
         repository = new MedRepository(application);
         medData = repository.getMedicineArrayList();
-        statusCountList = repository.getReportStatusCountList();
+        //statusCountList = repository.getReportStatusCountList();
         statusCountListCaregiver = repository.getReportStatusCountListCaregiver();
         reportData = repository.getReportDetail();
         medListData = repository.getMedicineDataArrayList();
@@ -75,7 +75,7 @@ public class MedViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<ArrayList<Integer>> getStatusCountList() {
-        return statusCountList;
+        return repository.getReportStatusCountList();
     }
 
     public MutableLiveData<ArrayList<Integer>> getStatusCountListCaregiver() {

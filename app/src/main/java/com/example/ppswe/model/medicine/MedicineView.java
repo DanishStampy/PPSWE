@@ -10,6 +10,7 @@ public class MedicineView implements Parcelable {
     private int medDose;
     private String medType;
     private String medID;
+    private String medStatus;
 
     public MedicineView() {
     }
@@ -29,6 +30,7 @@ public class MedicineView implements Parcelable {
         medDose = in.readInt();
         medType = in.readString();
         medID = in.readString();
+        medStatus = in.readString();
     }
 
     public static final Creator<MedicineView> CREATOR = new Creator<MedicineView>() {
@@ -91,6 +93,14 @@ public class MedicineView implements Parcelable {
         this.medType = medType;
     }
 
+    public String getMedStatus() {
+        return medStatus;
+    }
+
+    public void setMedStatus(String medStatus) {
+        this.medStatus = medStatus;
+    }
+
     public String getAllDescription() {
         return "Take " + medDose + " " + medType + " " + medInstruction;
     }
@@ -108,5 +118,6 @@ public class MedicineView implements Parcelable {
         parcel.writeInt(medDose);
         parcel.writeString(medType);
         parcel.writeString(medID);
+        parcel.writeString(medStatus);
     }
 }
