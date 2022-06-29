@@ -159,7 +159,7 @@ public class ReportPatientActivity extends AppCompatActivity {
                                 break;
                         }
                     } else {
-                        Toast.makeText(ReportPatientActivity.this, "Please select a report type to generate.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ReportPatientActivity.this, "Please select a report type to continue.", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (FileNotFoundException e) {

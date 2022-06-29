@@ -23,8 +23,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.ppswe.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,8 +47,9 @@ public class SyncCaregiverFragment extends Fragment {
     private EditText etCaregiverEmail_Sync;
     private Button btnSubmitCaregiverEmail;
     private FirebaseAuth auth;
+    private FirebaseFirestore firestore;
 
-    private static final String URL_SUBMIT = "http://192.168.219.101/api_ppswe/sync_account.php";
+    private static final String URL_SUBMIT = "http://192.168.57.101/api_ppswe/sync_account.php";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +57,7 @@ public class SyncCaregiverFragment extends Fragment {
 
         // Init
         auth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -71,64 +81,82 @@ public class SyncCaregiverFragment extends Fragment {
                 final String uid = auth.getUid();
                 final String email = etCaregiverEmail_Sync.getText().toString();
 
-                Toast.makeText(getActivity(), "hallo" + uid, Toast.LENGTH_SHORT).show();
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_SUBMIT,
-                        new Response.Listener<String>() {
+                firestore.collection("users")
+                        .whereEqualTo("roles", "caregiver")
+                        .whereEqualTo("email", email)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
-                            public void onResponse(String response) {
-                                try {
-                                    // on below line we are passing our response
-                                    // to json object to extract data from it.
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    if (task.getResult().isEmpty()) {
+                                        Toast.makeText(getActivity().getApplicationContext(), "Caregiver account doesn't exists", Toast.LENGTH_SHORT).show();
+                                    } else {
 
-                                    Log.i("tagconvertstr", "["+response+"]");
-                                    JSONObject respObj = new JSONObject(response);
+                                        //Toast.makeText(getActivity(), "hallo" + uid, Toast.LENGTH_SHORT).show();
+                                        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL_SUBMIT,
+                                                new Response.Listener<String>() {
+                                                    @Override
+                                                    public void onResponse(String response) {
+                                                        try {
+                                                            // on below line we are passing our response
+                                                            // to json object to extract data from it.
 
-                                    // below are the strings which we
-                                    // extract from our json object.
-                                    String id = respObj.getString("uid");
-                                    String email = respObj.getString("email");
+                                                            Log.i("tagconvertstr", "[" + response + "]");
+                                                            JSONObject respObj = new JSONObject(response);
 
-                                    // we just toast the value we got from API, 1 for success, 0 otherwise
-                                    Toast.makeText(getActivity(), "result is " + id + ", Hi " + email, Toast.LENGTH_SHORT).show();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                    Toast.makeText(getActivity(), "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                                                            // below are the strings which we
+                                                            // extract from our json object.
+                                                            String id = respObj.getString("uid");
+                                                            String email = respObj.getString("email");
+
+                                                            // we just toast the value we got from API, 1 for success, 0 otherwise
+                                                            Toast.makeText(getActivity(), "Verification link has been sent to the caregiver email.", Toast.LENGTH_SHORT).show();
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                            Toast.makeText(getActivity(), "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                                                        }
+                                                    }
+                                                },
+                                                error1 -> Toast.makeText(getActivity(), "Error volley: " + error1.toString(), Toast.LENGTH_SHORT).show()) {
+                                            @NonNull
+                                            @Override
+                                            protected Map<String, String> getParams() {
+
+                                                Map<String, String> params = new HashMap<>();
+                                                params.put("uid", uid);
+                                                params.put("email", email);
+
+                                                return params;
+
+                                            }
+                                        };
+
+                                        stringRequest.setRetryPolicy(new RetryPolicy() {
+                                            @Override
+                                            public int getCurrentTimeout() {
+                                                return 50000;
+                                            }
+
+                                            @Override
+                                            public int getCurrentRetryCount() {
+                                                return 50000;
+                                            }
+
+                                            @Override
+                                            public void retry(VolleyError error) throws VolleyError {
+
+                                            }
+                                        });
+
+                                        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+                                        requestQueue.add(stringRequest);
+                                    }
+                                } else {
+                                    Log.d("err", "Error getting documents");
                                 }
                             }
-                        },
-                        error -> Toast.makeText(getActivity(), "Error volley: " + error.toString(), Toast.LENGTH_SHORT).show()) {
-                    @NonNull
-                    @Override
-                    protected Map<String, String> getParams() {
-
-                        Map<String, String> params = new HashMap<>();
-                        params.put("uid", uid);
-                        params.put("email", email);
-
-                        return params;
-
-                    }
-                };
-
-                stringRequest.setRetryPolicy(new RetryPolicy() {
-                    @Override
-                    public int getCurrentTimeout() {
-                        return 50000;
-                    }
-
-                    @Override
-                    public int getCurrentRetryCount() {
-                        return 50000;
-                    }
-
-                    @Override
-                    public void retry(VolleyError error) throws VolleyError {
-
-                    }
-                });
-
-                RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-                requestQueue.add(stringRequest);
+                        });
             }
         });
     }
@@ -140,7 +168,7 @@ public class SyncCaregiverFragment extends Fragment {
 
         if (email.isEmpty()) {
             etCaregiverEmail_Sync.requestFocus();
-            etCaregiverEmail_Sync.setError("Please enter the caregiver email.");
+            etCaregiverEmail_Sync.setError("Please enter caregiver email to continue.");
             return false;
         } else if (!(pattern.matcher(email).matches())) {
             etCaregiverEmail_Sync.requestFocus();

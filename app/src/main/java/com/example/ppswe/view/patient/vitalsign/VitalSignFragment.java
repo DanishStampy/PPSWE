@@ -136,12 +136,12 @@ public class VitalSignFragment extends Fragment {
     // Input validation
     private Boolean validateInfo(double systolicBP, double diastolicBP, double pulseRate, double respirationRate) {
 
-        if (systolicBP == 0) {
+        if (systolicBP == 0 || etSystolicBP.getText().toString() == null) {
             etSystolicBP.requestFocus();
             etSystolicBP.setError("Please enter systolic blood pressure.");
             return false;
 
-        } else if (diastolicBP == 0) {
+        } else if (diastolicBP == 0 || etDiastolicBP.getText().toString() == null) {
             etDiastolicBP.requestFocus();
             etDiastolicBP.setError("Please enter diastolic blood pressure.");
             return false;
