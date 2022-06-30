@@ -32,6 +32,7 @@ public class MedFormFragment extends Fragment {
     private EditText etNameMed, etDoseMed, etFreqMed;
     private Button btnNextFragment;
     private NavController navController;
+    private String medName;
 
     public Medicine med;
 
@@ -51,6 +52,11 @@ public class MedFormFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // get bundle if exists
+        if (getArguments() != null) {
+            medName = getArguments().getString("med_name");
+        }
 
         med = new Medicine();
 
@@ -91,6 +97,8 @@ public class MedFormFragment extends Fragment {
         etFreqMed = view.findViewById(R.id.etFreqMed);
         etDoseMed = view.findViewById(R.id.etMedDose);
         etNameMed = view.findViewById(R.id.etMedName);
+
+        etNameMed.setText(medName);
 
         // Button for next fragment
         btnNextFragment = view.findViewById(R.id.btnNextFragment_submit);

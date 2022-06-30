@@ -23,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.ppswe.R;
+import com.example.ppswe.adapter.LoadingDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -49,6 +50,8 @@ public class SyncCaregiverFragment extends Fragment {
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
 
+    private LoadingDialog loadingDialog;
+
     private static final String URL_SUBMIT = "http://192.168.57.101/api_ppswe/sync_account.php";
 
     @Override
@@ -71,6 +74,9 @@ public class SyncCaregiverFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // init loading dialog
+        loadingDialog = new LoadingDialog(getContext());
+
         etCaregiverEmail_Sync = view.findViewById(R.id.etCaregiverEmail_sync);
         btnSubmitCaregiverEmail = view.findViewById(R.id.btnSubmitSyncCaregiver);
 
@@ -80,6 +86,7 @@ public class SyncCaregiverFragment extends Fragment {
 
                 final String uid = auth.getUid();
                 final String email = etCaregiverEmail_Sync.getText().toString();
+                loadingDialog.showDialog();
 
                 firestore.collection("users")
                         .whereEqualTo("roles", "caregiver")
@@ -90,6 +97,7 @@ public class SyncCaregiverFragment extends Fragment {
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     if (task.getResult().isEmpty()) {
+                                        loadingDialog.hideDialog();
                                         Toast.makeText(getActivity().getApplicationContext(), "Caregiver account doesn't exists", Toast.LENGTH_SHORT).show();
                                     } else {
 
@@ -110,15 +118,19 @@ public class SyncCaregiverFragment extends Fragment {
                                                             String id = respObj.getString("uid");
                                                             String email = respObj.getString("email");
 
+                                                            loadingDialog.hideDialog();
                                                             // we just toast the value we got from API, 1 for success, 0 otherwise
                                                             Toast.makeText(getActivity(), "Verification link has been sent to the caregiver email.", Toast.LENGTH_SHORT).show();
                                                         } catch (JSONException e) {
                                                             e.printStackTrace();
-                                                            Toast.makeText(getActivity(), "Error: " + e.toString(), Toast.LENGTH_LONG).show();
+                                                            Toast.makeText(getActivity(), "Error: " , Toast.LENGTH_LONG).show();
                                                         }
                                                     }
                                                 },
-                                                error1 -> Toast.makeText(getActivity(), "Error volley: " + error1.toString(), Toast.LENGTH_SHORT).show()) {
+                                                error1 -> {
+                                                    loadingDialog.hideDialog();
+                                                    Toast.makeText(getActivity(), "Error volley: ", Toast.LENGTH_SHORT).show();
+                                                }) {
                                             @NonNull
                                             @Override
                                             protected Map<String, String> getParams() {

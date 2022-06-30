@@ -29,6 +29,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.ppswe.R;
+import com.example.ppswe.adapter.LoadingDialog;
 import com.example.ppswe.adapter.OnAdapterItemClickListener;
 import com.example.ppswe.adapter.buttonTimePickerAdapter;
 import com.example.ppswe.adapter.reciever.AlarmReceiver;
@@ -110,6 +111,7 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
             String medDescription = etMedDesc.getText().toString().trim();
 
             if (validateInfo(medInstruction, medTimes)) {
+
                 int[] hour = new int[list.size()];
                 int[] minute = new int[list.size()];
 
@@ -129,6 +131,7 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
 
                 medViewModel.writeMed(medicine);
 
+                Toast.makeText(getActivity(), "Medicine has been successfully saved!", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(getActivity(), MainMenuActivity.class));
             }
         });

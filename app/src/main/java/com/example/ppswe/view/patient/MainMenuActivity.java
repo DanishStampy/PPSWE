@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ppswe.R;
+import com.example.ppswe.adapter.LoadingDialog;
 import com.example.ppswe.adapter.medDataAdapter;
 import com.example.ppswe.model.medicine.MedicineView;
 import com.example.ppswe.view.authentication.LoginActivity;
@@ -54,6 +55,7 @@ public class MainMenuActivity extends AppCompatActivity implements medDataAdapte
     private MedViewModel medViewModel;
 
     private medDataAdapter medDataAdapter;
+    private LoadingDialog loadingDialog;
 
     private String role, uid;
     private ArrayList<MedicineView> medicineViews;
@@ -68,11 +70,16 @@ public class MainMenuActivity extends AppCompatActivity implements medDataAdapte
         firestore = FirebaseFirestore.getInstance();
         medicineViews = new ArrayList<>();
 
+        // Init loading
+        loadingDialog = new LoadingDialog(this);
+
         if(auth.getCurrentUser() == null){
             showLoggedOut();
         } else {
             uid = auth.getUid();
         }
+
+        loadingDialog.showDialog();
 
         tvTodayDate = findViewById(R.id.tvTodayDate);
         tvTodayDate.setText(todayDate());
@@ -91,6 +98,7 @@ public class MainMenuActivity extends AppCompatActivity implements medDataAdapte
         medViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(MedViewModel.class);
         //Log.d("TEST_MED_DATA", "This is = " + medViewModel.getMedData().size());
         medViewModel.getMedData().observe(this, medData-> {
+            loadingDialog.hideDialog();
             medicineViews = medData;
             medDataAdapter = new medDataAdapter(medicineViews, this, this);
             recyclerViewMedList.setAdapter(medDataAdapter);
@@ -98,7 +106,7 @@ public class MainMenuActivity extends AppCompatActivity implements medDataAdapte
             if (medicineViews.size() == 0) {
                 btnListAllMed.setVisibility(View.GONE);
             }
-            Log.d("MED_DATA", medicineViews.get(1).getMedID());
+
         });
 
         bottomNavigationView = findViewById(R.id.bottom_nav);

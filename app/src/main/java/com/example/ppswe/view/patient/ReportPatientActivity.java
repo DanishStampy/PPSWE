@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ppswe.R;
+import com.example.ppswe.adapter.LoadingDialog;
 import com.example.ppswe.adapter.medDataAdapter;
 import com.example.ppswe.model.report.ReportFile;
 import com.example.ppswe.viewmodel.MedViewModel;
@@ -80,6 +81,7 @@ public class ReportPatientActivity extends AppCompatActivity {
     private Button btnGenerateReport;
 
     private MedViewModel medViewModel;
+    private LoadingDialog loadingDialog;
 
     private ArrayList<Integer> statusCountList;
 
@@ -87,6 +89,9 @@ public class ReportPatientActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_patient);
+
+        // init loading dialog
+        loadingDialog = new LoadingDialog(this);
 
         statusCountList = new ArrayList<>();
 
@@ -142,6 +147,7 @@ public class ReportPatientActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
+                loadingDialog.showDialog();
                 try {
                     //Toast.makeText(ReportPatientActivity.this, "Report type: "+selectedReportType, Toast.LENGTH_SHORT).show();
 
@@ -158,13 +164,16 @@ public class ReportPatientActivity extends AppCompatActivity {
                                 createPDF_monthly(String.valueOf(System.currentTimeMillis()));
                                 break;
                         }
+
                     } else {
+
                         Toast.makeText(ReportPatientActivity.this, "Please select a report type to continue.", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
+                loadingDialog.hideDialog();
             }
         });
 

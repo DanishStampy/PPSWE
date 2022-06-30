@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.ppswe.R;
+import com.example.ppswe.adapter.LoadingDialog;
 import com.example.ppswe.adapter.medDataAdapterCaregiver;
 import com.example.ppswe.model.medicine.MedicineView;
 import com.example.ppswe.model.user.SingletonStatusPatient;
@@ -52,6 +53,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
     private MedViewModel medViewModel;
     private medDataAdapterCaregiver medDataAdapterCaregiver;
     private ArrayList<MedicineView> medicineViewsCaregiver;
+    private LoadingDialog loadingDialog;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -68,6 +70,9 @@ public class CaregiverMainActivity extends AppCompatActivity {
             showLoggedOut();
         }
 
+        // init loading dialog
+        loadingDialog = new LoadingDialog(this);
+
         // recyclerview
         recyclerViewMedListCaregiver = findViewById(R.id.rcMedList_caregiver);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -80,11 +85,14 @@ public class CaregiverMainActivity extends AppCompatActivity {
         medicineViewsCaregiver = intent.getParcelableExtra("med_view_data");
         //Log.d("Size", "Size is " +medicineViewsCaregiver.size());
 
+        loadingDialog.showDialog();
         // Med viewmodel
         medViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(MedViewModel.class);
         medViewModel.getMedDataCaregiver().observe(this, medData-> {
+            loadingDialog.hideDialog();
+
             medicineViewsCaregiver = medData;
-            Log.d("SIZE_MEDDATA", "Size is " + medData.size());
+            //Log.d("SIZE_MEDDATA", "Size is " + medData.size());
             medDataAdapterCaregiver = new medDataAdapterCaregiver(medicineViewsCaregiver);
             recyclerViewMedListCaregiver.setAdapter(medDataAdapterCaregiver);
         });

@@ -11,8 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ppswe.R;
+import com.example.ppswe.adapter.LoadingDialog;
 import com.example.ppswe.model.user.User;
 import com.example.ppswe.view.caregiver.CaregiverMainActivity;
 import com.example.ppswe.view.patient.MainMenuActivity;
@@ -32,7 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView tvLogin;
     private RadioButton radioPatient, radioCaregiver;
 
-    private AuthViewModel authViewModel;
+    private LoadingDialog loadingDialog;
 
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
@@ -42,8 +44,12 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        // init firebase
         firestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
+
+        // init loading dialog
+        loadingDialog = new LoadingDialog(this);
 
         etUsername = findViewById(R.id.etUsername);
         etEmail = findViewById(R.id.etEmail);
@@ -67,6 +73,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (validation(username, email, phoneNum, password, confirmPassword)){
 
+                    loadingDialog.showDialog();
+
                     auth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -84,6 +92,8 @@ public class RegisterActivity extends AppCompatActivity {
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void unused) {
+                                                        loadingDialog.hideDialog();
+                                                        Toast.makeText(RegisterActivity.this, "Registration is successful!", Toast.LENGTH_SHORT).show();
                                                         if (roles.equals("patient")){
                                                             showMainActivity();
                                                         } else {
@@ -95,6 +105,8 @@ public class RegisterActivity extends AppCompatActivity {
                                                 .addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
+                                                        loadingDialog.hideDialog();
+                                                        Toast.makeText(RegisterActivity.this, "Please make sure you connect to the internet.", Toast.LENGTH_SHORT).show();
                                                         Log.w("FAIL", "Error writing doc", e);
                                                     }
                                                 });

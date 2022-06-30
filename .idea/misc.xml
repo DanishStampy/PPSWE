@@ -10,6 +10,7 @@
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/drawable/ic_baseline_login_24.xml" value="0.3675" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/drawable/ic_baseline_menu_open_24.xml" value="0.3675" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/drawable/ic_baseline_person_outline_24.xml" value="0.3675" />
+        <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.3675" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/drawable/ic_outline_favorite_border_24.xml" value="0.1" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/drawable/ic_outline_file_copy_24.xml" value="0.3675" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/drawable/ic_outline_home_24.xml" value="0.3665" />
@@ -51,7 +52,7 @@
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_personal_info.xml" value="0.5" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_profile.xml" value="0.5" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_profile_caregiver.xml" value="0.33" />
-        <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_search_med.xml" value="0.36666666666666664" />
+        <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_search_med.xml" value="0.33" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_submit_med.xml" value="0.36666666666666664" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_submit_update_med.xml" value="0.5" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_sync_caregiver.xml" value="0.30932971014492755" />
@@ -60,6 +61,7 @@
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_vital_sign__ready.xml" value="0.33" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_vital_sign__result.xml" value="0.36666666666666664" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/fragment_weight__height.xml" value="0.36666666666666664" />
+        <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/loading_dialog.xml" value="0.36666666666666664" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/med_freq_dropdown.xml" value="0.17831813576494426" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/med_type_dropdown.xml" value="0.36666666666666664" />
         <entry key="..\:/Programming/androidProject/PPSWE/app/src/main/res/layout/single_med_data.xml" value="0.3541666666666667" />
