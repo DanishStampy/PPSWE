@@ -101,6 +101,7 @@ public class CaregiverSubmitUpdateMedFragment extends Fragment implements OnAdap
                 medicine.setMedInstruction(etUpdateMedInstruction.getText().toString());
 
                 medViewModel.updateMedCaregiver(medicine);
+                Toast.makeText(getActivity(), "Medicine has been updated!", Toast.LENGTH_SHORT).show();
 
                 startActivity(new Intent(getActivity(), MedicationListActivity.class));
                 getActivity().finish();
@@ -138,7 +139,7 @@ public class CaregiverSubmitUpdateMedFragment extends Fragment implements OnAdap
 
             int time = hour * 60 * 60 + (minute * 60);
 
-            Toast.makeText(getActivity(), "Hour : " +hour+ " Minute : "+minute, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity(), "Hour : " +hour+ " Minute : "+minute, Toast.LENGTH_LONG).show();
 
             medTimes.set(position, time);
             timePicker();

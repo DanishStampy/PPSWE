@@ -102,6 +102,7 @@ public class SubmitUpdateMedFragment extends Fragment implements OnAdapterItemCl
             medicine.setMedInstruction(etUpdateMedInstruction.getText().toString());
 
             medViewModel.updateMed(medicine);
+            Toast.makeText(getActivity(), "Medicine has been updated!", Toast.LENGTH_SHORT).show();
 
             startActivity(new Intent(getActivity(), ListMedicineActivity.class));
             getActivity().finish();
@@ -138,7 +139,7 @@ public class SubmitUpdateMedFragment extends Fragment implements OnAdapterItemCl
 
             int time = hour * 60 * 60 + (minute * 60);
 
-            Toast.makeText(getActivity(), "Hour : " +hour+ " Minute : "+minute, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity(), "Hour : " +hour+ " Minute : "+minute, Toast.LENGTH_LONG).show();
 
             medTimes.set(position, time);
             timePicker();

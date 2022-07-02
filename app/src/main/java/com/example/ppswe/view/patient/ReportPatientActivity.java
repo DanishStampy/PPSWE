@@ -127,15 +127,15 @@ public class ReportPatientActivity extends AppCompatActivity {
 
             switch (selectedReportType) {
                 case "Weekly Report":
-                    Toast.makeText(this, "week", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "week", Toast.LENGTH_SHORT).show();
                     tvDateReport.setText(getAWeekBeforeCurrentDay());
                     break;
                 case "Daily Report":
-                    Toast.makeText(this, "day", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "day", Toast.LENGTH_SHORT).show();
                     tvDateReport.setText(getACurrentData());
                     break;
                 case "Monthly Report":
-                    Toast.makeText(this, "month", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "month", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -591,6 +591,7 @@ public class ReportPatientActivity extends AppCompatActivity {
         return result;
     }
 
+    @SuppressLint("SimpleDateFormat")
     private ArrayList<String> getAllDateForWeek() {
 
         ArrayList<String> resultList = new ArrayList<>();

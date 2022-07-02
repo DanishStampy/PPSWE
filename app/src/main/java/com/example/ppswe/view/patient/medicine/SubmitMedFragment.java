@@ -41,6 +41,8 @@ import com.example.ppswe.viewmodel.MedViewModel;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import io.grpc.okhttp.internal.Util;
+
 public class SubmitMedFragment extends Fragment implements OnAdapterItemClickListener {
 
     private RecyclerView recyclerViewTimePickerButton;
@@ -138,7 +140,7 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
     }
 
     private void createNoficationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             CharSequence name = "medicationChannel";
             String description = "Channel for alarm manager";
             int important = NotificationManager.IMPORTANCE_HIGH;
@@ -196,7 +198,14 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
             intent.putExtra("reqCode", i);
             final int id = (int) System.currentTimeMillis();
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), id, intent, 0);
+            int pendingFlags;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                pendingFlags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
+            } else {
+                pendingFlags = PendingIntent.FLAG_UPDATE_CURRENT;
+            }
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), id, intent, pendingFlags);
 
             alarmManager[i].setRepeating(AlarmManager.RTC_WAKEUP, calendar[i].getTimeInMillis(),
                     alarmManager[i].INTERVAL_DAY, pendingIntent);
@@ -227,7 +236,7 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
 
             int time = hour * 60 * 60 + (minute * 60);
 
-            Toast.makeText(getActivity(), "Hour : " + hour + " Minute : " + minute, Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity(), "Hour : " + hour + " Minute : " + minute, Toast.LENGTH_LONG).show();
 
             medTimes.set(position, time);
             timePicker();

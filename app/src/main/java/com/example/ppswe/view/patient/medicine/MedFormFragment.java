@@ -132,12 +132,7 @@ public class MedFormFragment extends Fragment {
             etNameMed.setError("Please enter medicine name.");
             return false;
 
-        } else if (!medName.matches("[a-zA-Z]+")){
-            etNameMed.requestFocus();
-            etNameMed.setError("Please enter using alphabetical letter.");
-            return false;
-
-        } else if (medDose.isEmpty()) {
+        }  else if (medDose.isEmpty()) {
             etDoseMed.requestFocus();
             etDoseMed.setError("Please enter medicine dose.");
             return false;

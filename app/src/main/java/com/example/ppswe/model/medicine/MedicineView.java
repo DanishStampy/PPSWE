@@ -3,7 +3,7 @@ package com.example.ppswe.model.medicine;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class MedicineView implements Parcelable {
+public class MedicineView implements Parcelable, Comparable {
     private String medName;
     private int medTime;
     private String medInstruction;
@@ -119,5 +119,11 @@ public class MedicineView implements Parcelable {
         parcel.writeString(medType);
         parcel.writeString(medID);
         parcel.writeString(medStatus);
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        int compareTime = ((MedicineView)o).getMedTime();
+        return this.medTime - compareTime;
     }
 }

@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -138,6 +139,7 @@ public class MedRepository {
                             medicineView.setMedTime(((Number) medicineTime.get(i)).intValue());
                             medicineList.add(medicineView);
                         }
+                        Collections.sort(medicineList);
 
                         Log.d("EXIST", "ada je = " + medicineList.size());
                     }
@@ -183,6 +185,7 @@ public class MedRepository {
     }
 
     // Get all med caregiver
+    @SuppressLint("SimpleDateFormat")
     public MutableLiveData<ArrayList<MedicineView>> getMedicineArrayListCaregiver() {
 
         userRef.get()
@@ -214,9 +217,47 @@ public class MedRepository {
                                                         medicineView.setMedTime(((Number) medicineTime.get(i)).intValue());
                                                         medicineViews.add(medicineView);
                                                     }
+
+                                                    Collections.sort(medicineViews);
                                                 }
                                             }
-                                            medicineArrayListCaregiver.postValue(medicineViews);
+                                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                                            Date date = new Date();
+                                            String todayDate = format.format(date);
+
+                                            firestore.document(path)
+                                                    .collection("medHistory")
+                                                    .whereEqualTo("date", todayDate)
+                                                    .addSnapshotListener((value1, error1) -> {
+                                                        ArrayList<MedicineStatus> medicineStatuses = new ArrayList<>();
+                                                        if (value1 != null) {
+
+                                                            for (QueryDocumentSnapshot doc1 : value1) {
+                                                                medicineStatuses.add(doc1.toObject(MedicineStatus.class));
+                                                            }
+
+                                                            for (int i = 0; i < medicineViews.size(); i++) {
+                                                                String time = String.valueOf(medicineViews.get(i).getMedTime());
+                                                                String[] temp = medicineViews.get(i).getMedID().split("\\.");
+                                                                String id = temp[0] + "." + temp[1];
+                                                                Log.d("avail_med", "id: " + id + ", time: " + time);
+
+                                                                for (MedicineStatus med: medicineStatuses) {
+                                                                    if (med.getMedTime().equals(time) && med.getMedId().equals(id)){
+                                                                        Log.d("med_status", " this is : " + med.getMedStatus());
+                                                                        medicineViews.get(i).setMedStatus(med.getMedStatus());
+                                                                        break;
+                                                                    }
+                                                                }
+                                                                if (medicineViews.get(i).getMedStatus() == null) {
+                                                                    medicineViews.get(i).setMedStatus("postpone");
+                                                                }
+                                                                Log.d("check_status", " " + medicineViews.get(i).getMedStatus());
+                                                            }
+                                                        }
+                                                        medicineArrayListCaregiver.postValue(medicineViews);
+                                                    });
+
                                         } else {
                                             Log.d("testing_else", "not existss?");
                                         }

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ppswe.R;
+import com.example.ppswe.adapter.LoadingDialog;
 import com.example.ppswe.model.medicine.Medicine;
 import com.example.ppswe.view.patient.MainMenuActivity;
 import com.example.ppswe.viewmodel.MedViewModel;
@@ -32,6 +33,7 @@ public class MedFullDetailFragment extends Fragment {
 
     private NavController navController;
     private MaterialAlertDialogBuilder builder;
+    private LoadingDialog loadingDialog;
 
     private MedViewModel medViewModel;
 
@@ -56,6 +58,9 @@ public class MedFullDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // init loading dialog
+        loadingDialog = new LoadingDialog(getContext());
+
         // TextView
         tvMedName = view.findViewById(R.id.tvDetailMedName);
         tvMedTime = view.findViewById(R.id.tvDetailMedTime);
@@ -63,11 +68,14 @@ public class MedFullDetailFragment extends Fragment {
         tvMedInstruction = view.findViewById(R.id.tvMedDetailInfo_intrusction_dose);
         navController = Navigation.findNavController(view);
 
+        loadingDialog.showDialog();
+
         if (getArguments() != null) {
             Medicine medicine = getArguments().getParcelable("medicine_data");
 
             String medInfo = "Take " + medicine.getMedDose() + " dose(s), " + medicine.getMedInstruction() + " everyday";
             String listMedTimes = getListMedTimes(medicine.getMedTimes());
+            loadingDialog.hideDialog();
 
             tvMedName.setText(medicine.getMedName());
             tvMedType.setText(medicine.getMedType());
