@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -21,7 +22,15 @@ public class AlarmReceiver extends BroadcastReceiver {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         int reqCode = intent.getIntExtra("reqCode", 0);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, reqCode, i, 0);
+
+        int pendingFlags;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            pendingFlags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
+            Log.d("set_alarm", "setting");
+        } else {
+            pendingFlags = PendingIntent.FLAG_UPDATE_CURRENT;
+        }
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, reqCode, i, pendingFlags);
 
         Log.d("ALARM", "Alarm fired with request code: " +reqCode);
 

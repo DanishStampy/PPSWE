@@ -201,9 +201,11 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
             int pendingFlags;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 pendingFlags = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
+                Log.d("set_alarm", "setting");
             } else {
                 pendingFlags = PendingIntent.FLAG_UPDATE_CURRENT;
             }
+
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), id, intent, pendingFlags);
 

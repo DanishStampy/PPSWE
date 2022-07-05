@@ -254,8 +254,8 @@ public class MedRepository {
                                                                 }
                                                                 Log.d("check_status", " " + medicineViews.get(i).getMedStatus());
                                                             }
+                                                            medicineArrayListCaregiver.postValue(medicineViews);
                                                         }
-                                                        medicineArrayListCaregiver.postValue(medicineViews);
                                                     });
 
                                         } else {

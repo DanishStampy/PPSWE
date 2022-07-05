@@ -52,7 +52,7 @@ public class SyncCaregiverFragment extends Fragment {
 
     private LoadingDialog loadingDialog;
 
-    private static final String URL_SUBMIT = "http://192.168.57.101/api_ppswe/sync_account.php";
+    private static final String URL_SUBMIT = "http://192.168.43.128/api_ppswe/sync_account.php";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
