@@ -45,7 +45,7 @@ public class SearchMedFragment extends Fragment {
     private NavController navController;
 
     private EditText etSearchQuery;
-    private ImageView btnImgSearchQuery;
+    private ImageView btnImgSearchQuery, btnImgGuide;
     private ListView lvResultsQuery;
     private MaterialAlertDialogBuilder builder;
 
@@ -74,7 +74,12 @@ public class SearchMedFragment extends Fragment {
 
         etSearchQuery = view.findViewById(R.id.etSearchKeyword);
         btnImgSearchQuery = view.findViewById(R.id.btnImgSearch);
+        btnImgGuide = view.findViewById(R.id.imgViewGuideBtn);
         lvResultsQuery = view.findViewById(R.id.lvMedResult);
+
+        btnImgGuide.setOnClickListener(view1 -> {
+            navController.navigate(R.id.action_searchMedFragment_to_guideSearchFragment);
+        });
 
         btnImgSearchQuery.setOnClickListener(view1 -> {
 

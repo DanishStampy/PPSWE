@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_searchMedFragment_to_medFormFragment"
             app:destination="@id/medFormFragment" />
+        <action
+            android:id="@+id/action_searchMedFragment_to_guideSearchFragment"
+            app:destination="@id/guideSearchFragment" />
     </fragment>
     <fragment
         android:id="@+id/medFormFragment"
@@ -28,4 +31,9 @@
         android:name="com.example.ppswe.view.patient.medicine.SubmitMedFragment"
         android:label="fragment_submit_med"
         tools:layout="@layout/fragment_submit_med" />
+    <fragment
+        android:id="@+id/guideSearchFragment"
+        android:name="com.example.ppswe.view.patient.medicine.GuideSearchFragment"
+        android:label="fragment_guide_search"
+        tools:layout="@layout/fragment_guide_search" />
 </navigation>
