@@ -98,13 +98,13 @@ public class Weight_HeightFragment extends Fragment {
         double bmi = weight / (height * height);
 
         if (bmi < 18.5) {
-            return "Underweight";
+            return "Underweight, your BMI is " + bmi + " kg/m²";
         } else if (bmi >= 18.5 && bmi <= 24.9) {
-            return "Normal";
+            return "Normal, your BMI is " + bmi + " kg/m²";
         } else if (bmi >= 25.0 && bmi <= 29.9) {
-            return "Overweight";
+            return "Overweight, your BMI is " + bmi + " kg/m²";
         } else {
-            return "Obese";
+            return "Obese, your BMI is " + bmi + " kg/m²";
         }
     }
 

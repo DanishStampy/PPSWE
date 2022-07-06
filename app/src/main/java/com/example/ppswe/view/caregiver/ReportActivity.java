@@ -48,8 +48,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ReportActivity extends AppCompatActivity {
@@ -206,6 +210,11 @@ public class ReportActivity extends AppCompatActivity {
             ArrayList<String> listStatusMed = reportData.getMedStatus(); // status for report
             ArrayList<String> listMedTimes = reportData.getMedTimes(); // time data for medicine
 
+            float percentSkip, percentPostpone, percentTaken, total = 0.00F;
+            int countSkip = 0, countPostpone = 0, countTaken = 0;
+
+            HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
+
             String pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
             File file = new File(pdfPath, fileId + ".pdf");
 
@@ -257,6 +266,27 @@ public class ReportActivity extends AppCompatActivity {
                         ++rowToSpan;
                         temp.add(listMedName.get(j) + " (" + getSpecificMedTime(listMedTimes.get(j)) + ")");
                         tempStatus.add(listStatusMed.get(j));
+
+                        total++;
+                        Log.d("check_status_med", listStatusMed.get(j));
+
+                        switch (listStatusMed.get(j)) {
+                            case "taken":
+                                countTaken++;
+                                break;
+                            case "skip":
+                                countSkip++;
+                                if (hashMap.containsKey(listMedName.get(j))){
+                                    int count = hashMap.get(listMedName.get(j));
+                                    hashMap.put(listMedName.get(j), count + 1);
+                                } else {
+                                    hashMap.put(listMedName.get(j), 1);
+                                }
+                                break;
+                            case "postpone":
+                                countPostpone++;
+                                break;
+                        }
                     }
                 }
                 // Rowspan each date
@@ -270,7 +300,28 @@ public class ReportActivity extends AppCompatActivity {
                     table.addCell(new Cell().add(new Paragraph(tempStatus.get(n))).setMargin(5));
                 }
             }
+
+            percentTaken = (float) (Math.round(((countTaken/total)*100.00)*100.0)/100.0);
+            percentSkip = (float) (Math.round(((countSkip/total)*100.00)*100.0)/100.0);
+            percentPostpone = (float) (Math.round(((countPostpone/total)*100.00)*100.0)/100.0);
+
             document.add(table);
+
+            String mostSkipMed = Collections.max(hashMap.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
+
+            Paragraph summary = new Paragraph("\n Weekly summary:")
+                    .setFontSize(16)
+                    .add("\n")
+                    .add(new Paragraph("Percentage of taken medicine is " + percentTaken +"%"))
+                    .add("\n")
+                    .add(new Paragraph("Percentage of skip medicine is " + percentSkip +"%"))
+                    .add("\n")
+                    .add(new Paragraph("Percentage of postpone medicine is " + percentPostpone +"%\n"))
+                    .add("\n")
+                    .add(new Paragraph(mostSkipMed+" is the most skipped medicine with count, "+hashMap.get(mostSkipMed)+" for this week."));
+
+            document.add(summary);
+
 
             // generate time and date
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
@@ -279,7 +330,7 @@ public class ReportActivity extends AppCompatActivity {
             document.add(generateTimeandDate);
 
             document.close();
-            Toast.makeText(this, "File is download at " + pdfPath, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Weekly report has been downloaded.", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -356,6 +407,7 @@ public class ReportActivity extends AppCompatActivity {
             document.add(generateTimeandDate);
 
             document.close();
+            Toast.makeText(this, "Daily report has been downloaded.", Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -368,6 +420,11 @@ public class ReportActivity extends AppCompatActivity {
             ArrayList<String> listReportData = reportData.getReportDate(); // history date for report
             ArrayList<String> listStatusMed = reportData.getMedStatus(); // status for report
             ArrayList<String> listMedTimes = reportData.getMedTimes(); // time data for medicine
+
+            float percentSkip, percentPostpone, percentTaken, total = 0.00F;
+            int countSkip = 0, countPostpone = 0, countTaken = 0;
+
+            HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
 
             String pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
             File file = new File(pdfPath, fileId + ".pdf");
@@ -430,6 +487,27 @@ public class ReportActivity extends AppCompatActivity {
                         ++rowToSpan;
                         temp.add(listMedName.get(j) + " (" + getSpecificMedTime(listMedTimes.get(j)) + ")");
                         tempStatus.add(listStatusMed.get(j));
+
+                        total++;
+                        Log.d("check_status_med", listStatusMed.get(j));
+
+                        switch (listStatusMed.get(j)) {
+                            case "taken":
+                                countTaken++;
+                                break;
+                            case "skip":
+                                countSkip++;
+                                if (hashMap.containsKey(listMedName.get(j))){
+                                    int count = hashMap.get(listMedName.get(j));
+                                    hashMap.put(listMedName.get(j), count + 1);
+                                } else {
+                                    hashMap.put(listMedName.get(j), 1);
+                                }
+                                break;
+                            case "postpone":
+                                countPostpone++;
+                                break;
+                        }
                     }
                 }
 
@@ -444,8 +522,26 @@ public class ReportActivity extends AppCompatActivity {
                     table.addCell(new Cell().add(new Paragraph(tempStatus.get(n))).setMargin(5));
                 }
             }
+            percentTaken = (float) (Math.round(((countTaken/total)*100.00)*100.0)/100.0);
+            percentSkip = (float) (Math.round(((countSkip/total)*100.00)*100.0)/100.0);
+            percentPostpone = (float) (Math.round(((countPostpone/total)*100.00)*100.0)/100.0);
 
             document.add(table);
+
+            String mostSkipMed = Collections.max(hashMap.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
+
+            Paragraph summary = new Paragraph("\n Monthly summary:")
+                    .setFontSize(16)
+                    .add("\n")
+                    .add(new Paragraph("Percentage of taken medicine is " + percentTaken +"%"))
+                    .add("\n")
+                    .add(new Paragraph("Percentage of skip medicine is " + percentSkip +"%"))
+                    .add("\n")
+                    .add(new Paragraph("Percentage of postpone medicine is " + percentPostpone +"%\n"))
+                    .add("\n")
+                    .add(new Paragraph(mostSkipMed+" is the most skipped medicine with count, "+hashMap.get(mostSkipMed)+" for this month."));
+
+            document.add(summary);
 
             // generate time and date
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
@@ -454,7 +550,7 @@ public class ReportActivity extends AppCompatActivity {
             document.add(generateTimeandDate);
 
             document.close();
-            Toast.makeText(this, "File is download at " + pdfPath, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Monthly report has been downloaded.", Toast.LENGTH_SHORT).show();
         });
     }
 

@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -31,14 +33,16 @@ import com.example.ppswe.view.patient.ListMedicineActivity;
 import com.example.ppswe.viewmodel.MedViewModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class SubmitUpdateMedFragment extends Fragment implements OnAdapterItemClickListener {
 
     private RecyclerView recyclerViewUpdateTimePickerButton;
     private buttonTimePickerAdapter buttonTimePickerAdapter;
-    private EditText etUpdateMedInstruction, etUpdateMedDesc;
+    private EditText etUpdateMedDesc;
     private Button btnSubmitUpdateMed;
+    private AutoCompleteTextView updateMedInstruction;
 
     private MedViewModel medViewModel;
 
@@ -46,6 +50,8 @@ public class SubmitUpdateMedFragment extends Fragment implements OnAdapterItemCl
 
     ArrayList<Integer> medTimes = new ArrayList<>();
     ArrayList<Integer> list = new ArrayList<>();
+    ArrayAdapter<String> adapter_instruction;
+    String medInstructChoose;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,8 +75,6 @@ public class SubmitUpdateMedFragment extends Fragment implements OnAdapterItemCl
         super.onViewCreated(view, savedInstanceState);
 
         etUpdateMedDesc = view.findViewById(R.id.etUpdateMedDescription);
-        etUpdateMedInstruction = view.findViewById(R.id.etUpdateMedInstruction);
-
         btnSubmitUpdateMed = view.findViewById(R.id.btnSubmitUpdateMedData);
 
         recyclerViewUpdateTimePickerButton = view.findViewById(R.id.recyclerTime_update);
@@ -78,6 +82,22 @@ public class SubmitUpdateMedFragment extends Fragment implements OnAdapterItemCl
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         recyclerViewUpdateTimePickerButton.setLayoutManager(linearLayoutManager);
+
+        // Dropdown item
+        String[] instruction = new String[] {"before meal", "after meal", "mix with water", "mix with meal"};
+        adapter_instruction = new ArrayAdapter<>(
+                getContext(),
+                R.layout.med_type_dropdown,
+                instruction
+        );
+
+        // Dropdown adapter
+        updateMedInstruction = view.findViewById(R.id.dropdown_update_medInstruction);
+        updateMedInstruction.setAdapter(adapter_instruction);
+
+        updateMedInstruction.setOnItemClickListener((adapterView, view1, i, l) -> {
+            medInstructChoose = updateMedInstruction.getText().toString();
+        });
 
         if (getArguments() != null) {
             medicine = getArguments().getParcelable("new_update_data");
@@ -91,7 +111,8 @@ public class SubmitUpdateMedFragment extends Fragment implements OnAdapterItemCl
 
             timePicker();
 
-            etUpdateMedInstruction.setText(medicine.getMedInstruction());
+            int index = Arrays.asList(instruction).indexOf(medicine.getMedInstruction());
+            updateMedInstruction.setText(adapter_instruction.getItem(index), false);
             etUpdateMedDesc.setText(medicine.getMedDesc());
         }
 
@@ -99,7 +120,7 @@ public class SubmitUpdateMedFragment extends Fragment implements OnAdapterItemCl
 
             medicine.setMedTimes(medTimes);
             medicine.setMedDesc(etUpdateMedDesc.getText().toString());
-            medicine.setMedInstruction(etUpdateMedInstruction.getText().toString());
+            medicine.setMedInstruction(medInstructChoose);
 
             medViewModel.updateMed(medicine);
             Toast.makeText(getActivity(), "Medicine has been updated!", Toast.LENGTH_SHORT).show();

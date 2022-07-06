@@ -23,6 +23,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -48,13 +50,16 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
     private RecyclerView recyclerViewTimePickerButton;
     private buttonTimePickerAdapter buttonTimePickerAdapter;
     private Button btnSubmitMedData;
-    private EditText etMedInstruction, etMedDesc;
+    private EditText etMedDesc;
+    private AutoCompleteTextView medInstruction;
 
     Calendar[] calendar;
     AlarmManager[] alarmManager;
     ArrayList<PendingIntent> intentArray;
     ArrayList<Integer> medTimes = new ArrayList<>();
     ArrayList<Integer> list = new ArrayList<>();
+    ArrayAdapter<String> adapter_instruction;
+    String medInstructionChoose;
 
     private MedViewModel medViewModel;
     private Medicine medicine;
@@ -85,6 +90,14 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
             medicine = getArguments().getParcelable("new_med");
         }
 
+        // Dropdown item
+        String[] instruction = new String[] {"before meal", "after meal", "mix with water", "mix with meal"};
+        adapter_instruction = new ArrayAdapter<>(
+                getContext(),
+                R.layout.med_type_dropdown,
+                instruction
+        );
+
         // recyclerview
         recyclerViewTimePickerButton = view.findViewById(R.id.recyclerTime);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -100,7 +113,13 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
         // Set time picker on button in recyclerview
         timePicker();
 
-        etMedInstruction = view.findViewById(R.id.etMedInstruction);
+        medInstruction = view.findViewById(R.id.dropdown_medInstruction);
+        medInstruction.setAdapter(adapter_instruction);
+
+        medInstruction.setOnItemClickListener((adapterView, view1, i, l) -> {
+            medInstructionChoose = medInstruction.getText().toString();
+        });
+
         etMedDesc = view.findViewById(R.id.etMedDescription);
 
         // Init notification channel
@@ -109,10 +128,9 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
         btnSubmitMedData = view.findViewById(R.id.btnSubmitMedData);
         btnSubmitMedData.setOnClickListener(view1 -> {
 
-            String medInstruction = etMedInstruction.getText().toString().trim();
             String medDescription = etMedDesc.getText().toString().trim();
 
-            if (validateInfo(medInstruction, medTimes)) {
+            if (validateInfo(medInstructionChoose, medTimes)) {
 
                 int[] hour = new int[list.size()];
                 int[] minute = new int[list.size()];
@@ -127,7 +145,7 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
                 setAlarm(list.size(), hour, minute);
 
 
-                medicine.setMedInstruction(medInstruction);
+                medicine.setMedInstruction(medInstructionChoose);
                 medicine.setMedDesc(medDescription);
                 medicine.setMedTimes(medTimes);
 
@@ -152,11 +170,11 @@ public class SubmitMedFragment extends Fragment implements OnAdapterItemClickLis
         }
     }
 
-    private Boolean validateInfo(String medInstruction, ArrayList<Integer> medTimes) {
+    private Boolean validateInfo(String medInstruct, ArrayList<Integer> medTimes) {
 
-        if (medInstruction.isEmpty()) {
-            etMedInstruction.requestFocus();
-            etMedInstruction.setError("Please enter medicine instruction.");
+        if (medInstruct == null) {
+            medInstruction.requestFocus();
+            medInstruction.setError("Please select medicine instruction.");
             return false;
 
         } else if (medTimes.contains(0)) {

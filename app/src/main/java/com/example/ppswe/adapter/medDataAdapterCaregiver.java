@@ -75,9 +75,9 @@ public class medDataAdapterCaregiver extends RecyclerView.Adapter<medDataAdapter
             }
 
             if (medicineList.get(position).getMedStatus().equals("taken")) {
-                holder.medStatus.setImageResource(R.drawable.ic_baseline_check_24);
+                holder.medStatus.setImageResource(R.drawable.ic_baseline_check_circle_24);
             } else if (medicineList.get(position).getMedStatus().equals("skip")) {
-                holder.medStatus.setImageResource(R.drawable.ic_baseline_do_not_disturb_24);
+                holder.medStatus.setImageResource(R.drawable.ic_baseline_warning_24);
             } else {
                 holder.medStatus.setImageResource(R.drawable.ic_baseline_access_time_24);
             }
